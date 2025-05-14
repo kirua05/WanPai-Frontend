@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>玩拍｜我的購物車</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white">
+  <div class="flex justify-between items-center px-4 py-2 text-white">
+    <div class="flex items-center space-x-3">
+      <a href="#"><img src="img/icon-mail.svg" alt="信箱" class="w-6 h-6 filter invert"></a>
+      <a href="#"><img src="img/icon-info.svg" alt="資訊" class="w-6 h-6 filter invert"></a>
+      <a href="#"><img src="img/icon-crown.svg" alt="等級" class="w-6 h-6 filter invert"></a>
+      <span class="user-level">玩具初心者</span>
+      <a href="#"><img src="img/icon-logout.svg" alt="登出" class="w-6 h-6 filter invert"></a>
+    </div>
+    <div class="flex items-center space-x-4">
+      <a href="#" class="hover:opacity-75"><img src="img/facebook.svg" alt="FB" class="w-6 h-6 filter invert"></a>
+      <a href="#" class="hover:opacity-75"><img src="img/line.svg" alt="Line" class="w-6 h-6 filter invert"></a>
+      <a href="#" class="hover:opacity-75"><img src="img/instagram.svg" alt="IG" class="w-6 h-6 filter invert"></a>
+      <a href="#" class="hover:opacity-75"><img src="img/youtube.svg" alt="YouTube" class="w-6 h-6 filter invert"></a>
+      <a href="#" class="hover:opacity-75"><img src="img/blog.svg" alt="Blog" class="w-6 h-6 filter invert"></a>
+      <button class="p-2 hover:bg-gray-800 rounded"><svg class="w-6 h-6"></svg></button>
+    </div>
+  </div>
+
+  <!-- ====== Logo + 主選單 ====== -->
+  <header class="bg-black text-center pb-2">
+    <h1 class="text-5xl font-extrabold text-yellow-400">玩拍</h1>
+    <p class="text-2xl font-bold">WAN PAI</p>
+
+    <!-- 主選單：多欄式下拉（示範） -->
+    <nav class="mt-4">
+      <ul class="flex flex-wrap justify-center space-x-4 text-sm">
+        <li class="group relative">
+          <a href="#" class="hover:text-yellow-400">首頁</a>
+        </li>
+        <li class="group relative">
+          <a href="#" class="hover:text-yellow-400">關於</a>
+        </li>
+        <li class="group relative">
+          <a href="#" class="hover:text-yellow-400">全部商品</a>
+        </li>
+        <li class="group relative">
+          <a href="#" class="hover:text-yellow-400">BANDAI TAMASHII 魂</a>
+          <!-- 下拉 -->
+          <ul class="absolute left-0 top-full bg-black text-white text-sm mt-1 p-2 rounded shadow-lg hidden group-hover:block">
+            <li><a href="#" class="block px-4 py-1 hover:bg-gray-800">魂系列A</a></li>
+            <li><a href="#" class="block px-4 py-1 hover:bg-gray-800">魂系列B</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ====== 購物車內容 ====== -->
+  <main class="container mx-auto mt-6 px-4 text-gray-900 bg-white rounded-lg shadow">
+    <h2 class="text-2xl font-semibold py-4 border-b">我的購物車</h2>
+
+    <!-- 表頭 -->
+    <div class="grid grid-cols-7 bg-gray-800 text-white text-center py-3 font-medium">
+      <div class="col-span-2">品名</div>
+      <div>規格</div>
+      <div>數量</div>
+      <div>單價</div>
+      <div>小計</div>
+      <div>刪除</div>
+    </div>
+
+    <!-- 單品項 -->
+    <div class="grid grid-cols-7 items-center border-b px-4 py-3 gap-4">
+      <!-- 品名+圖 -->
+      <div class="col-span-2 flex items-start space-x-3">
+        <img src="img/test-product.png" alt="商品圖" class="w-20 h-20 object-cover rounded">
+        <div>
+          <span class="inline-block bg-green-100 text-green-800 text-xs px-1 rounded">預計2025/11出貨</span>
+          <p class="font-medium mt-1">引進數量限定 MEGAHOUSE 榮耀傳承式樣…</p>
+          <button class="mt-1 text-sm text-orange-600 hover:underline">點我享優惠加購</button>
+        </div>
+      </div>
+      <!-- 規格 -->
+      <div class="text-center">單一規格</div>
+      <!-- 數量 -->
+      <div class="text-center">
+        <select class="border border-gray-300 rounded px-2 py-1">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+        </select>
+      </div>
+      <div class="text-center font-semibold">$880</div>
+      <div class="text-center font-semibold">$880</div>
+      <div class="text-center">
+        <button class="text-gray-400 hover:text-red-500">🗑️</button>
+      </div>
+    </div>
+
+    <!-- 積點 & 優惠 -->
+    <section class="px-4 py-3 text-sm text-red-600 border-b">
+      <p><span class="bg-red-100 text-red-800 px-1 rounded">現金積點</span> 會員 滿 $100 元，現金積點回饋 2%（共 18 點）</p>
+      <p class="mt-1 text-gray-500">詳細請參閱「現金積點規則」。</p>
+      <div class="mt-2 flex items-center space-x-4">
+        <label class="flex items-center"><input type="radio" name="discount" checked class="mr-1"/>不使用優惠</label>
+        <label class="flex items-center"><input type="radio" name="discount" class="mr-1"/>優惠代碼</label>
+      </div>
+    </section>
+
+    <!-- 全館活動提醒 -->
+    <div class="px-4 py-3 bg-gray-50 flex justify-between items-center text-sm border-b">
+      <p>全館再 $4,342 元，抵 $222 元（尚未符合）</p>
+      <a href="#" class="text-red-600 hover:underline">查看活動</a>
+    </div>
+
+    <!-- 小計 -->
+    <div class="px-4 py-4 flex justify-between items-center">
+      <span class="font-medium">小計</span>
+      <span class="font-semibold text-lg">$880</span>
+    </div>
+  </main>
+
+  <!-- ====== 運費 & 總金額 ====== -->
+  <section class="container mx-auto mt-4">
+    <div class="bg-white px-4 rounded-lg shadow overflow-hidden">
+      <div class="px-4 py-3 flex justify-between items-center border-b">
+        <span class="text-red-600">運費</span>
+        <a href="#" class="text-red-600 hover:underline">前往下一步驟計算</a>
+      </div>
+      <div class="px-4 py-4 bg-gray-800 text-white flex justify-between items-center">
+        <span class="font-medium">總金額 (TWD)</span>
+        <span class="font-bold text-xl">$880</span>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
