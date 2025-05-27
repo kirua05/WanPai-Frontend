@@ -1,59 +1,86 @@
 <template>
-  <div class="notification-page">
-    <h2 class="notification-title">我的通知</h2>
+  <div class="p-6 font-sans">
+    <h2 class="text-2xl font-bold mb-6 ml-8">我的通知</h2>
 
-    <div class="notification-layout">
+    <div class="flex gap-6">
       <!-- 左側分類 -->
-      <aside class="notification-sidebar">
-        <ul class="notification-menu">
+      <aside class="w-40">
+        <ul class="list-none p-0 m-0">
           <li
-            class="notification-menu-item"
             v-for="(item, index) in categories"
             :key="index"
-            :class="{ active: selectedCategory === item.type }"
             @click="selectedCategory = item.type"
+            :class="[
+              'bg-gray-200 p-3 mb-2 cursor-pointer text-center rounded relative',
+              selectedCategory === item.type ? 'bg-gray-800 text-white' : ''
+            ]"
           >
             {{ item.label }}
-            <span v-if="hasUnread(item.type)" class="unread-dot"></span>
+            <span
+              v-if="hasUnread(item.type)"
+              class="inline-block w-2 h-2 bg-red-600 rounded-full ml-1.5 transition-opacity"
+            ></span>
           </li>
         </ul>
       </aside>
 
-      <!-- 右側通知內容 -->
-      <section v-if="selectedCategory" class="notification-content">
-        <div class="notification-header">
-          <span>{{ currentLabel }}</span>
-          <span class="notification-count">共 {{ filteredNotifications.length }} 條</span>
+      <!-- 右側內容 -->
+      <section class="flex-1 flex items-center justify-center">
+        <!-- ✅ 尚未選擇分類：顯示歡迎畫面 -->
+        <div v-if="!selectedCategory" class="text-center">
+          <!-- 👇 PrimeVue icon 放這裡，如有問題請確認 pi 套件有載入 -->
+          <span
+            class="pi pi-inbox text-9xl text-gray-400 mb-6 block mx-auto"
+            aria-hidden="true"
+          ></span>
+
+          <h3 class="text-xl font-semibold mb-2">歡迎來到通知中心</h3>
+          <p class="text-gray-500">請從左邊的列表選擇想查看的通知類型</p>
         </div>
 
-        <Divider class="my-2" />
-
-        <div
-          class="notification-item"
-          v-for="(item, index) in filteredNotifications"
-          :key="index"
-          @click="toggleExpanded(item)"
-        >
-          <!-- 一律顯示時間 + 紅點 -->
-          <p class="notification-time">
-            {{ item.time }}
-            <span v-if="!item.read" class="dot-icon pi pi-circle-fill"></span>
-          </p>
-
-          <!-- 點開後才顯示細節 -->
-          <div v-if="item.expanded">
-            <p class="notification-message">
-              <strong class="notification-username">{{ item.username }}</strong>
-              {{ item.message }}
-            </p>
-            <p class="notification-order-id">訂單編號：{{ item.orderId }}</p>
+        <!-- ✅ 選擇分類後顯示內容 -->
+        <div v-else class="w-full">
+          <div class="flex justify-between items-center text-gray-500 text-sm px-6">
+            <span>{{ currentLabel }}</span>
+            <span>共 {{ filteredNotifications.length }} 條</span>
           </div>
 
-          <!-- 加分隔線，但最後一筆不加 -->
-          <Divider
-            v-if="index < filteredNotifications.length - 1"
-            class="my-3"
-          />
+          <Divider class="my-2" />
+
+          <!-- 無通知 -->
+          <div
+            v-if="filteredNotifications.length === 0"
+            class="text-center py-10 text-gray-500"
+          >
+            沒有新通知
+          </div>
+
+          <!-- 通知列表 -->
+          <div
+            v-else
+            v-for="(item, index) in filteredNotifications"
+            :key="index"
+            @click="toggleExpanded(item)"
+            class="px-6 py-2 cursor-pointer"
+          >
+            <p class="text-sm text-gray-600 flex items-center gap-1.5 mb-1.5">
+              {{ item.time }}
+              <span
+                v-if="!item.read"
+                class="pi pi-circle-fill text-xs text-red-600"
+              ></span>
+            </p>
+
+            <div v-if="item.expanded">
+              <p class="text-base mb-1">
+                <strong class="text-red-600 font-bold">{{ item.username }}</strong>
+                {{ item.message }}
+              </p>
+              <p class="text-sm text-gray-700">訂單編號：{{ item.orderId }}</p>
+            </div>
+
+            <Divider v-if="index < filteredNotifications.length - 1" class="my-3" />
+          </div>
         </div>
       </section>
     </div>
@@ -61,7 +88,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import Divider from 'primevue/divider'
 
 const categories = ref([
@@ -70,7 +97,7 @@ const categories = ref([
   { label: '優惠相關', type: 'promo' },
 ])
 
-const selectedCategory = ref('order')
+const selectedCategory = ref(null)
 
 const notifications = ref([
   {
@@ -93,6 +120,15 @@ const notifications = ref([
   },
 ])
 
+watch(selectedCategory, (newType) => {
+  notifications.value.forEach((n) => {
+    if (n.type === newType) {
+      n.expanded = true
+      n.read = true
+    }
+  })
+})
+
 const filteredNotifications = computed(() =>
   notifications.value.filter((n) => n.type === selectedCategory.value)
 )
@@ -112,107 +148,3 @@ function hasUnread(type) {
   return notifications.value.some((n) => n.type === type && !n.read)
 }
 </script>
-
-<style scoped>
-.notification-page {
-  padding: 24px;
-  font-family: sans-serif;
-}
-
-.notification-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 24px;
-  margin-left: 32px;
-}
-
-.notification-layout {
-  display: flex;
-  gap: 24px;
-}
-
-.notification-sidebar {
-  width: 160px;
-}
-
-.notification-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.notification-menu-item {
-  background-color: #e9e9e9;
-  padding: 12px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  text-align: center;
-  border-radius: 4px;
-  position: relative;
-}
-
-.notification-menu-item.active {
-  background-color: #333;
-  color: white;
-}
-
-.unread-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background-color: #d9534f;
-  border-radius: 50%;
-  margin-left: 6px;
-}
-
-.notification-content {
-  flex: 1;
-}
-
-.notification-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #888;
-  font-size: 14px;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-.notification-item {
-  padding: 8px 24px;
-  cursor: pointer;
-}
-
-.notification-time {
-  font-size: 14px;
-  color: #666;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-
-.dot-icon {
-  font-size: 8px;
-  color: #d9534f;
-}
-
-.notification-message {
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.notification-username {
-  color: #d9534f;
-}
-
-.notification-order-id {
-  font-size: 14px;
-  color: #444;
-}
-
-.notification-count {
-  font-size: 14px;
-}
-</style>
