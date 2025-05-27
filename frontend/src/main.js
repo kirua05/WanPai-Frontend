@@ -6,10 +6,12 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config'
-import Aura from '@primevue/themes/aura';
 import Carousel from 'primevue/carousel'
 import 'primeicons/primeicons.css'
 import Button from 'primevue/button'
+import Aura from '@primeuix/themes/aura'
+
+import 'primeicons/primeicons.css'
 
 
 
