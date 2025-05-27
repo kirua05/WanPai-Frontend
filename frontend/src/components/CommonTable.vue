@@ -10,7 +10,15 @@ import { ref } from 'vue'
 
 const selectedRows = ref([])
 
-defineProps({
+function filteredData(status) {
+  if (status === 'all') {
+    return props.value
+  } else {
+    return props.value.filter((item) => item.status === status)
+  }
+}
+
+const props = defineProps({
   tabs: {
     type: Array,
     required: true,
@@ -36,11 +44,11 @@ defineProps({
         <Tab v-for="tab in tabs" :key="tab.title" :value="tab.value">{{ tab.title }}</Tab>
       </TabList>
       <TabPanels>
-        <TabPanel v-for="tab in tabs" :key="tab.content" :value="tab.value">
+        <TabPanel v-for="tab in tabs" :key="tab.value" :value="tab.value">
           <div class="card">
             <DataTable
               v-model:selection="selectedRows"
-              :value="value"
+              :value="filteredData(tab.value)"
               removable-sort
               pt:table="min-w-200"
               data-key="id"

@@ -4,11 +4,10 @@ import CommonTable from '../../components/CommonTable.vue'
 import { fetchAllProducts } from '@/api/admin/product'
 import { onMounted } from 'vue'
 const productTabs = ref([
-  // content會依照 commonTable 切到哪個 Tab來顯示，這部分尚未實作
-  { title: '全部', content: 'Tab 1 Content', value: 'all' },
-  { title: '上架中', content: 'Tab 1 Content', value: 'active' },
-  { title: '草稿', content: 'Tab 2 Content', value: 'draft' },
-  { title: '典藏', content: 'Tab 3 Content', value: 'archived' },
+  { title: '全部', value: 'all' },
+  { title: '上架中', value: 'active' },
+  { title: '草稿', value: 'draft' },
+  { title: '典藏', value: 'archived' },
 ])
 const productColumns = ref([
   { field: 'name', header: '商品', style: 'width: 25%' },
