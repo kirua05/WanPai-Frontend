@@ -1,13 +1,11 @@
 require("dotenv").config();
-const ecpayConfig = require("../../configs/ecpay/ecpayConfig");
+const ecpayConfig = require("../configs/ecpayConfig");
 const ecpay_payment = require("ecpay_aio_nodejs");
-// const { MERCHANTID, HASHKEY, HASHIV, HOST } = process.env;
 const db = require("../configs/db");
 const { orders } = require("../models/ecpaySchema");
-const { eq } = require("drizzle-orm");
 
 const options = {
-  OperationMode: "Test", // Test or Production
+  OperationMode: "Test",
   MercProfile: {
     MerchantID: ecpayConfig.merchantID,
     HashKey: ecpayConfig.hashKey,
@@ -17,7 +15,6 @@ const options = {
   IsProjectContractor: false,
 };
 
-// 處理 /create-order 的邏輯
 exports.createOrder = async (req, res) => {
   const {
     MerchantTradeNo,
@@ -27,7 +24,6 @@ exports.createOrder = async (req, res) => {
     ItemName,
   } = req.body;
 
-  // 強化驗證，確保所有必需欄位都有
   if (
     !MerchantTradeNo ||
     !MerchantTradeDate ||
@@ -43,26 +39,25 @@ exports.createOrder = async (req, res) => {
   let base_param = {
     MerchantTradeNo: MerchantTradeNo,
     MerchantTradeDate: MerchantTradeDate,
-    TotalAmount: TotalAmount, // 這裡的 TotalAmount 應該是字串形式，如 "100"
+    TotalAmount: TotalAmount,
     TradeDesc: TradeDesc,
     ItemName: ItemName,
-    ReturnURL: ecpayConfig.returnURL, // 從 ecpayConfig 獲取
-    ClientBackURL: ecpayConfig.clientBackURL, // 從 ecpayConfig 獲取
-    PaymentType: "aio", // 根據綠界文件建議，增加此欄位
+    ReturnURL: ecpayConfig.returnURL,
+    ClientBackURL: ecpayConfig.clientBackURL,
+    PaymentType: "aio",
   };
 
   const create = new ecpay_payment(options);
   const html = create.payment_client.aio_check_out_all(base_param);
 
   try {
-    // 將訂單資訊存入資料庫
     await db.insert(orders).values({
       merchantTradeNo: MerchantTradeNo,
       merchantTradeDate: MerchantTradeDate,
       totalAmount: TotalAmount,
       tradeDesc: TradeDesc,
       itemName: ItemName,
-      tradeStatus: "pending", // 初始狀態設為 pending
+      tradeStatus: "pending",
     });
 
     res.json({
@@ -76,7 +71,6 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// 處理 /return 的邏輯
 exports.handleReturn = async (req, res) => {
   console.log("綠界回傳資料 (POST):", req.body);
 
@@ -99,8 +93,7 @@ exports.handleReturn = async (req, res) => {
   res.send("1|OK");
 };
 
-// 處理 /clientReturn 的邏輯
 exports.clientReturn = (req, res) => {
   console.log("用戶跳轉回您的網站 (GET):", req.body, req.query);
-  res.render("return", { query: req.query }); // 假設您有設定視圖引擎
+  res.render("return", { query: req.query });
 };

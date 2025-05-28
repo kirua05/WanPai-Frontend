@@ -4,7 +4,7 @@ const {
   createOrder,
   handleReturn,
   clientReturn,
-} = require("../../controllers/ecpay/ecpayController");
+} = require("../controllers/ecpayController");
 router.post("/create-order", createOrder);
 
 router.post("/return", handleReturn);
