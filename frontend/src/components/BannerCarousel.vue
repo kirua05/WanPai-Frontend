@@ -27,6 +27,7 @@
 import { ref } from 'vue'
 import Carousel from 'primevue/carousel'
 
+
 const banners = ref([
   {
     title: '🔥 限時優惠中！',

@@ -26,7 +26,5 @@ defineProps({
   product: Object
 })
 
-const addToCart = (product) => {
-  console.log('加入購物車', product)
-}
+
 </script>
