@@ -11,9 +11,9 @@ function isValidEmail(email) {
 const register = async (req, res) => {
   console.log('收到註冊請求');
 
-  const { user_name, email, password } = req.body;
+  const { userName, email, password } = req.body;
 
-  if (!user_name || !email || !password) {
+  if (!userName || !email || !password) {
     return res.status(400).json({ error: '請填寫所有欄位' });
   }
 
@@ -34,9 +34,9 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.insert(users).values({
-      user_name,
+      userName,
       email,
-      password_hash: hashedPassword,
+      password: hashedPassword,
     });
 
     res.status(201).json({ message: '註冊成功' });
@@ -60,7 +60,7 @@ const login = async (req, res) => {
       return res.status(401).json({ error: '帳號或密碼錯誤' });
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user[0].password_hash);
+    const isPasswordValid = await bcrypt.compare(password, user[0].password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: '帳號或密碼錯誤' });
     }

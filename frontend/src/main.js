@@ -3,11 +3,14 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import App from './App.vue';
-import router from './router';
-import PrimeVue from 'primevue/config';
+import App from './App.vue'
+import router from './router'
+import PrimeVue from 'primevue/config'
 import Aura from '@primevue/themes/aura';
+import Carousel from 'primevue/carousel'
 import 'primeicons/primeicons.css'
+import Button from 'primevue/button'
+
 
 
 
@@ -20,7 +23,12 @@ app.use(PrimeVue,{
 
 app.use(createPinia())
 app.use(router)
-app.use(PrimeVue)
-
-
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura
+    }
+});
 app.mount('#app')
+
+app.component('Carousel', Carousel)
+app.component('Button', Button)
