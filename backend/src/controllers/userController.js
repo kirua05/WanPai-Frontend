@@ -11,9 +11,9 @@ function isValidEmail(email) {
 const register = async (req, res) => {
   console.log('收到註冊請求');
 
-  const { userName, email, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!userName || !email || !password) {
+  if (!username || !email || !password) {
     return res.status(400).json({ error: '請填寫所有欄位' });
   }
 
