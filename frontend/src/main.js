@@ -22,15 +22,11 @@ app.use(PrimeVue,{
 app.use(createPinia())
 app.use(router)
 app.use(PrimeVue)
-<<<<<<< HEAD
-
-=======
 // app.use(PrimeVue, {
 //   unstyled: true,
 // })
 app.use(PrimeVue, {
     theme:{ preset: Aura }
   })
->>>>>>> 7cb3bf8 (primeVue升版到V4)
 
 app.mount('#app')
