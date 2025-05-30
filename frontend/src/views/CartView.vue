@@ -168,7 +168,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, toRefs, onMounted, computed, watch, nextTick } from 'vue'
+import { ref, reactive, toRefs, onMounted, computed, watch } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import Button from '@/volt/Button.vue'
 import DataTable from 'primevue/datatable'
@@ -209,19 +209,9 @@ function calculateShipping() {
 }
 
 // 監聽選中項目變化以更新運費
-watch(selectedItems, (newItems) => {
+watch(selectedItems, () => {
   calculateShipping()
 }, { deep: true })
-
-// 優惠設定
-const threshold = 5000
-const discount = 222
-
-// 產生促案文字
-function getPromotionText(total) {
-  const gap = threshold - total
-  return gap > 0 ? `再 $${gap} 元，抵 $${discount} 元` : `已達標，折抵 $${discount} 元`
-}
 
 // 開發階段種子資料
 onMounted(() => {
