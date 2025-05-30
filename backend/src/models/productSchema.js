@@ -13,10 +13,10 @@ const productsTable = pgTable("products", {
   description: text().notNull(),
   img: varchar(),
   price: integer().notNull(),
-  status: varchar(),
+  status: varchar().notNull().default("draft"),
   currentStock: integer("current_stock"),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 module.exports = { productsTable };

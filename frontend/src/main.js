@@ -5,18 +5,22 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config'
+
 import Aura from '@primeuix/themes/aura'
 import 'primeicons/primeicons.css'
+import ToastService from 'primevue/toastservice'
+// Toast component is controlled via the ToastService that needs to be installed as an application plugin.
 
-const app = createApp(App);
+const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+
 app.use(PrimeVue, {
-    theme: {
-      preset: Aura,
-    },
-  })
+  theme: {
+    preset: Aura,
+  },
+})
+app.use(ToastService)
 
 app.mount('#app')
-
