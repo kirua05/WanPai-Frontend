@@ -1,4 +1,4 @@
-name: CI
+name: Frontend CI
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 jobs:
-  frontend-backend-ci:
+  frontend-ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,20 +19,11 @@ jobs:
         with:
           node-version: 18
 
-      # ===== Frontend =====
       - name: Install frontend dependencies
-        working-directory: ./frontend
         run: npm install
 
       - name: Lint frontend
-        working-directory: ./frontend
         run: npm run lint
 
       - name: Build frontend
-        working-directory: ./frontend
         run: npm run build
-
-      # ===== Backend =====
-      - name: Install backend dependencies
-        working-directory: ./backend
-        run: npm install

@@ -1,4 +1,4 @@
-import axios from '@/utils/axiosInstance'
+import axios from 'src/utils/axiosInstance'
 
 export const fetchAllProducts = async () => {
   try {

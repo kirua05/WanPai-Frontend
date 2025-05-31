@@ -91,7 +91,7 @@
 
 <script setup>
 import { ref, reactive, toRefs, onMounted, computed, watch } from 'vue'
-import { useCartStore } from '@/stores/cart'
+import { useCartStore } from 'src/stores/cart'
 import Button from '@/volt/Button.vue'
 import { testItems } from '@/components/CartItem.vue'
 

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import CommonTable from '@/components/CommonTable.vue'
-import { fetchAllProducts } from '@/api/admin/product'
+import { fetchAllProducts } from 'src/api/admin/product'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()

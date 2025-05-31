@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".", // Added baseUrl to allow non-relative paths
     "paths": {
-      "@/*": ["frontend/src/*"]
+      "@/*": ["src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

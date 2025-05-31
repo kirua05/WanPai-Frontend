@@ -25,6 +25,7 @@ export default defineConfig([
       'no-unused-vars': 'warn',
       'no-undef': 'warn',
       'no-console': 'warn',
+      'vue/multi-word-component-names': 'off'
     },
   },
 ])
