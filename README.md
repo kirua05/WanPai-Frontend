@@ -23,12 +23,10 @@ $ npm run dev
 ```
 ## 技術棧
 本專案使用了以下技術和工具：
-- Vue 3
+- Vue 3 + Vite
 - Tailwind CSS
 - PrimeVue
 - JavaScript (ES6+)
-- Vite
-- HTML5 / CSS3
 - 版本控制：Git
 ## 團隊成員
 
