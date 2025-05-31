@@ -1,13 +1,19 @@
 <script setup>
-defineProps({
-  product: Object,
-})
+  defineProps({
+    product: Object,
+  })
 </script>
 
 <template>
-  <div class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition-all relative">
+  <div
+    class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition-all relative"
+  >
     <!-- 商品圖片 -->
-    <img :src="product.image" alt="商品圖片" class="w-full h-64 object-contain bg-white" />
+    <img
+      :src="product.image"
+      alt="商品圖片"
+      class="w-full h-64 object-contain bg-white"
+    />
 
     <!-- 商品資訊 -->
     <div class="p-3">

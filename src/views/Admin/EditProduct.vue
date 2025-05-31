@@ -4,5 +4,5 @@
 </template>
 
 <script setup>
-import ProductForm from '@/components/ProductForm.vue'
+  import ProductForm from '@/components/ProductForm.vue'
 </script>

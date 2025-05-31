@@ -1,21 +1,21 @@
 <script setup>
-import { ref } from 'vue'
-import UploadFile from './UploadFile.vue'
+  import { ref } from 'vue'
+  import UploadFile from './UploadFile.vue'
 
-import AutoComplete from 'primevue/autocomplete'
-import Select from 'primevue/select'
-const selectedType = ref()
-const types = ref([
-  { name: 'ip', code: 'ip' },
-  { name: '系列', code: 'siries' },
-  { name: '品牌', code: 'brand' },
-])
-const value = ref(null)
-const items = ref([])
-// 商品標籤選擇 WIP
-const search = (event) => {
-  items.value = [...Array(10).keys()].map((item) => event.query + '-' + item)
-}
+  import AutoComplete from 'primevue/autocomplete'
+  import Select from 'primevue/select'
+  const selectedType = ref()
+  const types = ref([
+    { name: 'ip', code: 'ip' },
+    { name: '系列', code: 'siries' },
+    { name: '品牌', code: 'brand' },
+  ])
+  const value = ref(null)
+  const items = ref([])
+  // 商品標籤選擇 WIP
+  const search = (event) => {
+    items.value = [...Array(10).keys()].map((item) => event.query + '-' + item)
+  }
 </script>
 
 <template>

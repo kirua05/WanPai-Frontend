@@ -6,7 +6,12 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat'
 
 export default defineConfig([
   // 忽略資料夾（這不受 files 限制，會全域忽略）
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/src/volt/**']),
+  globalIgnores([
+    '**/dist/**',
+    '**/dist-ssr/**',
+    '**/coverage/**',
+    '**/src/volt/**',
+  ]),
 
   {
     files: ['**/*.{js,mjs,cjs,vue}'],
@@ -25,7 +30,7 @@ export default defineConfig([
       'no-unused-vars': 'warn',
       'no-undef': 'warn',
       'no-console': 'warn',
-      'vue/multi-word-component-names': 'off'
+      'vue/multi-word-component-names': 'off',
     },
   },
 ])

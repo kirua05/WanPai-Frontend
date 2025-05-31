@@ -8,13 +8,13 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   plugins: [
     vue(),
-    svgLoader(),         // 新增
+    svgLoader(), // 新增
     vueDevTools(),
-    tailwindcss()
+    tailwindcss(),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
 })

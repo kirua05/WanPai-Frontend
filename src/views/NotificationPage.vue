@@ -1,63 +1,65 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
-import Divider from 'primevue/divider'
+  import { ref, computed, watch } from 'vue'
+  import Divider from 'primevue/divider'
 
-const categories = ref([
-  { label: '訂單訊息', type: 'order' },
-  { label: '帳戶訊息', type: 'account' },
-  { label: '優惠相關', type: 'promo' },
-])
+  const categories = ref([
+    { label: '訂單訊息', type: 'order' },
+    { label: '帳戶訊息', type: 'account' },
+    { label: '優惠相關', type: 'promo' },
+  ])
 
-const selectedCategory = ref(null)
+  const selectedCategory = ref(null)
 
-const notifications = ref([
-  {
-    type: 'order',
-    time: '2024-09-16 10:04',
-    username: '會員名稱',
-    message: '您好，感謝您購買本站商品，商品訂單已成立',
-    orderId: '2024090801004604613',
-    read: false,
-    expanded: false,
-  },
-  {
-    type: 'promo',
-    time: '2024-09-01 08:20',
-    username: '系統訊息',
-    message: '限時優惠 88 折，立即搶購！',
-    orderId: '',
-    read: true,
-    expanded: false,
-  },
-])
+  const notifications = ref([
+    {
+      type: 'order',
+      time: '2024-09-16 10:04',
+      username: '會員名稱',
+      message: '您好，感謝您購買本站商品，商品訂單已成立',
+      orderId: '2024090801004604613',
+      read: false,
+      expanded: false,
+    },
+    {
+      type: 'promo',
+      time: '2024-09-01 08:20',
+      username: '系統訊息',
+      message: '限時優惠 88 折，立即搶購！',
+      orderId: '',
+      read: true,
+      expanded: false,
+    },
+  ])
 
-watch(selectedCategory, (newType) => {
-  notifications.value.forEach((n) => {
-    if (n.type === newType) {
-      n.expanded = true
-      n.read = true
-    }
+  watch(selectedCategory, (newType) => {
+    notifications.value.forEach((n) => {
+      if (n.type === newType) {
+        n.expanded = true
+        n.read = true
+      }
+    })
   })
-})
 
-const filteredNotifications = computed(() =>
-  notifications.value.filter((n) => n.type === selectedCategory.value),
-)
+  const filteredNotifications = computed(() =>
+    notifications.value.filter((n) => n.type === selectedCategory.value)
+  )
 
-const currentLabel = computed(
-  () => categories.value.find((c) => c.type === selectedCategory.value)?.label || '',
-)
+  const currentLabel = computed(
+    () =>
+      categories.value.find((c) => c.type === selectedCategory.value)?.label ||
+      ''
+  )
 
-function toggleExpanded(item) {
-  item.expanded = !item.expanded
-  if (!item.read) {
-    item.read = true
+  function toggleExpanded(item) {
+    item.expanded = !item.expanded
+    if (!item.read) {
+      item.read = true
+    }
   }
-}
 
-function hasUnread(type) {
-  return notifications.value.some((n) => n.type === type && !n.read)
-}
+  function hasUnread(type) {
+    return notifications.value.some((n) => n.type === type && !n.read)
+  }
 </script>
 
 <template>
@@ -98,14 +100,19 @@ function hasUnread(type) {
         </div>
 
         <div v-else class="w-full">
-          <div class="flex justify-between items-center text-gray-500 text-sm px-6">
+          <div
+            class="flex justify-between items-center text-gray-500 text-sm px-6"
+          >
             <span>{{ currentLabel }}</span>
             <span>共 {{ filteredNotifications.length }} 條</span>
           </div>
 
           <Divider class="my-2" />
 
-          <div v-if="filteredNotifications.length === 0" class="text-center py-10 text-gray-500">
+          <div
+            v-if="filteredNotifications.length === 0"
+            class="text-center py-10 text-gray-500"
+          >
             沒有新通知
           </div>
 
@@ -118,18 +125,26 @@ function hasUnread(type) {
           >
             <p class="text-sm text-gray-600 flex items-center gap-1.5 mb-1.5">
               {{ item.time }}
-              <span v-if="!item.read" class="pi pi-circle-fill text-xs text-red-600"></span>
+              <span
+                v-if="!item.read"
+                class="pi pi-circle-fill text-xs text-red-600"
+              ></span>
             </p>
 
             <div v-if="item.expanded">
               <p class="text-base mb-1">
-                <strong class="text-red-600 font-bold">{{ item.username }}</strong>
+                <strong class="text-red-600 font-bold">
+                  {{ item.username }}
+                </strong>
                 {{ item.message }}
               </p>
               <p class="text-sm text-gray-700">訂單編號：{{ item.orderId }}</p>
             </div>
 
-            <Divider v-if="index < filteredNotifications.length - 1" class="my-3" />
+            <Divider
+              v-if="index < filteredNotifications.length - 1"
+              class="my-3"
+            />
           </div>
         </div>
       </section>

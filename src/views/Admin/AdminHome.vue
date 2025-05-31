@@ -1,28 +1,28 @@
 <script setup>
-import InputText from '@/volt/InputText.vue'
-import Menu from '@/volt/Menu.vue'
-import { ref } from 'vue'
-// import { useRouter } from 'vue-router'
+  import InputText from '@/volt/InputText.vue'
+  import Menu from '@/volt/Menu.vue'
+  import { ref } from 'vue'
+  // import { useRouter } from 'vue-router'
 
-// const router = useRouter()
-const search = ref('')
-const items = ref([
-  {
-    label: '商品列表',
-    icon: 'pi pi-palette',
-    route: '/admin/products',
-  },
-  {
-    label: '訂單管理',
-    icon: 'pi pi-palette',
-    route: '/admin/orders',
-  },
-  {
-    label: '庫存管理',
-    icon: 'pi pi-palette',
-    route: '/admin/inventory',
-  },
-])
+  // const router = useRouter()
+  const search = ref('')
+  const items = ref([
+    {
+      label: '商品列表',
+      icon: 'pi pi-palette',
+      route: '/admin/products',
+    },
+    {
+      label: '訂單管理',
+      icon: 'pi pi-palette',
+      route: '/admin/orders',
+    },
+    {
+      label: '庫存管理',
+      icon: 'pi pi-palette',
+      route: '/admin/inventory',
+    },
+  ])
 </script>
 
 <template>
@@ -45,7 +45,12 @@ const items = ref([
   <div class="w-3xs fixed top-20 left-2">
     <Menu :model="items" class="h-screen">
       <template #item="{ item, props }">
-        <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+        <router-link
+          v-if="item.route"
+          v-slot="{ href, navigate }"
+          :to="item.route"
+          custom
+        >
           <a :href="href" v-bind="props.action" @click="navigate">
             <span>{{ item.label }}</span>
           </a>
