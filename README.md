@@ -26,7 +26,6 @@ $ npm run dev
 - Vue 3 + Vite
 - Tailwind CSS
 - PrimeVue
-- JavaScript (ES6+)
 - 版本控制：Git
 ## 團隊成員
 
