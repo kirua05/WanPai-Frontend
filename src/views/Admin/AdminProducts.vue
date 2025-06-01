@@ -12,6 +12,7 @@
     { title: '典藏', value: 'archived' },
   ])
   const productColumns = ref([
+    { field: 'img', header: '商品圖', style: 'width: 25%' },
     { field: 'name', header: '商品', style: 'width: 25%' },
     { field: 'status', header: '狀態', style: 'width: 25%' },
     { field: 'currentStock', header: '庫存數量', style: 'width: 25%' },

@@ -60,7 +60,6 @@
                 selection-mode="multiple"
                 header-style="width: 3rem"
               ></Column>
-              <Column field="img" style="width: 25%"></Column>
               <Column
                 v-for="col in columns"
                 :key="col.field"
