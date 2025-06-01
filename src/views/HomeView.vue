@@ -1,11 +1,11 @@
 <script setup>
   import BannerCarousel from '@/components/BannerCarousel.vue'
-  import ProductListWithPagination from '@/components/ProductListWithPagination.vue'
+  import PaginatedProductList from '@/components/PaginatedProductList.vue'
 </script>
 
 <template>
   <div>
     <BannerCarousel />
-    <ProductListWithPagination />
+    <PaginatedProductList />
   </div>
 </template>
