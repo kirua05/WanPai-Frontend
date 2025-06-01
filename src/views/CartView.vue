@@ -3,7 +3,10 @@
   import { useCartStore } from '@/stores/cart'
   import Button from '@/volt/Button.vue'
   import { testItems } from '@/components/CartItem.vue'
-
+  import axios from 'axios'
+  import { useToast } from 'primevue/usetoast'
+  import Toast from 'primevue/toast'
+  const toast = useToast()
   // Pinia 購物車狀態
   const cart = useCartStore()
 
@@ -91,15 +94,92 @@
     }
     calculateShipping()
   }
+
+  //結帳
+  async function checkout() {
+    if (selectedItems.value.length === 0) {
+      toast.add({
+        severity: 'error',
+        summary: '警告',
+        detail: '請選擇至少一項商品才能結帳！',
+        life: 3000,
+      })
+      return
+    }
+    const MerchantTradeNo = Date.now().toString()
+    const MerchantTradeDate = new Date()
+      .toLocaleString('zh-TW', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+      .replace(/\//g, '/')
+      .replace(/ /g, ' ')
+
+    const itemNames = selectedItems.value.map((item) => item.title).join('#')
+    const tradeDesc = `購物車商品結帳: ${itemNames}`
+
+    const payload = {
+      MerchantTradeNo: MerchantTradeNo,
+      MerchantTradeDate: MerchantTradeDate,
+      TotalAmount: (selectedTotal.value + shipping.value).toString(),
+      TradeDesc: tradeDesc,
+      ItemName: itemNames,
+    }
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/api/create-order',
+        payload
+      )
+
+      if (response.data && response.data.includes('<form id="_form_aiochk"')) {
+        const div = document.createElement('div')
+        div.innerHTML = response.data
+        document.body.appendChild(div)
+
+        const form = document.getElementById('_form_aiochk')
+        if (form) {
+          form.submit()
+        } else {
+          toast.add({
+            severity: 'error',
+            summary: '警告',
+            detail: '結帳失敗：無法找到綠界表單。',
+            life: 3000,
+          })
+        }
+      } else {
+        toast.add({
+          severity: 'error',
+          summary: '警告',
+          detail: '結帳失敗：後端回應格式不正確。',
+          life: 3000,
+        })
+      }
+    } catch {
+      toast.add({
+        severity: 'error',
+        summary: '警告',
+        detail: '結帳失敗，請稍後再試。',
+        life: 3000,
+      })
+    }
+  }
 </script>
 
 <template>
+  <Toast />
   <div class="bg-black text-white min-h-screen flex flex-col">
     <main class="flex-1 px-4 py-6 bg-gray-100 text-black">
       <div class="container mx-auto p-4 bg-white rounded shadow">
         <h1 class="text-2xl font-bold mb-6 text-gray-800">我的購物車</h1>
 
-        <!-- 購物車列表 -->
+        
         <div class="overflow-x-auto">
           <table class="min-w-full">
             <thead class="bg-gray-800 text-white">
@@ -178,12 +258,12 @@
           </table>
         </div>
 
-        <!-- 已選項目與合計 -->
+        
         <div class="mt-4 text-gray-700">
           已選 {{ selectedCount }} 項，合計 {{ formatCurrency(selectedTotal) }}
         </div>
 
-        <!-- 小計 & 運費 & 總金額 -->
+        
         <div class="mt-6 bg-white shadow rounded p-4">
           <div class="flex justify-between items-center border-b pb-2">
             <span>小計</span>
@@ -227,7 +307,7 @@
     color: #2d3748;
   }
 
-  /* 隐藏原生checkbox，使用自定义外观 */
+  
   input[type='checkbox'].custom-checkbox {
     appearance: none;
     -webkit-appearance: none;
@@ -243,7 +323,7 @@
       background 0.2s;
   }
   input[type='checkbox'].custom-checkbox:checked {
-    background: #38bdf8; /* sky-400，可自定 */
+    background: #38bdf8; 
     border-color: #38bdf8;
   }
   input[type='checkbox'].custom-checkbox:checked::after {
