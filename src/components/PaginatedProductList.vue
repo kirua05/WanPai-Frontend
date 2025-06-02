@@ -7,9 +7,8 @@
   import { RouterLink } from 'vue-router'
 
   const {
-    inputKeyword, // 用來綁搜尋欄
-    submitSearch, // 按下搜尋按鈕觸發
-    keyword, // 目前搜尋結果實際關鍵字（從 URL）
+    inputKeyword,
+    submitSearch,
     activeCategory,
     allCategories,
     paginatedProducts,
@@ -26,17 +25,14 @@
 
 <template>
   <div class="p-6 max-w-screen-xl mx-auto">
-    <!-- 分類 -->
     <ProductCategoryFilter
       :categories="allCategories"
       :activeCategory="activeCategory"
       @update:category="handleCategoryClick"
     />
 
-    <!-- 搜尋 -->
     <ProductSearchBar v-model="inputKeyword" @submit="submitSearch" />
 
-    <!-- 商品列表 -->
     <div ref="productSection" class="grid grid-cols-2 md:grid-cols-4 gap-6">
       <RouterLink
         v-for="item in paginatedProducts"
@@ -48,7 +44,6 @@
       </RouterLink>
     </div>
 
-    <!-- 查無商品 -->
     <div
       v-if="paginatedProducts.length === 0"
       class="text-center text-gray-400 py-10"
@@ -57,11 +52,9 @@
       <p>查無符合的商品</p>
     </div>
 
-    <!-- 分頁 -->
     <div
       class="flex flex-col md:flex-row justify-center items-center gap-4 py-6 text-sm"
     >
-      <!-- 分頁按鈕 -->
       <div class="flex items-center gap-1">
         <Button
           icon="pi pi-angle-double-left"
@@ -97,7 +90,6 @@
         />
       </div>
 
-      <!-- 跳轉頁碼 -->
       <div class="flex items-center gap-2">
         <span>前往</span>
         <input
