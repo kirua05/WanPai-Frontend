@@ -106,26 +106,11 @@
       })
       return
     }
-    const MerchantTradeNo = Date.now().toString()
-    const MerchantTradeDate = new Date()
-      .toLocaleString('zh-TW', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      })
-      .replace(/\//g, '/')
-      .replace(/ /g, ' ')
 
     const itemNames = selectedItems.value.map((item) => item.title).join('#')
     const tradeDesc = `購物車商品結帳: ${itemNames}`
 
     const payload = {
-      MerchantTradeNo: MerchantTradeNo,
-      MerchantTradeDate: MerchantTradeDate,
       TotalAmount: (selectedTotal.value + shipping.value).toString(),
       TradeDesc: tradeDesc,
       ItemName: itemNames,
@@ -179,7 +164,6 @@
       <div class="container mx-auto p-4 bg-white rounded shadow">
         <h1 class="text-2xl font-bold mb-6 text-gray-800">我的購物車</h1>
 
-        
         <div class="overflow-x-auto">
           <table class="min-w-full">
             <thead class="bg-gray-800 text-white">
@@ -258,12 +242,10 @@
           </table>
         </div>
 
-        
         <div class="mt-4 text-gray-700">
           已選 {{ selectedCount }} 項，合計 {{ formatCurrency(selectedTotal) }}
         </div>
 
-        
         <div class="mt-6 bg-white shadow rounded p-4">
           <div class="flex justify-between items-center border-b pb-2">
             <span>小計</span>
@@ -307,7 +289,6 @@
     color: #2d3748;
   }
 
-  
   input[type='checkbox'].custom-checkbox {
     appearance: none;
     -webkit-appearance: none;
@@ -323,7 +304,7 @@
       background 0.2s;
   }
   input[type='checkbox'].custom-checkbox:checked {
-    background: #38bdf8; 
+    background: #38bdf8;
     border-color: #38bdf8;
   }
   input[type='checkbox'].custom-checkbox:checked::after {
