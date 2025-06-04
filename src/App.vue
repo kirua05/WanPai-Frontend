@@ -1,13 +1,14 @@
 <script setup>
-  import { RouterLink, RouterView } from 'vue-router'
+import Navbar from '@/components/layout/NavBar.vue'
+import Footer from '@/components/layout/Footer.vue'
 </script>
 
 <template>
-  <nav class="p-4 bg-gray-100 mb-4">
-    <RouterLink to="/admin" class="mr-4">後台首頁</RouterLink>
-    <RouterLink to="/">首頁</RouterLink>
-    <RouterLink to="/productdetailpage" class="ml-4">Product</RouterLink>
-  </nav>
+  <Navbar />
 
+  <main class="mt-6 bg-gray-50 min-h-screen">
   <RouterView />
+  </main>
+
+  <Footer />
 </template>
