@@ -9,7 +9,7 @@ export function useProductList() {
   const allCategories = ['全部', ...categories]
   const itemsPerPage = 20
 
-  // ✅ 狀態來自 URL
+
   const activeCategory = computed({
     get: () => route.query.category || '全部',
     set: (val) => {
@@ -26,10 +26,10 @@ export function useProductList() {
     },
   })
 
-  // ✅ 搜尋欄位輸入的暫存值
+
   const inputKeyword = ref(route.query.keyword || '')
 
-  // ✅ 關鍵補強：當 URL keyword 改變時同步到輸入欄
+
   watch(
     () => route.query.keyword,
     (val) => {
@@ -37,7 +37,7 @@ export function useProductList() {
     }
   )
 
-  // ✅ 點搜尋按鈕 → 更新 URL query（觸發篩選）
+
   function submitSearch() {
     router.push({
       query: {
@@ -48,7 +48,7 @@ export function useProductList() {
     })
   }
 
-  // ✅ 假資料初始化
+ 
   const products = ref([])
   for (let i = 1; i <= 60; i++) {
     const category = categories[(i - 1) % categories.length]
@@ -66,7 +66,7 @@ export function useProductList() {
     if (activeCategory.value !== '全部') {
       result = result.filter((p) => p.category === activeCategory.value)
     }
-    if (keyword.value.trim().length >= 2) {
+    if (keyword.value.trim().length >= 1) {
       result = result.filter((p) =>
         p.name.toLowerCase().includes(keyword.value.toLowerCase())
       )
