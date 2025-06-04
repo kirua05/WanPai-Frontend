@@ -1,3 +1,7 @@
+<script setup>
+
+</script>
+
 <template>
   <footer class="w-full bg-gray-100 text-center text-sm py-2 shadow mt-10">
     <span class="text-gray-600">© 2025 WanPai. All rights reserved.</span>
@@ -9,5 +13,3 @@
   </footer>
 </template>
 
-<script setup>
-</script>

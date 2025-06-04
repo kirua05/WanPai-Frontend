@@ -1,3 +1,19 @@
+<script setup>
+import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import Drawer from 'primevue/drawer'
+import Button from 'primevue/button'
+
+const visible = ref(false)
+
+const menuItems = [
+  { label: '後台首頁', to: '/admin' },
+  { label: '首頁', to: '/' },
+  { label: '商品詳情', to: '/productdetailpage' },
+]
+</script>
+
+
 <template>
   <header class="bg-white shadow-sm">
     <div class="max-w-screen-xl mx-auto flex items-center justify-between h-16 px-6">
@@ -30,7 +46,7 @@
     </div>
 
 
-    <Sidebar v-model:visible="visible" position="right">
+    <Drawer v-model:visible="visible" position="right">
       <template #header>
         <div class="text-lg font-semibold">選單</div>
       </template>
@@ -46,21 +62,7 @@
         </RouterLink>
         <Button label="登入" severity="primary" class="mt-4" @click="visible = false" />
       </div>
-    </Sidebar>
+    </Drawer>
   </header>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
-import Sidebar from 'primevue/sidebar'
-import Button from 'primevue/button'
-
-const visible = ref(false)
-
-const menuItems = [
-  { label: '後台首頁', to: '/admin' },
-  { label: '首頁', to: '/' },
-  { label: '商品詳情', to: '/productdetailpage' },
-]
-</script>
