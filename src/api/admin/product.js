@@ -1,6 +1,6 @@
 import axios from '@/utils/axiosInstance'
 
-export const fetchAllProducts = async () => {
+const fetchAllProducts = async () => {
   try {
     const res = await axios.get('/admin/products')
     return res.data
@@ -9,3 +9,14 @@ export const fetchAllProducts = async () => {
     return err
   }
 }
+
+const createProduct = async (data) => {
+  try {
+    const res = await axios.post('/admin/products', data)
+    return res
+  } catch (err) {
+    return err
+  }
+}
+
+export { fetchAllProducts, createProduct }

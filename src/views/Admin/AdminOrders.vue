@@ -76,12 +76,14 @@
       </button>
     </div>
   </div>
-  <CommonTable
-    :tabs="orderTabs"
-    :columns="orderColumns"
-    :value="orderValue"
-    scrollable
-    selectable
-    scroll-height="500px"
-  />
+  <div class="mr-8">
+    <CommonTable
+      :tabs="orderTabs"
+      :columns="orderColumns"
+      :value="orderValue"
+      scrollable
+      selectable
+      scroll-height="500px"
+    />
+  </div>
 </template>

@@ -49,12 +49,14 @@
       </button>
     </div>
   </div>
-  <CommonTable
-    :tabs="productTabs"
-    :columns="productColumns"
-    :value="productValue"
-    scrollable
-    selectable
-    scroll-height="500px"
-  />
+  <div class="mr-8">
+    <CommonTable
+      :tabs="productTabs"
+      :columns="productColumns"
+      :value="productValue"
+      scrollable
+      selectable
+      scroll-height="500px"
+    />
+  </div>
 </template>
