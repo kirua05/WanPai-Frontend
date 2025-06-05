@@ -4,6 +4,8 @@
   import AutoComplete from 'primevue/autocomplete'
   import Select from 'primevue/select'
   import { createProduct } from '@/api/admin/product'
+  import { QuillEditor } from '@vueup/vue-quill'
+  import '@vueup/vue-quill/dist/vue-quill.snow.css'
   const selectedType = ref()
   const types = ref([
     { name: 'ip', code: 'ip' },
@@ -77,12 +79,7 @@
 
     <div>
       <label class="font-bold mb-2 block" for="description">商品描述</label>
-      <textarea
-        v-model="form.description"
-        class="w-240 h-80 bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary px-3 py-2 transition-colors duration-200 resize-none"
-        name="description"
-        id="description"
-      ></textarea>
+      <QuillEditor theme="snow" />
     </div>
 
     <div>
