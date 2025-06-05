@@ -26,7 +26,7 @@
 </script>
 
 <template>
-  <header class="w-full fixed top-0 left-0 right-0 p-4 bg-amber-950">
+  <header class="w-full fixed top-0 left-0 right-0 p-4 z-10 bg-amber-950">
     <div class="w-2/3 flex justify-between items-center">
       <div>
         <img src="" alt="logo" />
