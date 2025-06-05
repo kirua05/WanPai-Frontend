@@ -79,7 +79,12 @@
 
     <div>
       <label class="font-bold mb-2 block" for="description">商品描述</label>
-      <QuillEditor theme="snow" />
+      <QuillEditor
+        theme="snow"
+        toolbar="essential"
+        contentType="html"
+        v-model:content="form.description"
+      />
     </div>
 
     <div>
