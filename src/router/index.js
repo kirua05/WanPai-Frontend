@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ProductDetailPage from '../components/ProductDetailPage.vue'
 import CartView from '@/views/CartView.vue'
 import HomeView from '@/views/HomeView.vue'
-import LoginSignup from '@/views/ LoginSignup.vue'
+import LoginSignup from '@/views/LoginSignup.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,7 +67,7 @@ const router = createRouter({
     {
       path: '/orders',
       name: 'Orders',
-      component: () => import('@/views/OrderManagement.vue')
+      component: () => import('@/views/OrderManagement.vue'),
     },
     {
       path: '/loginsignup',

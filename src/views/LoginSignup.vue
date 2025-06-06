@@ -36,7 +36,7 @@
 
 <template>
   <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg mt-[-100px]">
       <h2 class="text-center text-2xl font-semibold mb-6">
         {{ isLogin ? '登入' : '註冊' }}
       </h2>
