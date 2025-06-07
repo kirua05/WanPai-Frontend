@@ -1,4 +1,4 @@
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 export function useProductList() {
@@ -36,12 +36,10 @@ export function useProductList() {
     },
   })
 
-  // ⭐ 初始化：帶入 keyword 到 input，但不做 computed
   if (route.query.keyword) {
     inputKeyword.value = route.query.keyword
   }
 
-  // ✅ submit 時才真的觸發搜尋，並滾動到商品區
   function submitSearch() {
     if (isComposing.value) return
 

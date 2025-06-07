@@ -20,7 +20,6 @@
 
   function clearKeyword() {
     emit('update:modelValue', '')
-    emit('submit')
   }
 </script>
 
