@@ -16,33 +16,27 @@
   // 選中的商品數量
   const showShippingDetails = ref(false)
 
+  //根據orders資料庫要的屬性做命名
   const shippingForm = reactive({
-    recepientName: '',
-    recepientPhone: '',
+    recipientName: '',
+    recipientPhone: '',
     shippingAddress: '',
   })
 
   //判斷名字不能為空
-  const isRecepientNameValid = computed(
-    () => shippingForm.recepientName.trim() !== ''
+  const isRecipientNameValid = computed(
+    () => shippingForm.recipientName.trim() !== ''
   )
   //手機號碼要照正確的格式
-  const isRecepientPhoneValid = computed(() => {
+  const isRecipientPhoneValid = computed(() => {
     const cellphoneRegex = /^09\d{8}$/
-    return cellphoneRegex.test(shippingForm.recepientPhone)
+    return cellphoneRegex.test(shippingForm.recipientPhone)
   })
   //地址不能為空
   const isShippingAddressValid = computed(
     () => shippingForm.shippingAddress.trim() !== ''
   )
   //上面這些判斷都還沒生效，要加在最後的checkout事件監聽當中，上面這些有一項沒過就不會觸發打API和後續的動作
-  const isShippingFormValid = computed(() => {
-    return (
-      isRecepientNameValid.value &&
-      isRecepientPhoneValid.value &&
-      isShippingAddressValid.value
-    )
-  })
 
   // 計算選中項目數量和金額
   const selectedCount = computed(() => selectedItems.value.length)
@@ -131,9 +125,9 @@
       if (newVal.length === 0) {
         showShippingDetails.value = false
         //關閉(收貨詳細資訊)清除底下input框輸入過的內容
-        shippingForm.recepientName,
-          shippingForm.recepientPhone,
-          (shippingForm.shippingAddress = '')
+        shippingForm.recipientName = ''
+        shippingForm.recipientPhone = ''
+        shippingForm.shippingAddress = ''
       }
     },
     { deep: true }
@@ -141,7 +135,7 @@
 
   //結帳
   async function ecpayCheckout() {
-    if (!isRecepientNameValid.value) {
+    if (!isRecipientNameValid.value) {
       toast.add({
         severity: 'error',
         summary: '輸入錯誤',
@@ -151,7 +145,7 @@
       return
     }
 
-    if (!isRecepientPhoneValid.value) {
+    if (!isRecipientPhoneValid.value) {
       toast.add({
         severity: 'error',
         summary: '輸入錯誤',
@@ -329,7 +323,7 @@
           <label for="username" class="font-bold">姓名</label>
           <InputText
             id="username"
-            v-model="shippingForm.recepientName"
+            v-model="shippingForm.recipientName"
             aria-describedby="username-help"
             class="w-lg p-2 outline rounded-lg"
             required=""
@@ -337,7 +331,7 @@
           <label for="cellphone" class="font-bold">手機號碼</label>
           <InputText
             id="cellphone"
-            v-model="shippingForm.recepientPhone"
+            v-model="shippingForm.recipientPhone"
             aria-describedby="cellphone-help"
             class="w-lg p-2 outline rounded-lg mg-1"
             required=""
