@@ -64,18 +64,15 @@ const shippingDetailsMove = ref(null)
     }, 0)
   })
 
-  // 運費狀態
   const state = reactive({
     shipping: 0,
   })
 
-  // TODO: 運費邏輯
   function calculateShipping() {
     state.shipping =
       selectedItems.value && selectedItems.value.length > 0 ? 100 : 0
   }
 
-  // 監聽選中項目變化以更新運費
   watch(
     selectedItems,
     () => {
@@ -103,7 +100,6 @@ const shippingDetailsMove = ref(null)
 
   const { shipping } = toRefs(state)
 
-  // 全選
   function toggleSelectAll(event) {
     const isChecked = event.target.checked
     if (isChecked) {
@@ -126,7 +122,6 @@ const shippingDetailsMove = ref(null)
     )
   }
 
-  // 結帳
   async function ecpayCheckout() {
     if (!isRecipientNameValid.value) {
       toast.add({
@@ -187,7 +182,6 @@ const shippingDetailsMove = ref(null)
     }
   }
 
-  // 單選
   function toggleSelectItem(item, event) {
     const isChecked = event.target.checked
     if (isChecked) {
@@ -324,7 +318,6 @@ const shippingDetailsMove = ref(null)
     </main>
   </div>
 
-  <!-- 收貨詳細資訊 -->
   <div
     class="bg-black text-white flex flex-col"
     v-if="showShippingDetails"
@@ -360,7 +353,7 @@ const shippingDetailsMove = ref(null)
             required=""
           />
         </div>
-        <!-- 總金額 -->
+
         <div class="flex justify-between items-center pt-2 border-t mt-4">
           <span class="font-semibold">總金額 (TWD)</span>
           <span class="text-xl font-bold">
