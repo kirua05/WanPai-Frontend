@@ -46,7 +46,7 @@
 
     <h1 class="mt-4 text-2xl font-bold">{{ product.name }}</h1>
 
-    <p class="mb-2 text-gray-500">{{ product.description }}</p>
+    <p class="mb-2 text-gray-500" v-html="product.description"></p>
 
     <div class="mb-4 text-xl">
       <span
