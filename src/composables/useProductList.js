@@ -1,4 +1,4 @@
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 export function useProductList() {
@@ -18,9 +18,10 @@ export function useProductList() {
   const allCategories = ['全部', ...categories]
   const itemsPerPage = 20
 
-  const inputKeyword = ref('')
-  const isComposing = ref(false)
   const productSection = ref(null)
+  const pageInput = ref('')
+  const inputKeyword = ref('')
+  const searchKeyword = computed(() => route.query.keyword || '')
 
   const activeCategory = computed({
     get: () => route.query.category || '全部',
@@ -36,26 +37,17 @@ export function useProductList() {
     },
   })
 
-  if (route.query.keyword) {
-    inputKeyword.value = route.query.keyword
-  }
+  inputKeyword.value = searchKeyword.value
 
   function submitSearch() {
-    if (isComposing.value) return
-
+    const keyword = inputKeyword.value.trim()
     router.push({
+      path: '/',
       query: {
         ...route.query,
-        keyword: inputKeyword.value,
+        keyword: keyword || undefined,
         page: 1,
       },
-    })
-
-    nextTick(() => {
-      productSection.value?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
     })
   }
 
@@ -65,6 +57,7 @@ export function useProductList() {
   }
 
   const products = ref([])
+
   const brands = [
     '鋼彈',
     '海賊王',
@@ -79,8 +72,8 @@ export function useProductList() {
     '東京復仇者',
     '刀劍神域',
   ]
-  const items = categories
 
+  const items = categories
   for (let i = 1; i <= 60; i++) {
     const brand = brands[i % brands.length]
     const item = items[i % items.length]
@@ -93,14 +86,17 @@ export function useProductList() {
 
   const filteredProducts = computed(() => {
     let result = products.value
+
+    const keyword = searchKeyword.value.toLowerCase()
+
     if (activeCategory.value !== '全部') {
       result = result.filter((p) => p.category === activeCategory.value)
     }
-    if (inputKeyword.value.trim().length >= 1) {
-      result = result.filter((p) =>
-        p.name.toLowerCase().includes(inputKeyword.value.toLowerCase())
-      )
+
+    if (keyword.length > 0) {
+      result = result.filter((p) => p.name.toLowerCase().includes(keyword))
     }
+
     return result
   })
 
@@ -127,7 +123,6 @@ export function useProductList() {
     activeCategory.value = category
   }
 
-  const pageInput = ref('')
   function jumpToPage() {
     const page = parseInt(pageInput.value, 10)
     if (!isNaN(page)) {
@@ -159,6 +154,5 @@ export function useProductList() {
     jumpToPage,
     pageButtons,
     productSection,
-    isComposing,
   }
 }

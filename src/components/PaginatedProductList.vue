@@ -34,7 +34,7 @@
     <ProductSearchBar
       v-model="inputKeyword"
       @submit="submitSearch"
-      @reset="resetSearch"
+      @clear="resetSearch"
     />
 
     <div ref="productSection" class="grid grid-cols-2 md:grid-cols-4 gap-6">
