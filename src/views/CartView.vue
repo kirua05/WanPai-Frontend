@@ -3,7 +3,7 @@
   import { useCartStore } from '@/stores/cart'
   import Button from '@/volt/Button.vue'
   import { testItems } from '@/components/CartItem.vue'
-  import axios from 'axios'
+  import { createEcpayOrder } from '@/api/createEcpayOrder'
   import { useToast } from 'primevue/usetoast'
   import Toast from 'primevue/toast'
   const toast = useToast()
@@ -96,7 +96,7 @@
   }
 
   //結帳
-  async function checkout() {
+  async function ecpayCheckout() {
     if (selectedItems.value.length === 0) {
       toast.add({
         severity: 'error',
@@ -116,44 +116,7 @@
       ItemName: itemNames,
     }
 
-    try {
-      const response = await axios.post(
-        'http://localhost:3000/api/create-order',
-        payload
-      )
-
-      if (response.data && response.data.includes('<form id="_form_aiochk"')) {
-        const div = document.createElement('div')
-        div.innerHTML = response.data
-        document.body.appendChild(div)
-
-        const form = document.getElementById('_form_aiochk')
-        if (form) {
-          form.submit()
-        } else {
-          toast.add({
-            severity: 'error',
-            summary: '警告',
-            detail: '結帳失敗：無法找到綠界表單。',
-            life: 3000,
-          })
-        }
-      } else {
-        toast.add({
-          severity: 'error',
-          summary: '警告',
-          detail: '結帳失敗：後端回應格式不正確。',
-          life: 3000,
-        })
-      }
-    } catch {
-      toast.add({
-        severity: 'error',
-        summary: '警告',
-        detail: '結帳失敗，請稍後再試。',
-        life: 3000,
-      })
-    }
+    await createEcpayOrder(payload, toast)
   }
 </script>
 
@@ -267,7 +230,7 @@
               icon="pi pi-shopping-cart"
               severity="primary"
               size="large"
-              @click="checkout"
+              @click="ecpayCheckout"
               :pt="{
                 root: 'bg-primary hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center cursor-pointer',
                 icon: 'mr-2 order-first',
