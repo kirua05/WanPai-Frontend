@@ -1,16 +1,16 @@
 <script setup>
-import Button from 'primevue/button'
+  import Button from 'primevue/button'
 
-defineProps({
-  categories: Array,
-  activeCategory: String
-})
+  defineProps({
+    categories: Array,
+    activeCategory: String,
+  })
 
-const emit = defineEmits(['update:category'])
+  const emit = defineEmits(['update:category'])
 
-function setCategory(c) {
-  emit('update:category', c)
-}
+  function setCategory(c) {
+    emit('update:category', c)
+  }
 </script>
 
 <template>

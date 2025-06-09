@@ -1,13 +1,10 @@
 <script setup>
   import { ref, computed } from 'vue'
   import InputText from 'primevue/inputtext'
-  import Select from 'primevue/select';
+  import Select from 'primevue/select'
   import DataTable from 'primevue/datatable'
   import Column from 'primevue/column'
   import Button from 'primevue/button'
-
-
-
 
   const searchOrderId = ref('')
   const selectedDateRange = ref('')
@@ -106,10 +103,9 @@
   }
 </script>
 
-
 <template>
   <div class="p-8 max-w-screen-xl mx-auto">
-    <div class="mb-6 flex  md:flex-row md:items-end gap-4 justify-end ml-auto">
+    <div class="mb-6 flex md:flex-row md:items-end gap-4 justify-end ml-auto">
       <div class="flex flex-col w-full md:w-[230px]">
         <label for="orderId" class="text-sm mb-1">訂單搜尋</label>
         <InputText
@@ -120,19 +116,19 @@
         />
       </div>
 
-    <div class="flex flex-col w-full md:w-[230px]">
-      <label for="dateRange" class="text-sm mb-1">日期</label>
-      <Select
-        id="dateRange"
-        v-model="selectedDateRange"
-        :options="dateOptions"
-        optionLabel="label"
-        optionValue="value"
-        placeholder="全部時間"
-        class="w-full"
-      />
+      <div class="flex flex-col w-full md:w-[230px]">
+        <label for="dateRange" class="text-sm mb-1">日期</label>
+        <Select
+          id="dateRange"
+          v-model="selectedDateRange"
+          :options="dateOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="全部時間"
+          class="w-full"
+        />
+      </div>
     </div>
-  </div>
 
     <h2 class="text-2xl mb-6">我的訂單</h2>
     <DataTable
@@ -185,4 +181,3 @@
     </DataTable>
   </div>
 </template>
-

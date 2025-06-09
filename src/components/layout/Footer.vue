@@ -1,6 +1,4 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
   <footer class="w-full bg-gray-100 text-center text-sm py-2 shadow mt-10">
@@ -12,4 +10,3 @@
     </div>
   </footer>
 </template>
-
