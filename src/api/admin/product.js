@@ -2,7 +2,7 @@ import axios from '@/utils/axiosInstance'
 
 const fetchAllProducts = async () => {
   try {
-    const res = await axios.get('/admin/products')
+    const res = await axios.get('/products')
     return res.data
   } catch (err) {
     // 之後會再加入錯誤訊息框

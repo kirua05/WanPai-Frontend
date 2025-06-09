@@ -1,8 +1,99 @@
 <template>
-  <h2 class="text-2xl">新增商品</h2>
-  <ProductForm />
+  <h2 class="text-2xl">
+    {{ isCreateMode ? '新增商品' : isEditMode ? '編輯商品' : '庫存管理' }}
+  </h2>
+  <label class="block" for="title">商品名稱</label>
+  <input
+    type="text"
+    id="title"
+    class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary px-3 py-2 transition-colors duration-200"
+  />
+  <label class="block" for="description">商品描述</label>
+  <textarea
+    class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary px-3 py-2 transition-colors duration-200 resize-none"
+    name="description"
+    id="description"
+  ></textarea>
+  <label class="block" for="image">商品圖片</label>
+  <UploadFile />
+
+  <label class="block" for="price">商品價格</label>
+  <input
+    type="number"
+    id="price"
+    min="0"
+    class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary px-3 py-2 transition-colors duration-200"
+  />
+  <!-- Tag type selector -->
+
+  <label class="block" for="stock">目前庫存數</label>
+  <input
+    type="number"
+    id="stock"
+    min="0"
+    class="block bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary px-3 py-2 transition-colors duration-200"
+  />
+
+  <Select
+    v-model="selectedType"
+    :options="types"
+    optionLabel="name"
+    placeholder="選擇標籤類型"
+    class="w-full md:w-56"
+  />
+  <label for="multiple-ac-2" class="font-bold mt-8 mb-2 block">商品標籤</label>
+
+  <AutoComplete
+    v-model="value"
+    inputId="multiple-ac-2"
+    multiple
+    fluid
+    :typeahead="false"
+    :suggestions="items"
+    field="name"
+    @complete="search"
+    @customItem="handleCustomTag"
+  />
 </template>
 
 <script setup>
-  import ProductForm from '@/components/ProductForm.vue'
+  import { useRoute } from 'vue-router'
+  import { ref, onMounted } from 'vue'
+  import UploadFile from '@/components/UploadFile.vue'
+  import AutoComplete from 'primevue/autocomplete'
+  import Select from 'primevue/select'
+
+  const route = useRoute()
+  const mode = route.query.mode || 'edit' // 預設是 edit
+  const productId = route.params.id || null
+
+  // const showStockEditor = mode === 'stock'
+  const isCreateMode = mode === 'create'
+  const isEditMode = mode === 'edit'
+  const formData = ref({
+    name: '',
+    price: 0,
+    stock: 0,
+  })
+
+  const selectedType = ref()
+  const types = ref([
+    { name: 'ip', code: 'ip' },
+    { name: '系列', code: 'siries' },
+    { name: '品牌', code: 'brand' },
+  ])
+  const value = ref(null)
+  const items = ref([])
+  // 商品標籤選擇 WIP
+  const search = (event) => {
+    items.value = [...Array(10).keys()].map((item) => event.query + '-' + item)
+  }
+
+  onMounted(async () => {
+    if (!isCreateMode && productId) {
+      // 從 API 取得商品資料
+      const res = await fetchProductById(productId)
+      formData.value = res
+    }
+  })
 </script>

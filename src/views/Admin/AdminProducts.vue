@@ -1,10 +1,15 @@
 <script setup>
   import { ref } from 'vue'
   import CommonTable from '@/components/CommonTable.vue'
-  // import { fetchAllProducts } from '@/api/admin/product'
-  // import { onMounted } from 'vue'
+  import { fetchAllProducts } from '@/api/admin/product'
+  import { onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   const router = useRouter()
+  const statusTextMap = {
+    active: '上架中',
+    draft: '草稿',
+    archived: '典藏',
+  }
   const productTabs = ref([
     { title: '全部', value: 'all' },
     { title: '上架中', value: 'active' },
@@ -16,25 +21,18 @@
     { field: 'name', header: '商品', style: 'width: 25%', sortable: true },
     { field: 'status', header: '狀態', style: 'width: 25%', sortable: true },
     {
-      field: 'currentStock',
+      field: 'stockOnHand',
       header: '庫存數量',
       style: 'width: 25%',
       sortable: true,
     },
   ])
 
-  const productValue = ref([
-    {
-      img: 'f230fh0g3',
-      name: '路卡力歐',
-      status: '上架中',
-      currentStock: 24,
-    },
-  ])
-  // onMounted(async () => {
-  //   const res = await fetchAllProducts()
-  //   productValue.value = res
-  // })
+  const productValue = ref([])
+  onMounted(async () => {
+    const res = await fetchAllProducts()
+    productValue.value = res
+  })
 </script>
 
 <template>
@@ -43,7 +41,12 @@
     <div class="card flex justify-center">
       <button
         class="text-md text-white px-3 py-2 border-surface-200 rounded-md bg-primary cursor-pointer"
-        @click="() => router.push('/admin/products/create')"
+        @click="
+          router.push({
+            path: '/admin/products/edit',
+            query: { mode: 'create' },
+          })
+        "
       >
         新增商品
       </button>
@@ -57,6 +60,23 @@
       scrollable
       selectable
       scroll-height="500px"
-    />
+    >
+      <template #body-status="{ data }">
+        {{ statusTextMap[data.status] || '未知' }}
+      </template>
+      <template #body-name="{ data }">
+        <a
+          class="w-full underline text-primary cursor-pointer"
+          @click="
+            router.push({
+              path: `/admin/products/edit/${data.id}`,
+              query: { mode: 'edit' },
+            })
+          "
+        >
+          {{ data.name }}
+        </a>
+      </template>
+    </CommonTable>
   </div>
 </template>
