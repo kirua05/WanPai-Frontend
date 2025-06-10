@@ -58,8 +58,11 @@
             </span>
           </div>
         </RouterLink>
-        <RouterLink to="/loginsignup">
-          <Button label="登入" severity="primary" size="small" />
+      </div>
+
+      <div class="hidden md:block">
+        <RouterLink to="/authform">
+         <Button label="登入" severity="primary" size="small" />
         </RouterLink>
       </div>
 
