@@ -37,24 +37,7 @@ export function useProductList() {
     },
   })
 
-<<<<<<< HEAD
   inputKeyword.value = searchKeyword.value
-=======
-  const inputKeyword = ref(route.query.keyword || '')
-  const productSection = ref(null)
-
-  watch(
-    () => route.query.keyword,
-    async (val) => {
-      inputKeyword.value = val || ''
-      await nextTick()
-      productSection.value?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
-  )
->>>>>>> 4fd57d7 (chore: format files with Prettier)
 
   function submitSearch() {
     const keyword = inputKeyword.value.trim()
