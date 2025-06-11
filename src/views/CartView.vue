@@ -1,5 +1,13 @@
 <script setup>
-  import { ref, reactive, toRefs, onMounted, computed, watch } from 'vue'
+  import {
+    ref,
+    reactive,
+    toRefs,
+    onMounted,
+    computed,
+    watch,
+    nextTick,
+  } from 'vue'
   import { useCartStore } from '@/stores/cart'
   import Button from '@/volt/Button.vue'
   import { testItems } from '@/components/CartItem.vue'
@@ -23,22 +31,35 @@
     shippingAddress: '',
   })
 
-  //判斷名字不能為空
-  const isRecipientNameValid = computed(
-    () => shippingForm.recipientName.trim() !== ''
-  )
-  //手機號碼要照正確的格式
+  const shippingDetailsMove = ref(null)
+
+  const isRecipientNameValid = computed(() => {
+    if (shippingForm.recipientName.trim() === '') {
+      return false
+    }
+    const chineseRegex = /^[\u4e00-\u9fa5]{2,}$/
+    return chineseRegex.test(shippingForm.recipientName.trim())
+  })
+
   const isRecipientPhoneValid = computed(() => {
+    if (shippingForm.recipientPhone.trim() === '') {
+      return false
+    }
     const cellphoneRegex = /^09\d{8}$/
     return cellphoneRegex.test(shippingForm.recipientPhone)
   })
-  //地址不能為空
-  const isShippingAddressValid = computed(
-    () => shippingForm.shippingAddress.trim() !== ''
-  )
-  //上面這些判斷都還沒生效，要加在最後的checkout事件監聽當中，上面這些有一項沒過就不會觸發打API和後續的動作
 
-  // 計算選中項目數量和金額
+  const isShippingAddressValid = computed(() => {
+    const address = shippingForm.shippingAddress.trim()
+
+    if (address === '') {
+      return false
+    }
+
+    const chineseCharacterRegex = /[\u4e00-\u9fa5]/
+    return chineseCharacterRegex.test(address)
+  })
+
   const selectedCount = computed(() => selectedItems.value.length)
 
   const selectedTotal = computed(() => {
@@ -139,7 +160,7 @@
       toast.add({
         severity: 'error',
         summary: '輸入錯誤',
-        detail: '收件人姓名不能為空！',
+        detail: '收件人姓名不能為空，並至少輸入兩個中文字！',
         life: 3000,
       })
       return
@@ -159,7 +180,7 @@
       toast.add({
         severity: 'error',
         summary: '輸入錯誤',
-        detail: '收件地址不能為空！',
+        detail: '收件地址不能為空,並輸入中文地址',
         life: 3000,
       })
       return
@@ -185,7 +206,12 @@
         life: 3000,
       })
     } else {
-      return (showShippingDetails.value = true)
+      showShippingDetails.value = true
+      nextTick(() => {
+        if (shippingDetailsMove.value) {
+          shippingDetailsMove.value.scrollIntoView({ behavior: 'smooth' })
+        }
+      })
     }
   }
 </script>
@@ -314,7 +340,11 @@
   </div>
 
   <!-- 收貨詳細資訊 -->
-  <div class="bg-black text-white flex flex-col" v-if="showShippingDetails">
+  <div
+    class="bg-black text-white flex flex-col"
+    v-if="showShippingDetails"
+    ref="shippingDetailsMove"
+  >
     <main class="flex-1 px-4 py-6 bg-gray-100 text-black">
       <div class="container mx-auto p-4 bg-white rounded shadow">
         <h1 class="text-2xl font-bold mb-6 text-gray-800">收貨詳細資訊</h1>
