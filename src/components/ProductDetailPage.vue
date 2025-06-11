@@ -2,7 +2,7 @@
   import { ref, onMounted, nextTick } from 'vue'
   import { useRoute } from 'vue-router'
   import axios from 'axios'
-
+  import Image from 'primevue/image'
   import Button from 'primevue/button'
   import InputNumber from 'primevue/inputnumber'
 
