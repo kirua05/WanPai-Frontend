@@ -4,11 +4,13 @@
   import Drawer from 'primevue/drawer'
   import Button from 'primevue/button'
   import { useCartStore } from '@/stores/cart'
+  import { useAuthStore } from '@/stores/auth'
 
   const visible = ref(false)
   const cart = useCartStore()
   const route = useRoute()
   const router = useRouter()
+  const authStore = useAuthStore()
 
   const menuItems = [{ label: '後台首頁', to: '/admin' }]
 
@@ -19,6 +21,13 @@
       router.push({ path: '/', query: {} })
     }
   }
+  authStore.initAuth()
+
+  const logout = () => {
+    authStore.logout()
+    router.push('/authform')
+  }
+
 </script>
 
 <template>
@@ -58,13 +67,15 @@
             </span>
           </div>
         </RouterLink>
+        <div class="hidden md:block">
+        <RouterLink v-if="!authStore.isLoggedIn" to="/authform">
+          <Button label="登入" severity="primary" size="small" />
+        </RouterLink>
+        <Button v-else label="登出" severity="danger" size="small" @click="logout" />
+      </div>
       </div>
 
-      <div class="hidden md:block">
-        <RouterLink to="/authform">
-         <Button label="登入" severity="primary" size="small" />
-        </RouterLink>
-      </div>
+
 
       <div class="md:hidden">
         <Button icon="pi pi-bars" text @click="visible = true" />
@@ -111,6 +122,10 @@
         <RouterLink to="/loginsignup" @click="visible = false">
           <Button label="登入" severity="primary" class="mt-4 w-full" />
         </RouterLink>
+        <RouterLink v-if="!authStore.isLoggedIn" to="/authform" @click="visible = false">
+          <Button label="登入" severity="primary" class="mt-4 w-full" />
+        </RouterLink>
+        <Button v-else label="登出" severity="danger" class="mt-4" @click="logout" />
       </div>
     </Drawer>
   </header>

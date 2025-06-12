@@ -1,10 +1,12 @@
 <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import { useAuthStore } from '@/stores/auth'
   import axios from 'axios'
   import Button from 'primevue/button'
 
   const router = useRouter()
+  const authStore = useAuthStore()
 
   const isLogin = ref(true)
   const username = ref('')
@@ -36,6 +38,7 @@
 
       if (resp.status === 200) {
         successMessage.value = '登入成功，正在跳轉...'
+        authStore.login(resp.data.token, resp.data.role)
         localStorage.setItem('token', resp.data.token)
         localStorage.setItem('role', resp.data.role)
         setTimeout(() => {
@@ -44,7 +47,7 @@
           } else {
             router.push('/')
           }
-        }, 1500)
+        }, 1000)
       }
     } catch (error) {
       if (error.response?.status === 404) {
