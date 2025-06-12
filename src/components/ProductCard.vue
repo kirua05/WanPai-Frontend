@@ -1,19 +1,19 @@
 <script setup>
-import Image from 'primevue/image'
-import { useCartStore } from '@/stores/cart'
+  import Image from 'primevue/image'
+  import { useCartStore } from '@/stores/cart'
 
-const cart = useCartStore()
+  const cart = useCartStore()
 
-const props = defineProps({
-  product: Object,
-})
+  const props = defineProps({
+    product: Object,
+  })
 
-function addToCart(e) {
-  e.preventDefault()
-  e.stopPropagation()
-  cart.add(props.product)
-  alert('已加入購物車！')
-}
+  function addToCart(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    cart.add(props.product)
+    alert('已加入購物車！')
+  }
 </script>
 
 <template>
@@ -53,8 +53,10 @@ function addToCart(e) {
     </div>
 
     <!-- 購物車 icon -->
-    <button class="absolute bottom-2 right-2 w-10 h-10 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg"
-      @click="addToCart">
+    <button
+      class="absolute bottom-2 right-2 w-10 h-10 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg"
+      @click="addToCart"
+    >
       <i class="pi pi-shopping-cart"></i>
     </button>
   </div>
