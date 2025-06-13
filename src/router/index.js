@@ -45,8 +45,8 @@ const router = createRouter({
       ],
     },
     {
-      path: '/notification',
-      name: 'notification',
+      path: '/notifications',
+      name: 'notifications',
       component: () => import('../views/NotificationPage.vue'),
     },
     {

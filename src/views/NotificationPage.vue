@@ -1,35 +1,58 @@
 <script setup>
-  import { ref, computed, watch } from 'vue'
+  import { ref, computed, watch, onMounted } from 'vue'
   import Divider from 'primevue/divider'
+  import axios from 'axios'
 
   const categories = ref([
     { label: '訂單訊息', type: 'order' },
     { label: '帳戶訊息', type: 'account' },
-    { label: '優惠相關', type: 'promo' },
   ])
 
   const selectedCategory = ref(null)
+  const notifications = ref([])
+  const loading = ref(false)
+  const error = ref('')
 
-  const notifications = ref([
-    {
-      type: 'order',
-      time: '2024-09-16 10:04',
-      username: '會員名稱',
-      message: '您好，感謝您購買本站商品，商品訂單已成立',
-      orderId: '2024090801004604613',
-      read: false,
-      expanded: false,
-    },
-    {
-      type: 'promo',
-      time: '2024-09-01 08:20',
-      username: '系統訊息',
-      message: '限時優惠 88 折，立即搶購！',
-      orderId: '',
-      read: true,
-      expanded: false,
-    },
-  ])
+  const token = localStorage.getItem('token')
+
+  // type 對應資料庫設計
+  function mapType(type) {
+    if (
+      type === 'order_created' ||
+      type === 'order_shipped' ||
+      type === 'order_delivered'
+    )
+      return 'order'
+    if (type === 'account') return 'account'
+    return 'other'
+  }
+
+  // 取得通知資料
+  async function fetchNotifications() {
+    loading.value = true
+    error.value = ''
+    try {
+      const { data } = await axios.get('/api/notifications', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      notifications.value = data.map((item) => ({
+        ...item,
+        type: mapType(item.type),
+        time: item.createdAt ? new Date(item.createdAt).toLocaleString() : '',
+        username: item.username || '系統訊息',
+        message: item.message,
+        orderId: item.orderId ? String(item.orderId) : '',
+        read: item.read ?? false,
+        expanded: false,
+      }))
+    } catch (e) {
+      error.value = '通知載入失敗，請稍後再試'
+    } finally {
+      loading.value = false
+    }
+  }
+
+  onMounted(fetchNotifications)
 
   watch(selectedCategory, (newType) => {
     notifications.value.forEach((n) => {
@@ -67,7 +90,6 @@
     <h2 class="text-2xl font-bold mb-6 ml-8">我的通知</h2>
 
     <div class="flex gap-6">
-      <!-- 左側分類 -->
       <aside class="w-40">
         <ul class="list-none p-0 m-0">
           <li
@@ -89,12 +111,18 @@
       </aside>
 
       <section class="flex-1 flex items-center justify-center">
-        <div v-if="!selectedCategory" class="text-center">
+        <div v-if="loading" class="text-center text-gray-500 py-10">
+          載入中...
+        </div>
+        <div v-else-if="error" class="text-center text-red-500 py-10">
+          {{ error }}
+        </div>
+
+        <div v-else-if="!selectedCategory" class="text-center">
           <span
             class="pi pi-inbox text-9xl text-gray-400 mb-6 block mx-auto"
             aria-hidden="true"
           ></span>
-
           <h3 class="text-xl font-semibold mb-2">歡迎來到通知中心</h3>
           <p class="text-gray-500">請從左邊的列表選擇想查看的通知類型</p>
         </div>
@@ -106,7 +134,6 @@
             <span>{{ currentLabel }}</span>
             <span>共 {{ filteredNotifications.length }} 條</span>
           </div>
-
           <Divider class="my-2" />
 
           <div
@@ -138,7 +165,9 @@
                 </strong>
                 {{ item.message }}
               </p>
-              <p class="text-sm text-gray-700">訂單編號：{{ item.orderId }}</p>
+              <p v-if="item.orderId" class="text-sm text-gray-700">
+                訂單編號：{{ item.orderId }}
+              </p>
             </div>
 
             <Divider
