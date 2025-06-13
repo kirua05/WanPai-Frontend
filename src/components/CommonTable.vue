@@ -6,17 +6,15 @@
   import TabPanel from '@/volt/TabPanel.vue'
   import DataTable from '@/volt/DataTable.vue'
   import Column from 'primevue/column'
-  import { ref } from 'vue'
+  import { ref, computed } from 'vue'
 
   const selectedRows = ref([])
-
-  function filteredData(status) {
-    if (status === 'all') {
-      return props.value
-    } else {
-      return props.value.filter((item) => item.status === status)
-    }
-  }
+  const activeTab = ref('all')
+  const filteredData = computed(() => {
+    return activeTab.value === 'all'
+      ? props.value
+      : props.value.filter((item) => item.status === activeTab.value)
+  })
 
   const props = defineProps({
     tabs: {
@@ -39,7 +37,7 @@
 
 <template>
   <div class="card">
-    <Tabs :value="tabs[0].value">
+    <Tabs v-model:value="activeTab">
       <TabList>
         <Tab v-for="tab in tabs" :key="tab.title" :value="tab.value">
           {{ tab.title }}
@@ -50,7 +48,7 @@
           <div class="card">
             <DataTable
               v-model:selection="selectedRows"
-              :value="filteredData(tab.value)"
+              :value="filteredData"
               removable-sort
               data-key="id"
               scrollable
