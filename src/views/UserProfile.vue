@@ -26,7 +26,7 @@
       )
       profile.value = response.data
       editProfile.value = { ...profile.value }
-    } catch (error) {
+    } catch {
       toast.add({
         severity: 'error',
         summary: '載入失敗',
@@ -68,7 +68,7 @@
     }
 
     try {
-      const response = await axios.put(
+      await axios.put(
         'http://localhost:3000/api/users/profile',
         editProfile.value,
         {
