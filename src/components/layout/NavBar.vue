@@ -8,6 +8,7 @@
   import { useAuthStore } from '@/stores/auth'
   import { useNotificationStore } from '@/stores/notifications'
   import ProductSearchBar from '@/components/ProductSearchBar.vue'
+  import { useToast } from 'primevue/usetoast'
 
   const visible = ref(false)
   const cart = useCartStore()
@@ -15,6 +16,7 @@
   const router = useRouter()
   const authStore = useAuthStore()
   const notificationStore = useNotificationStore()
+  const toast = useToast()
 
   watch(
     () => authStore.isLoggedIn,
@@ -104,6 +106,20 @@
   const toggleMemberMenu = (event) => {
     memberMenu.value.toggle(event)
   }
+
+  function handleCartClick() {
+    if (!authStore.isLoggedIn) {
+      toast.add({
+        severity: 'warn',
+        summary: '請先登入',
+        detail: '請先登入會員再查看購物車！',
+        life: 3000,
+        position: 'top-right'
+      })
+      return
+    }
+    router.push('/cart')
+  }
 </script>
 
 <template>
@@ -160,17 +176,15 @@
             class="text-base"
           />
         </div>
-        <RouterLink to="/cart" class="relative">
-          <div class="relative">
-            <Button icon="pi pi-shopping-cart" text rounded />
-            <span
-              v-if="cart.items.length"
-              class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
-            >
-              {{ cart.items.length }}
-            </span>
-          </div>
-        </RouterLink>
+        <div class="relative cursor-pointer" @click="handleCartClick">
+          <Button icon="pi pi-shopping-cart" text rounded />
+          <span
+            v-if="cart.items.length"
+            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+          >
+            {{ cart.items.length }}
+          </span>
+        </div>
 
         <RouterLink
           v-if="authStore.isLoggedIn"
@@ -233,10 +247,9 @@
           {{ item.label }}
         </RouterLink>
 
-        <RouterLink
-          to="/cart"
-          class="text-gray-800 hover:text-emerald-600 text-base font-medium flex items-center"
-          @click="visible = false"
+        <div
+          class="text-gray-800 hover:text-emerald-600 text-base font-medium flex items-center cursor-pointer"
+          @click="() => { visible = false; handleCartClick() }"
         >
           <i class="pi pi-shopping-cart mr-2"></i>
           購物車
@@ -246,7 +259,7 @@
           >
             {{ cart.items.length }}
           </span>
-        </RouterLink>
+        </div>
 
         <RouterLink
           v-if="authStore.isLoggedIn"

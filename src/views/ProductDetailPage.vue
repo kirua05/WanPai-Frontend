@@ -3,7 +3,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from '@/utils/axiosInstance'
 import Image from 'primevue/image'
-import { useCartStore } from '@/stores/cart'
+
 import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
 import InputNumber from 'primevue/inputnumber'

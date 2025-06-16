@@ -1,19 +1,35 @@
 <script setup>
-  import Image from 'primevue/image'
-  import { useCartStore } from '@/stores/cart'
+import Image from 'primevue/image'
+import { useCartStore } from '@/stores/cart'
+import { useToast } from 'primevue/usetoast'
 
-  const cart = useCartStore()
+const cart = useCartStore()
+const toast = useToast()
 
   const props = defineProps({
     product: Object,
   })
 
-  function addToCart(e) {
-    e.preventDefault()
-    e.stopPropagation()
-    cart.add(props.product)
-    alert('已加入購物車！')
+async function addToCart(e) {
+  e.preventDefault()
+  e.stopPropagation()
+  try {
+    await cart.add(props.product)
+    toast.add({
+      severity: 'success',
+      summary: '成功',
+      detail: '已加入購物車！',
+      life: 3000,
+    })
+  } catch (err) {
+    toast.add({
+      severity: 'warn',
+      summary: '錯誤',
+      detail: err.message || '加入購物車失敗',
+      life: 3000,
+    })
   }
+}
 </script>
 
 <template>

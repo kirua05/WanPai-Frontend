@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, reactive, toRefs, computed, watch, nextTick } from 'vue'
+  import { ref, reactive, toRefs, computed, watch, nextTick, onMounted } from 'vue'
   import { useCartStore } from '@/stores/cart'
   import Button from '@/volt/Button.vue'
   import { createEcpayOrder } from '@/api/createEcpayOrder'
@@ -7,15 +7,11 @@
   import Toast from 'primevue/toast'
   import InputText from 'primevue/inputtext'
   const toast = useToast()
-  // Pinia 購物車狀態
   const cart = useCartStore()
-
-  // 選中的商品列表
   const selectedItems = ref([])
-  // 選中的商品數量
   const showShippingDetails = ref(false)
 
-  //根據orders資料庫要的屬性做命名
+
   const shippingForm = reactive({
     recipientName: '',
     recipientPhone: '',
@@ -58,8 +54,8 @@ const shippingDetailsMove = ref(null)
   const selectedTotal = computed(() => {
     if (!selectedItems.value || selectedItems.value.length === 0) return 0
     return selectedItems.value.reduce((sum, item) => {
-      const price = Number(item.price) || 0
-      const qty = Number(item.qty) || 0
+      const price = Number(item.priceAtAdd) || 0
+      const qty = Number(item.quantity) || 0
       return sum + price * qty
     }, 0)
   })
@@ -73,6 +69,7 @@ const shippingDetailsMove = ref(null)
       selectedItems.value && selectedItems.value.length > 0 ? 100 : 0
   }
 
+  // 監聽選中項目變化以更新運費
   watch(
     selectedItems,
     () => {
@@ -81,8 +78,9 @@ const shippingDetailsMove = ref(null)
     { deep: true }
   )
 
-  function updateQty(id, qty) {
-    cart.updateQty(id, qty)
+  async function updateQty(id, qty) {
+    await cart.updateQty(id, qty)
+    selectedItems.value = [...cart.items]
   }
 
   function remove(id) {
@@ -100,6 +98,7 @@ const shippingDetailsMove = ref(null)
 
   const { shipping } = toRefs(state)
 
+  // 全選
   function toggleSelectAll(event) {
     const isChecked = event.target.checked
     if (isChecked) {
@@ -107,20 +106,21 @@ const shippingDetailsMove = ref(null)
     } else {
       selectedItems.value = []
     }
-    watch(
-      selectedItems,
-      (newVal) => {
-        if (newVal.length === 0) {
-          showShippingDetails.value = false
-          //關閉(收貨詳細資訊)清除底下input框輸入過的內容
-          shippingForm.recipientName = ''
-          shippingForm.recipientPhone = ''
-          shippingForm.shippingAddress = ''
-        }
-      },
-      { deep: true }
-    )
   }
+
+  watch(
+    selectedItems,
+    (newVal) => {
+      if (newVal.length === 0) {
+        showShippingDetails.value = false
+        //關閉(收貨詳細資訊)清除底下input框輸入過的內容
+        shippingForm.recipientName = ''
+        shippingForm.recipientPhone = ''
+        shippingForm.shippingAddress = ''
+      }
+    },
+    { deep: true }
+  )
 
   async function ecpayCheckout() {
     if (!isRecipientNameValid.value) {
@@ -152,7 +152,7 @@ const shippingDetailsMove = ref(null)
       })
       return
     }
-    const itemNames = selectedItems.value.map((item) => item.title).join('#')
+    const itemNames = selectedItems.value.map((item) => item.product.name).join('#')
     const tradeDesc = `購物車商品結帳: ${itemNames}`
 
     const payload = {
@@ -193,6 +193,11 @@ const shippingDetailsMove = ref(null)
     }
     calculateShipping()
   }
+
+  onMounted(() => {
+    cart.fetchCart()
+    selectedItems.value = [...cart.items]
+  })
 </script>
 
 <template>
@@ -250,22 +255,19 @@ const shippingDetailsMove = ref(null)
                         預計 {{ item.eta }} 出貨
                       </div>
                       <div class="font-medium text-gray-800">
-                        {{ item.name }}
+                        {{ item.product.name }}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td class="px-4 py-4 text-center">
-                  <select
-                    v-model.number="item.qty"
-                    @change="updateQty(item.id, item.qty)"
-                    class="border rounded px-2 py-1"
-                  >
+                  <select v-model.number="item.quantity" @change="updateQty(item.id, item.quantity)"
+                    class="border rounded px-2 py-1">
                     <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
                   </select>
                 </td>
                 <td class="px-4 py-4 text-center">
-                  {{ formatCurrency(item.price) }}
+                  {{ formatCurrency(item.priceAtAdd) }}
                 </td>
                 <td class="px-4 py-4 text-center">
                   <button
