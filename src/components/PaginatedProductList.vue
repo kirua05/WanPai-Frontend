@@ -8,6 +8,7 @@
 
   const {
     inputKeyword,
+    resetSearch,
     submitSearch,
     activeCategory,
     allCategories,
@@ -100,7 +101,7 @@
         />
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 text-white">
         <span>前往</span>
         <input
           v-model="pageInput"

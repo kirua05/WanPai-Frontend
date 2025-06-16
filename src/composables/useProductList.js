@@ -116,6 +116,10 @@ export function useProductList() {
       pageInput.value = ''
     }
   }
+  function resetSearch() {
+    inputKeyword.value = ''
+    router.push({ query: { ...route.query, keyword: '', page: 1 } })
+  }
 
   const pageButtons = computed(() => {
     const total = totalPages.value
@@ -142,6 +146,7 @@ export function useProductList() {
   return {
     inputKeyword,
     keyword,
+    resetSearch,
     submitSearch,
     activeCategory,
     allCategories,

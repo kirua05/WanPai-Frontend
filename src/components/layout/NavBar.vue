@@ -44,7 +44,6 @@
     },
   ])
 
-  // 點首頁時清除 query（包含 keyword）
   function handleHomeClick(e) {
     if (route.path === '/') {
       e.preventDefault()
@@ -65,7 +64,7 @@
 </script>
 
 <template>
-  <header class="bg-white shadow-sm">
+  <header class="bg-black text-white shadow p-4">
     <div
       class="max-w-screen-xl mx-auto flex items-center justify-between h-16 px-6"
     >

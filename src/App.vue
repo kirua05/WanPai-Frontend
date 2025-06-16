@@ -6,7 +6,7 @@
 <template>
   <Navbar />
 
-  <main class="mt-6 bg-gray-50 min-h-screen">
+  <main class="mt-6 min-h-screen bg-black">
     <RouterView />
   </main>
 
