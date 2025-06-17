@@ -256,8 +256,4 @@
   </div>
 </template>
 
-<style scoped>
-  .password-input {
-    position: relative;
-  }
-</style>
+<style scoped></style>
