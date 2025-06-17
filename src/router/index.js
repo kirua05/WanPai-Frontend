@@ -3,6 +3,7 @@ import ProductDetailPage from '../views/ProductDetailPage.vue'
 import CartView from '@/views/CartView.vue'
 import HomeView from '@/views/HomeView.vue'
 import AuthForm from '@/views/AuthForm.vue'
+import NotFound from '@/views/NotFound.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -74,6 +75,11 @@ const router = createRouter({
       name: 'OrderDetail',
       component: () => import('@/views/OrderDetail.vue'),
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound
+    }
   ],
 })
 
