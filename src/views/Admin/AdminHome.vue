@@ -2,9 +2,6 @@
   import InputText from '@/volt/InputText.vue'
   import Menu from '@/volt/Menu.vue'
   import { ref } from 'vue'
-  // import { useRouter } from 'vue-router'
-
-  // const router = useRouter()
   const search = ref('')
   const items = ref([
     {
@@ -26,7 +23,7 @@
 </script>
 
 <template>
-  <header class="w-full fixed top-0 left-0 right-0 p-4 z-10 bg-amber-950">
+  <header class="w-full fixed top-0 left-0 right-0 p-4 z-20 bg-amber-950">
     <div class="w-2/3 flex justify-between items-center">
       <div>
         <img src="" alt="logo" />

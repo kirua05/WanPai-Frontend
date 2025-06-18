@@ -6,6 +6,7 @@
   import { useRouter } from 'vue-router'
   import { useToast } from 'primevue/usetoast'
   import Toast from 'primevue/toast'
+  import Image from 'primevue/image'
   const router = useRouter()
   const toast = useToast()
 
@@ -16,7 +17,7 @@
     { title: '典藏', value: 'archived' },
   ])
   const productColumns = ref([
-    { field: 'img', header: '', style: 'width: 25%', sortable: false },
+    { field: 'coverImage', header: '', style: 'width: 25%', sortable: false },
     { field: 'name', header: '商品', style: 'width: 25%', sortable: true },
     {
       field: 'status',
@@ -89,6 +90,15 @@
       selectable
       scroll-height="500px"
     >
+      <template #body-coverImage="{ data }">
+        <Image
+          v-if="data.coverImage"
+          :src="data.coverImage"
+          alt="Product Cover Image"
+          imageClass="w-32 h-32 object-cover rounded mx-auto"
+          loading="lazy"
+        />
+      </template>
       <template #body-name="{ data }">
         <a
           class="w-full underline text-primary cursor-pointer"

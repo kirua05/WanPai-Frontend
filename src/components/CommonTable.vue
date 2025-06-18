@@ -55,6 +55,9 @@
               data-key="id"
               scrollable
               scroll-height="500px"
+              paginator
+              :rows="20"
+              :rowsPerPageOptions="[5, 10, 20, 50]"
             >
               <Column
                 selection-mode="multiple"
