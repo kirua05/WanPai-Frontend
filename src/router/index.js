@@ -42,6 +42,11 @@ const router = createRouter({
           component: () => import('../views/Admin/AdminOrders.vue'),
         },
         {
+          path: 'orders/edit',
+          name: 'editOrder',
+          component: () => import('../views/Admin/EditOrder.vue'),
+        },
+        {
           path: 'inventory',
           name: 'inventory',
           component: () => import('../views/Admin/AdminInventory.vue'),

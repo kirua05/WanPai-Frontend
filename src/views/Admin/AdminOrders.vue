@@ -1,11 +1,13 @@
 <script setup>
   import { ref } from 'vue'
+  import { fetchAllOrders } from '@/api/order'
+  import { onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
   import CommonTable from '@/components/CommonTable.vue'
-
+  const router = useRouter()
   const orderTabs = ref([
     { title: '全部', value: 'all' },
-    { title: '待付款', value: 'unpaid' },
-    { title: '待出貨', value: 'unshipped' },
+    { title: '已付款', value: 'paid' },
     { title: '已出貨', value: 'shipped' },
     { title: '已完成', value: 'completed' },
     { title: '已取消', value: 'cancelled' },
@@ -31,12 +33,6 @@
       sortable: true,
     },
     {
-      field: 'shipping',
-      header: '物流狀態',
-      style: 'width: 12.5%',
-      sortable: true,
-    },
-    {
       field: 'status',
       header: '訂單狀態',
       style: 'width: 12.5%',
@@ -50,19 +46,12 @@
       sortable: true,
     },
   ])
-  // 假資料
-  const orderValue = ref([
-    {
-      orderNumber: 'f230fh0g3',
-      date: '2024-06-25',
-      customer: 'John Doe',
-      payment: '已付款',
-      shipping: '已出貨',
-      status: '已完成',
-      total: '$100',
-      quantity: '1',
-    },
-  ])
+
+  const orderValue = ref([])
+  onMounted(async () => {
+    const res = await fetchAllOrders()
+    orderValue.value = res
+  })
 </script>
 
 <template>
@@ -84,6 +73,19 @@
       scrollable
       selectable
       scroll-height="500px"
-    />
+    >
+      <template #body-orderNumber="{ data }">
+        <a
+          class="w-full underline text-primary cursor-pointer"
+          @click="
+            router.push({
+              path: `/admin/orders/edit`,
+            })
+          "
+        >
+          {{ data.orderNumber }}
+        </a>
+      </template>
+    </CommonTable>
   </div>
 </template>
