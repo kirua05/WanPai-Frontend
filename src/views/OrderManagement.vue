@@ -1,12 +1,16 @@
 <script setup>
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted, watch } from 'vue'
   import InputText from 'primevue/inputtext'
   import Select from 'primevue/select'
   import DataTable from 'primevue/datatable'
   import Column from 'primevue/column'
   import Button from 'primevue/button'
   import { useRouter } from 'vue-router'
+  import { useAuthStore } from '@/stores/auth'
+  import 'primeicons/primeicons.css'
+  import axios from 'axios'
 
+  const authStore = useAuthStore()
   const router = useRouter()
   const searchOrderId = ref('')
   const selectedDateRange = ref('')
@@ -21,57 +25,44 @@
     { label: '一年內', value: '365' },
   ]
 
-  const orders = ref([
-    {
-      id: 'A123',
-      date: '2025-05-26',
-      status: '待出貨',
-      items: [
-        {
-          name: '皮卡丘',
-          quantity: 2,
-          price: 300,
-          image: 'product-bamboo-watch.jpg',
-        },
-        {
-          name: '吉伊卡哇',
-          quantity: 3,
-          price: 120,
-          image: 'product-black-watch.jpg',
-        },
-      ],
-    },
-    {
-      id: 'B456',
-      date: '2025-05-20',
-      status: '已完成',
-      items: [
-        {
-          name: '模型人偶',
-          quantity: 1,
-          price: 1560,
-          image: 'product-bolt-shirt.jpg',
-        },
-        {
-          name: '扭蛋組合',
-          quantity: 2,
-          price: 500,
-          image: 'product-fitness-watch.jpg',
-        },
-      ],
-    },
-    {
-      id: 'C568',
-      date: '2025-02-20',
-      status: '已完成',
-      total: 2560,
-      items: [
-        { name: '哥吉拉', quantity: 1, price: 5660, image: '' },
-        { name: '盲盒', quantity: 2, price: 500, image: '' },
-      ],
-    },
-  ])
+  const orders = ref([])
 
+  async function fetchOrders() {
+    if (!authStore.isLoggedIn) return
+
+    // 組成 filters
+    const params = {}
+    if (searchOrderId.value) params.id = searchOrderId.value
+    if (selectedDateRange.value) params.dateRange = selectedDateRange.value
+
+    // 根據 API 路徑調整
+    try {
+      const res = await axios.get('/api/orders', { params })
+      orders.value = res.data
+    } catch (err) {
+      orders.value = []
+
+      console.error('取得訂單失敗', err)
+    }
+  }
+
+  // 監聽登入狀態
+  onMounted(() => {
+    if (authStore.isLoggedIn) fetchOrders()
+  })
+
+  watch(
+    () => authStore.isLoggedIn,
+    (newVal) => {
+      if (newVal) fetchOrders()
+      else orders.value = []
+    }
+  )
+
+  // 監聽搜尋條件自動查詢
+  watch([searchOrderId, selectedDateRange], fetchOrders)
+
+  // 自動計算總金額
   const ordersWithTotal = computed(() => {
     return orders.value.map((order) => {
       const total = order.items.reduce(
@@ -82,30 +73,13 @@
     })
   })
 
-  const filteredOrders = computed(() => {
-    const today = new Date()
-    return ordersWithTotal.value.filter((order) => {
-      const matchId = order.id.includes(searchOrderId.value)
-      let matchDate = true
-
-      if (selectedDateRange.value) {
-        const orderDate = new Date(order.date)
-        const diffTime = today - orderDate
-        const diffDays = diffTime / (1000 * 60 * 60 * 24)
-        matchDate = diffDays <= parseInt(selectedDateRange.value)
-      }
-
-      return matchId && matchDate
-    })
-  })
-
   function goToDetail(id) {
     router.push(`/orderdetail/${id}`)
   }
 </script>
 
 <template>
-  <div class="p-8 max-w-screen-xl mx-auto">
+  <div v-if="authStore.isLoggedIn" class="p-8 max-w-screen-xl mx-auto">
     <div class="mb-6 flex md:flex-row md:items-end gap-4 justify-end ml-auto">
       <div class="flex flex-col w-full md:w-[230px]">
         <label for="orderId" class="text-sm mb-1">訂單搜尋</label>
@@ -180,5 +154,14 @@
         </div>
       </template>
     </DataTable>
+  </div>
+  <div v-else class="flex flex-col items-center justify-center py-24">
+    <i
+      class="pi pi-info-circle mb-4"
+      style="font-size: 1.5rem; color: #4a5568"
+    ></i>
+    <p class="mb-6 text-xl font-semibold text-gray-700">
+      請先登入會員才能查看訂單
+    </p>
   </div>
 </template>
