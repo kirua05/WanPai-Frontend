@@ -5,12 +5,16 @@
   import Button from 'primevue/button'
   import { useCartStore } from '@/stores/cart'
   import { useAuthStore } from '@/stores/auth'
+  import { onMounted } from 'vue'
+  import { useNotificationStore } from '@/stores/notifications'
 
   const visible = ref(false)
   const cart = useCartStore()
   const route = useRoute()
   const router = useRouter()
   const authStore = useAuthStore()
+  const notificationStore = useNotificationStore()
+  onMounted(notificationStore.fetch)
 
   const menuItems = [{ label: '後台首頁', to: '/admin' }]
 
@@ -80,6 +84,11 @@
             class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:bg-gray-100 transition"
             aria-label="通知"
           />
+
+          <span
+            v-if="notificationStore.totalUnread > 0"
+            class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white z-10"
+          ></span>
         </RouterLink>
 
         <div class="hidden md:block">
@@ -151,6 +160,11 @@
             class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:bg-gray-100 transition"
             aria-label="通知"
           />
+
+          <span
+            v-if="notificationStore.totalUnread > 0"
+            class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white z-10"
+          ></span>
         </RouterLink>
 
         <RouterLink to="/loginsignup" @click="visible = false">

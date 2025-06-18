@@ -2,63 +2,36 @@
   import { ref, computed, watch, onMounted } from 'vue'
   import Divider from 'primevue/divider'
   import axios from 'axios'
+  import { useNotificationStore } from '@/stores/notifications'
 
+  const notificationStore = useNotificationStore()
+  const notifications = computed(() => notificationStore.list)
   const categories = ref([
     { label: '訂單訊息', type: 'order' },
     { label: '帳戶訊息', type: 'account' },
   ])
 
   const selectedCategory = ref(null)
-  const notifications = ref([])
   const loading = ref(false)
   const error = ref('')
-
   const token = localStorage.getItem('token')
 
-  // type 對應資料庫設計
-  function mapType(type) {
-    if (
-      type === 'order_created' ||
-      type === 'order_shipped' ||
-      type === 'order_delivered'
-    )
-      return 'order'
-    if (type === 'account') return 'account'
-    return 'other'
-  }
-
-  // 取得通知資料
-  async function fetchNotifications() {
+  onMounted(async () => {
     loading.value = true
     error.value = ''
     try {
-      const { data } = await axios.get('/api/notifications', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      notifications.value = data.map((item) => ({
-        ...item,
-        type: mapType(item.type),
-        time: item.createdAt ? new Date(item.createdAt).toLocaleString() : '',
-        username: item.username || '系統訊息',
-        message: item.message,
-        orderId: item.orderId ? String(item.orderId) : '',
-        read: item.read ?? false,
-        expanded: false,
-      }))
+      await notificationStore.fetch()
     } catch {
       error.value = '通知載入失敗，請稍後再試'
     } finally {
       loading.value = false
     }
-  }
-
-  onMounted(fetchNotifications)
+  })
 
   watch(selectedCategory, (newType) => {
     notifications.value.forEach((n) => {
       if (n.type === newType) {
         n.expanded = true
-        n.read = true
       }
     })
   })
@@ -73,10 +46,21 @@
       ''
   )
 
-  function toggleExpanded(item) {
+  async function toggleExpanded(item) {
     item.expanded = !item.expanded
     if (!item.read) {
-      item.read = true
+      try {
+        await axios.patch(
+          `/api/notifications/${item.id}/read`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        item.read = true
+      } catch {
+        // 忽略錯誤
+      }
     }
   }
 
@@ -154,7 +138,7 @@
               {{ item.time }}
               <span
                 v-if="!item.read"
-                class="pi pi-circle-fill text-xs text-red-600"
+                class="inline-block w-2 h-2 align-middle bg-red-500 rounded-full ml-2"
               ></span>
             </p>
 
