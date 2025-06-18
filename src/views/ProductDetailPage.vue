@@ -40,73 +40,77 @@
 </script>
 
 <template>
-  <div class="max-w-5xl mx-auto p-6">
-    <div class="flex flex-col md:flex-row gap-8">
-      <div class="flex-shrink-0 w-full md:w-1/2 text-center">
-        <Image
-          v-if="product.images?.cover"
-          :src="product.images.cover.imgUrl"
-          alt="Product Cover Image"
-          imageClass="w-64 h-64 object-cover rounded mx-auto"
-          preview
-        />
-        <div class="text-sm text-white mt-2">1 / 3</div>
-      </div>
-
-      <div class="flex flex-col justify-start w-full md:w-1/2 space-y-4">
-        <h1 class="text-2xl font-bold leading-snug text-white">
-          {{ product.name }}
-        </h1>
-
-        <div class="text-xl">
-          <span
-            :class="{ 'line-through text-gray-400': product.discountPrice }"
-          >
-            ${{ product.price }}
-          </span>
+  <div class="max-w-screen-md mx-auto px-4 py-10 space-y-6">
+    <div class="bg-white shadow-md rounded-lg p-6 md:p-8">
+      <div class="flex flex-col md:flex-row gap-10 items-start">
+        <div class="w-full md:max-w-[460px] text-center mx-auto">
+          <Image
+            v-if="product.images?.cover"
+            :src="product.images.cover.imgUrl"
+            alt="Product Cover Image"
+            imageClass="w-64 h-64 object-cover rounded mx-auto"
+            preview
+          />
+          <div class="text-sm text-black mt-2">1 / 3</div>
         </div>
 
-        <div class="flex items-center gap-3">
-          <label for="quantity" class="text-gray-200 text-xl">數量</label>
-          <InputNumber
-            v-model="quantity"
-            :ref="inputRef"
-            inputId="quantity"
-            :min="1"
-            showButtons
-            buttonLayout="horizontal"
-            decrementButtonClass="p-button-text"
-            incrementButtonClass="p-button-text"
-            inputClass="text-center"
-          >
-            <template #incrementicon>
-              <i class="pi pi-plus" />
-            </template>
-            <template #decrementicon>
-              <i class="pi pi-minus" />
-            </template>
-          </InputNumber>
-        </div>
+        <div class="w-full md:max-w-[360px] mx-auto flex flex-col space-y-4">
+          <h1 class="text-xl sm:text-2xl font-bold leading-snug text-black">
+            {{ product.name }}
+          </h1>
 
-        <div class="flex gap-4 mt-2">
-          <Button
-            label="加入購物車"
-            icon="pi pi-shopping-cart"
-            class="flex-1"
-          />
-          <Button
-            :label="product.isFavorited ? '取消收藏' : '收藏'"
-            icon="pi pi-heart"
-            class="flex-1"
-            @click="toggleFavorite"
-          />
+          <div class="text-lg sm:text-xl text-black font-bold">
+            <span
+              :class="{ 'line-through text-gray-400': product.discountPrice }"
+            >
+              ${{ product.price }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <label for="quantity" class="text-black text-sm">數量</label>
+            <InputNumber
+              v-model="quantity"
+              :ref="inputRef"
+              inputId="quantity"
+              :min="1"
+              showButtons
+              buttonLayout="horizontal"
+              decrementButtonClass="p-button-text !h-8 !w-8"
+              incrementButtonClass="p-button-text !h-8 !w-8"
+              inputClass="text-center w-12 h-8 text-sm"
+              class="text-sm"
+            >
+              <template #incrementicon>
+                <i class="pi pi-plus text-xs" />
+              </template>
+              <template #decrementicon>
+                <i class="pi pi-minus text-xs" />
+              </template>
+            </InputNumber>
+          </div>
+
+          <div class="flex gap-3 mt-1">
+            <Button
+              label="加入購物車"
+              icon="pi pi-shopping-cart"
+              class="flex-1"
+            />
+            <Button
+              :label="product.isFavorited ? '取消收藏' : '收藏'"
+              icon="pi pi-heart"
+              class="flex-1"
+              @click="toggleFavorite"
+            />
+          </div>
         </div>
       </div>
     </div>
 
     <div
-      class="mt-6 text-gray-300 text-lg leading-relaxed [&_*]:!text-gray-300 [&_*]:!bg-transparent"
-      v-html="product.description"
-    ></div>
+      class="bg-white shadow-md rounded-lg p-6 text-black text-base sm:text-lg leading-relaxed"
+    >
+      <div v-html="product.description"></div>
+    </div>
   </div>
 </template>

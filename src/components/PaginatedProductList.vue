@@ -25,7 +25,7 @@
 </script>
 
 <template>
-  <div class="p-6 max-w-screen-2xl mx-auto">
+  <div class="px-2 sm:px-4 md:px-6 lg:px-8 py-6 max-w-[1200px] mx-auto">
     <ProductCategoryFilter
       :categories="allCategories"
       :activeCategory="activeCategory"
@@ -101,7 +101,7 @@
         />
       </div>
 
-      <div class="flex items-center gap-2 text-white">
+      <div class="flex items-center gap-2 text-black">
         <span>前往</span>
         <input
           v-model="pageInput"

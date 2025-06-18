@@ -1,25 +1,26 @@
 <script setup>
   import { ref } from 'vue'
+  import { RouterLink } from 'vue-router'
   import Carousel from 'primevue/carousel'
 
   const banners = ref([
     {
-      title: '🔥 限時優惠中！',
-      image: '/banner/banner1.jpg',
+      image: '/Banner1.png',
+      link: '/products/5',
     },
     {
-      title: '新品上架 ✨',
-      image: '/banner/banner2.jpg',
+      image: '/Banner2.png',
+      link: '/products/1',
     },
     {
-      title: '人氣商品大賞 🏆',
-      image: '/banner/banner3.jpg',
+      image: '/Banner3.png',
+      link: '/products/74',
     },
   ])
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="max-w-screen-xl mx-auto px-4">
     <Carousel
       :value="banners"
       :numVisible="1"
@@ -28,18 +29,28 @@
       :autoplayInterval="3000"
     >
       <template #item="slotProps">
-        <div
-          class="relative w-full h-[400px] bg-cover bg-center"
-          :style="`background-image: url('${slotProps.data.image}')`"
-        >
+        <RouterLink :to="slotProps.data.link" class="block w-full h-full">
           <div
-            class="absolute inset-0 bg-black/40 flex items-center justify-center"
+            class="relative w-full aspect-[3/1] sm:aspect-auto sm:h-[400px] overflow-hidden"
           >
-            <h2 class="text-white text-3xl font-bold text-center">
-              {{ slotProps.data.title }}
-            </h2>
+            <img
+              :src="slotProps.data.image"
+              class="w-full h-full object-cover"
+              alt="banner"
+            />
+            <div
+              class="absolute inset-0 flex items-center justify-center"
+              :class="slotProps.data.title ? 'bg-black/40' : 'bg-transparent'"
+            >
+              <h2
+                v-if="slotProps.data.title"
+                class="text-white text-3xl font-bold text-center"
+              >
+                {{ slotProps.data.title }}
+              </h2>
+            </div>
           </div>
-        </div>
+        </RouterLink>
       </template>
     </Carousel>
   </div>

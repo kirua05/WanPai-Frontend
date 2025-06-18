@@ -64,9 +64,9 @@
 </script>
 
 <template>
-  <header class="bg-black text-white shadow p-4">
+  <header class="bg-white text-black shadow py-2">
     <div
-      class="max-w-screen-xl mx-auto flex items-center justify-between h-16 px-6"
+      class="max-w-screen-xl mx-auto flex items-center justify-between h-12 px-4"
     >
       <RouterLink
         to="/"
@@ -76,7 +76,7 @@
         <img
           src="@/assets/logo.png"
           alt="Wanpai Logo"
-          class="h-40 w-auto object-contain"
+          class="h-30 w-auto object-contain"
         />
       </RouterLink>
 
@@ -148,7 +148,7 @@
           <Button
             v-else
             label="登出"
-            severity="danger"
+            severity="secondary"
             size="small"
             @click="logout"
           />
