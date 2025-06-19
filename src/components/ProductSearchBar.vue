@@ -1,14 +1,8 @@
 <script setup>
   import { computed } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
-  import InputText from 'primevue/inputtext'
-  import Button from 'primevue/button'
 
   const props = defineProps(['modelValue'])
   const emit = defineEmits(['update:modelValue', 'submit', 'clear'])
-
-  const route = useRoute()
-  const router = useRouter()
 
   const modelValueProxy = computed({
     get: () => props.modelValue,
@@ -16,56 +10,43 @@
   })
 
   function handleSearch() {
-    router.push({
-      path: '/',
-      query: {
-        ...route.query,
-        keyword: modelValueProxy.value,
-        page: 1,
-      },
-    })
     emit('submit')
   }
 
   function handleEnter(event) {
-    if (event.isComposing) return
-    handleSearch()
+    if (!event.isComposing) {
+      handleSearch()
+    }
   }
 
   function clearKeyword() {
-    router.push({
-      path: '/',
-      query: {},
-    })
     emit('update:modelValue', '')
     emit('clear')
   }
 </script>
 
 <template>
-  <div
-    class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 my-4"
-  >
-    <InputText
+  <div class="flex items-center gap-2">
+    <input
       v-model="modelValueProxy"
+      @keyup.enter="handleEnter"
       placeholder="請輸入商品名稱..."
-      class="w-full sm:w-auto flex-1"
-      @keydown.enter="handleEnter"
+      class="px-3 py-[6px] border border-gray-300 rounded-md text-sm w-[200px]"
     />
-    <div class="flex gap-2">
-      <Button
-        label="搜尋"
-        icon="pi pi-search"
-        class="px-5"
-        @click="handleSearch"
-      />
-      <Button
-        label="清除搜尋"
-        icon="pi pi-times"
-        severity="secondary"
-        class="px-5"
-        @click="clearKeyword"
-      />
-    </div>
+
+    <button
+      @click="handleSearch"
+      class="flex items-center gap-1 bg-yellow-400 text-white text-sm px-3 py-[6px] rounded-md hover:bg-yellow-500"
+    >
+      <i class="pi pi-search text-sm" />
+      搜尋
+    </button>
+    <button
+      @click="clearKeyword"
+      class="flex items-center gap-1 bg-gray-100 text-sm px-3 py-[6px] rounded-md hover:bg-gray-200"
+    >
+      <i class="pi pi-times text-sm" />
+      清除搜尋
+    </button>
   </div>
 </template>

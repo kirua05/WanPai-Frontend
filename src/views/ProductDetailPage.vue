@@ -12,6 +12,8 @@
   const inputRef = ref(null)
 
   onMounted(async () => {
+    window.scrollTo(0, 0)
+
     const id = route.params.id
     const res = await axios.get(`/api/products/${id}`)
     product.value = res.data

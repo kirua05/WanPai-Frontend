@@ -8,6 +8,7 @@
   import { useAuthStore } from '@/stores/auth'
   import { onMounted } from 'vue'
   import { useNotificationStore } from '@/stores/notifications'
+  import ProductSearchBar from '@/components/ProductSearchBar.vue'
 
   const visible = ref(false)
   const cart = useCartStore()
@@ -16,6 +17,7 @@
   const authStore = useAuthStore()
   const notificationStore = useNotificationStore()
   onMounted(notificationStore.fetch)
+  const searchInput = ref(route.query.keyword || '')
 
   const menuItems = [{ label: '後台首頁', to: '/admin' }]
   const memberMenu = ref()
@@ -52,6 +54,36 @@
   }
 
   authStore.initAuth()
+
+  function search() {
+    if (!searchInput.value.trim()) return
+
+    router.push({
+      path: '/',
+      query: {
+        ...route.query,
+        keyword: searchInput.value.trim(),
+        page: 1,
+      },
+    })
+  }
+
+  function clearSearch() {
+    searchInput.value = ''
+
+    const newQuery = { ...route.query }
+
+    if (!newQuery.keyword) return
+
+    delete newQuery.keyword
+    delete newQuery.page
+
+    if (Object.keys(newQuery).length === 0) {
+      router.replace({ path: '/' })
+    } else {
+      router.replace({ path: '/', query: newQuery })
+    }
+  }
 
   const logout = () => {
     authStore.logout()
@@ -92,6 +124,11 @@
         </RouterLink>
       </nav>
 
+      <ProductSearchBar
+        v-model="searchInput"
+        @submit="search"
+        @clear="clearSearch"
+      />
       <div class="hidden md:flex items-center gap-4">
         <div v-if="authStore.isLoggedIn" class="hidden md:block relative">
           <Button

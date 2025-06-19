@@ -1,15 +1,11 @@
 <script setup>
   import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
-  import ProductSearchBar from '@/components/ProductSearchBar.vue'
   import ProductCard from '@/components/ProductCard.vue'
   import { useProductList } from '@/composables/useProductList.js'
   import Button from 'primevue/button'
   import { RouterLink } from 'vue-router'
 
   const {
-    inputKeyword,
-    resetSearch,
-    submitSearch,
     activeCategory,
     allCategories,
     paginatedProducts,
@@ -30,12 +26,6 @@
       :categories="allCategories"
       :activeCategory="activeCategory"
       @update:category="handleCategoryClick"
-    />
-
-    <ProductSearchBar
-      v-model="inputKeyword"
-      @submit="submitSearch"
-      @clear="resetSearch"
     />
 
     <div

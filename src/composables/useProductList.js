@@ -34,13 +34,12 @@ export function useProductList() {
     },
   })
 
-  const inputKeyword = ref(route.query.keyword || '')
   const productSection = ref(null)
 
   watch(
     () => route.query.keyword,
     async (val) => {
-      inputKeyword.value = val || ''
+      if (!val) return
       await nextTick()
       productSection.value?.scrollIntoView({
         behavior: 'smooth',
@@ -48,16 +47,6 @@ export function useProductList() {
       })
     }
   )
-
-  function submitSearch() {
-    router.push({
-      query: {
-        ...route.query,
-        keyword: inputKeyword.value,
-        page: 1,
-      },
-    })
-  }
 
   const products = ref([])
 
@@ -69,6 +58,13 @@ export function useProductList() {
       // eslint-disable-next-line no-console
       console.error('獲取產品列表失敗:', err)
       alert('產品載入失敗，請確認後端 API 是否正常，或稍後再試')
+    }
+    if (route.query.keyword && route.query.keyword.trim()) {
+      await nextTick()
+      productSection.value?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
     }
   })
 
@@ -89,6 +85,7 @@ export function useProductList() {
   const totalPages = computed(() =>
     Math.max(1, Math.ceil(filteredProducts.value.length / itemsPerPage))
   )
+
   const paginatedProducts = computed(() => {
     const start = (currentPage.value - 1) * itemsPerPage
     return filteredProducts.value.slice(start, start + itemsPerPage)
@@ -116,10 +113,6 @@ export function useProductList() {
       pageInput.value = ''
     }
   }
-  function resetSearch() {
-    inputKeyword.value = ''
-    router.push({ query: { ...route.query, keyword: '', page: 1 } })
-  }
 
   const pageButtons = computed(() => {
     const total = totalPages.value
@@ -144,10 +137,7 @@ export function useProductList() {
   })
 
   return {
-    inputKeyword,
     keyword,
-    resetSearch,
-    submitSearch,
     activeCategory,
     allCategories,
     products,
