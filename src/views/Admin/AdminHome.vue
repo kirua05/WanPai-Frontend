@@ -1,15 +1,14 @@
 <script setup>
   import { RouterLink, useRoute, useRouter } from 'vue-router'
-  import InputText from '@/volt/InputText.vue'
   import Menu from '@/volt/Menu.vue'
   import { ref } from 'vue'
   import Button from 'primevue/button'
+  import AdminSearchBar from '@/components/AdminSearchBar.vue'
   import { useAuthStore } from '@/stores/auth'
 
   const authStore = useAuthStore()
   const route = useRoute()
   const router = useRouter()
-  const search = ref('')
 
   authStore.initAuth()
 
@@ -56,15 +55,10 @@
         >
           <img src="@/assets/logo.png" alt="logo" class="h-30 object-contain" />
         </RouterLink>
-        <InputText
-          v-model="search"
-          type="text"
-          placeholder=" 搜尋"
-          :pt="{
-            root: 'w-72 text-gray-700 bg-white p-2 outline-none rounded-full shadow focus:ring-2 focus:ring-blue-300 transition',
-          }"
+        <AdminSearchBar
+          class="w-72 text-gray-700 p-2 outline-none focus:ring-2 focus:ring-blue-300 transition"
         />
-        <div v-if="authStore.isLoggedIn">
+        <div v-if="authStore.isLoggedIn" class="mr-2">
           <Button label="登出" severity="danger" size="small" @click="logout" />
         </div>
       </div>
