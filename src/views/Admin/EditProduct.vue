@@ -1,7 +1,7 @@
 <script setup>
-  import { useRoute } from 'vue-router'
-  import { ref, onMounted } from 'vue'
-  import UploadFile from '@/components/UploadFile.vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { ref, onMounted, computed } from 'vue'
+  import EditProductImage from '@/views/Admin/EditProductImage.vue'
   import AutoComplete from 'primevue/autocomplete'
   import Select from 'primevue/select'
   import { createProduct, fetchProductById, updateProduct } from '@/api/product'
@@ -10,8 +10,11 @@
   import { useToast } from 'primevue/usetoast'
   import Toast from 'primevue/toast'
   import Checkbox from 'primevue/checkbox'
+
+  const imageUploaderRef = ref(null)
   const showStockEdit = ref(false)
   const toast = useToast()
+  const tagValue = ref([])
 
   const toolbarOptions = [
     ['bold', 'italic', 'underline'],
@@ -22,10 +25,10 @@
   ]
 
   const route = useRoute()
-  const mode = route.query.mode || 'edit'
-  const productId = route.params.id || null
+  const router = useRouter()
 
-  const isCreateMode = mode === 'create'
+  const isCreateMode = computed(() => route.name === 'createProduct')
+  const productId = computed(() => Number(route.params.id) || null)
 
   const statusOptions = ref([
     { name: '草稿', value: 'draft' },
@@ -58,79 +61,59 @@
   const items = ref([])
   // 商品標籤選擇 WIP
   const search = (event) => {
-    items.value = [...Array(10).keys()].map((item) => event.query + '-' + item)
+    items.value = [...Array(10).keys()].map((i) => ({
+      name: `${event.query}-${i}`,
+      code: `TAG-${i}`, // 或者是從 API 來的 id
+    }))
   }
 
   const submit = async () => {
-    if (!form.value.name) {
+    if (!isCreateMode.value && !imageUploaderRef.value.validateBeforeSubmit()) {
+      return
+    }
+
+    if (!form.value.name || !form.value.sku || !form.value.description) {
       toast.add({
         severity: 'warn',
-        summary: '請輸入商品名稱',
+        summary: '欄位未填寫完整',
+        detail: '請填寫商品名稱、貨號與描述',
         life: 3000,
       })
       return
     }
-    if (!form.value.sku) {
-      toast.add({
-        severity: 'warn',
-        summary: '請輸入商品貨號',
-        life: 3000,
-      })
-      return
-    }
-    if (!form.value.description) {
-      toast.add({
-        severity: 'warn',
-        summary: '請輸入商品描述',
-        life: 3000,
-      })
-      return
-    }
-    const productId = route.params.id
-    if (isCreateMode) {
-      try {
-        await createProduct({ ...form.value })
+
+    try {
+      if (isCreateMode.value) {
+        const created = await createProduct(form.value)
         toast.add({
           severity: 'success',
           summary: '成功！',
-          detail: '已成功新增商品',
+          detail: '商品已建立，請上傳圖片',
           life: 3000,
         })
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(err)
-        toast.add({
-          severity: 'warn',
-          summary: '哦喔！',
-          detail: '暫時無法新增商品，請稍後再試',
-          life: 3000,
-        })
-      }
-    } else {
-      try {
-        await updateProduct(productId, { ...form.value })
+        router.push({ name: 'editProduct', params: { id: created.id } })
+      } else {
+        await updateProduct(productId.value, form.value)
         toast.add({
           severity: 'success',
           summary: '成功！',
-          detail: '已成功更新商品',
-          life: 3000,
-        })
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(err)
-        toast.add({
-          severity: 'warn',
-          summary: '哦喔！',
-          detail: '暫時無法更新商品，請稍後再試',
+          detail: '商品已更新',
           life: 3000,
         })
       }
+    } catch (err) {
+      toast.add({
+        severity: 'warn',
+        summary: '哦喔！',
+        detail: '暫時無法更新商品，請稍後再試',
+        life: 3000,
+      })
     }
   }
 
   onMounted(async () => {
-    if (!isCreateMode && productId) {
-      const res = await fetchProductById(productId)
+    if (!isCreateMode.value && productId.value) {
+      const res = await fetchProductById(productId.value)
       form.value = {
         name: res.name,
         sku: res.sku,
@@ -145,18 +128,63 @@
 
 <template>
   <Toast />
-  <div class="flex justify-center items-start min-h-screen bg-gray-100 py-10">
-    <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl px-10 py-8">
-      <h2
-        class="text-3xl font-bold mb-6 pb-2 border-b border-gray-200 text-primary"
-      >
-        {{ isCreateMode ? '新增商品' : '編輯商品' }}
-      </h2>
-      <div class="flex flex-col gap-6 mt-2">
-        <div>
-          <label class="font-semibold mb-2 block text-gray-700" for="title">
-            商品名稱
-          </label>
+  <div class="mr-6">
+    <h2 class="text-2xl">
+      {{ isCreateMode ? '新增商品' : '編輯商品' }}
+    </h2>
+    <div class="flex flex-col gap-4 mt-4">
+      <div>
+        <label class="font-bold mb-2 block" for="title">商品名稱</label>
+        <input
+          v-model="form.name"
+          type="text"
+          id="title"
+          class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full px-3 py-2 transition-colors duration-200"
+        />
+      </div>
+
+      <div>
+        <label class="font-bold mb-2 block" for="sku">商品貨號</label>
+        <input
+          v-model="form.sku"
+          type="text"
+          id="sku"
+          class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full px-3 py-2 transition-colors duration-200"
+        />
+      </div>
+      <div>
+        <label class="font-bold mb-2 block" for="description">商品描述</label>
+        <QuillEditor
+          v-model:content="form.description"
+          content-type="html"
+          :toolbar="toolbarOptions"
+          theme="snow"
+          style="height: 300px"
+        />
+      </div>
+
+      <div>
+        <label class="font-bold mb-2 block" for="image">商品圖片</label>
+        <EditProductImage
+          v-if="!isCreateMode"
+          :productId="productId"
+          ref="imageUploaderRef"
+        />
+      </div>
+      <div>
+        <label class="font-bold mb-2 block" for="price">商品價格</label>
+        <input
+          v-model="form.price"
+          type="number"
+          id="price"
+          min="0"
+          class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full md:w-56 px-3 py-2 transition-colors duration-200"
+        />
+      </div>
+
+      <div>
+        <label class="font-bold mb-2 block" for="stock">目前庫存數</label>
+        <div class="flex gap-4 items-end">
           <input
             v-model="form.name"
             type="text"
