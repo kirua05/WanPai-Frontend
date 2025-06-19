@@ -19,10 +19,6 @@
     }
   }
 
-  function clearKeyword() {
-    emit('update:modelValue', '')
-    emit('clear')
-  }
 </script>
 
 <template>
@@ -40,13 +36,6 @@
     >
       <i class="pi pi-search text-sm" />
       搜尋
-    </button>
-    <button
-      @click="clearKeyword"
-      class="flex items-center gap-1 bg-gray-100 text-sm px-3 py-[6px] rounded-md hover:bg-gray-200"
-    >
-      <i class="pi pi-times text-sm" />
-      清除搜尋
     </button>
   </div>
 </template>

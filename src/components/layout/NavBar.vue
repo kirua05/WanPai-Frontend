@@ -19,7 +19,6 @@
   onMounted(notificationStore.fetch)
   const searchInput = ref(route.query.keyword || '')
 
-  const menuItems = [{ label: '後台首頁', to: '/admin' }]
   const memberMenu = ref()
 
   const memberMenuItems = ref([
@@ -66,23 +65,6 @@
         page: 1,
       },
     })
-  }
-
-  function clearSearch() {
-    searchInput.value = ''
-
-    const newQuery = { ...route.query }
-
-    if (!newQuery.keyword) return
-
-    delete newQuery.keyword
-    delete newQuery.page
-
-    if (Object.keys(newQuery).length === 0) {
-      router.replace({ path: '/' })
-    } else {
-      router.replace({ path: '/', query: newQuery })
-    }
   }
 
   const logout = () => {

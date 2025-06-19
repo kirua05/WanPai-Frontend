@@ -97,6 +97,8 @@
           life: 3000,
         })
       } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err)
         toast.add({
           severity: 'warn',
           summary: '哦喔！',
@@ -114,6 +116,8 @@
           life: 3000,
         })
       } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err)
         toast.add({
           severity: 'warn',
           summary: '哦喔！',
