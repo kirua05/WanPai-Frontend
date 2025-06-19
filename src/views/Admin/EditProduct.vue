@@ -15,6 +15,7 @@
   const showStockEdit = ref(false)
   const toast = useToast()
   const tagValue = ref([])
+  const pendingImages = ref([])
 
   const toolbarOptions = [
     ['bold', 'italic', 'underline'],
@@ -68,10 +69,6 @@
   }
 
   const submit = async () => {
-    if (!isCreateMode.value && !imageUploaderRef.value.validateBeforeSubmit()) {
-      return
-    }
-
     if (!form.value.name || !form.value.sku || !form.value.description) {
       toast.add({
         severity: 'warn',
@@ -85,12 +82,17 @@
     try {
       if (isCreateMode.value) {
         const created = await createProduct(form.value)
+
+        productId.value = created.id
+        await imageUploaderRef.value.uploadPending(created.id)
+
         toast.add({
           severity: 'success',
           summary: '成功！',
-          detail: '商品已建立，請上傳圖片',
+          detail: '商品已建立並完成圖片上傳',
           life: 3000,
         })
+
         router.push({ name: 'editProduct', params: { id: created.id } })
       } else {
         await updateProduct(productId.value, form.value)
@@ -166,8 +168,9 @@
       <div>
         <label class="font-bold mb-2 block" for="image">商品圖片</label>
         <EditProductImage
-          v-if="!isCreateMode"
           :productId="productId"
+          :pending-images="pendingImages"
+          :enabled="!!productId"
           ref="imageUploaderRef"
         />
       </div>

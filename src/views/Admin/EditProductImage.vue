@@ -8,7 +8,12 @@
     deleteProductImage,
   } from '@/api/productImage'
 
-  const props = defineProps({ productId: Number })
+  const props = defineProps({
+    productId: Number,
+    pendingImages: Array,
+    enabled: Boolean,
+  })
+
   const toast = useToast()
 
   const coverImage = ref(null)
@@ -19,6 +24,8 @@
   const MAX_FILE_SIZE_MB = 5
   const MAX_PREVIEW_IMAGES = 3
   const maxPreviewImages = ref(MAX_PREVIEW_IMAGES)
+
+  const internalPendingImages = ref([])
 
   const loadImages = async () => {
     try {
@@ -72,7 +79,11 @@
   const onSelectMainImage = async (e) => {
     const file = e.target.files[0]
     if (file && validateImage(file)) {
-      await upload(file, true)
+      if (!props.productId) {
+        internalPendingImages.value.push({ file, isCover: true })
+      } else {
+        await upload(file, true)
+      }
     }
   }
 
@@ -81,7 +92,11 @@
     const slotsLeft = MAX_PREVIEW_IMAGES - previewImages.value.length
     const validFiles = files.filter(validateImage).slice(0, slotsLeft)
     for (const file of validFiles) {
-      await upload(file, false)
+      if (!props.productId) {
+        internalPendingImages.value.push({ file, isCover: false })
+      } else {
+        await upload(file, false)
+      }
     }
   }
 
@@ -89,7 +104,11 @@
     e.preventDefault()
     const file = e.dataTransfer.files[0]
     if (file && validateImage(file)) {
-      await upload(file, true)
+      if (!props.productId) {
+        internalPendingImages.value.push({ file, isCover: true })
+      } else {
+        await upload(file, true)
+      }
     }
   }
 
@@ -99,7 +118,11 @@
     const slotsLeft = MAX_PREVIEW_IMAGES - previewImages.value.length
     const validFiles = files.filter(validateImage).slice(0, slotsLeft)
     for (const file of validFiles) {
-      await upload(file, false)
+      if (!props.productId) {
+        internalPendingImages.value.push({ file, isCover: false })
+      } else {
+        await upload(file, false)
+      }
     }
   }
 
@@ -122,6 +145,31 @@
     } finally {
       isUploading.value = false
       checkPreviewLimit()
+    }
+  }
+
+  const uploadPending = async (productId) => {
+    if (!internalPendingImages.value.length) return
+    isUploading.value = true
+    try {
+      for (const item of internalPendingImages.value) {
+        const { file, isCover } = item
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append('isCover', isCover ? 'true' : 'false')
+        await uploadProductImage(productId, formData)
+      }
+      internalPendingImages.value = []
+      await loadImages()
+    } catch (err) {
+      toast.add({
+        severity: 'error',
+        summary: '圖片上傳失敗',
+        detail: '建立商品成功但圖片未成功上傳',
+        life: 4000,
+      })
+    } finally {
+      isUploading.value = false
     }
   }
 
@@ -148,7 +196,10 @@
   }
 
   const validateBeforeSubmit = () => {
-    if (!coverImage.value) {
+    if (
+      !coverImage.value &&
+      !internalPendingImages.value.some((i) => i.isCover)
+    ) {
       toast.add({
         severity: 'warn',
         summary: '驗證失敗',
@@ -160,10 +211,15 @@
     return true
   }
 
-  onMounted(loadImages)
+  onMounted(() => {
+    if (props.productId) {
+      loadImages()
+    }
+  })
 
   defineExpose({
     validateBeforeSubmit,
+    uploadPending,
   })
 </script>
 
@@ -185,6 +241,7 @@
           class="hidden"
           ref="coverInput"
           @change="onSelectMainImage"
+          name="cover"
         />
       </div>
       <div v-if="coverImage" class="mt-4 relative w-40">
@@ -208,6 +265,7 @@
         @change="onSelectPreviewImages"
         :disabled="overLimit"
         class="block w-full border p-2 rounded cursor-pointer"
+        name="previews"
       />
 
       <div
