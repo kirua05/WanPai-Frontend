@@ -2,6 +2,7 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { useAuthStore } from './stores/auth'
 import App from './App.vue'
 import router from './router'
 import PrimeVue from 'primevue/config'
@@ -53,6 +54,9 @@ app.use(PrimeVue, {
   },
 })
 app.use(ToastService)
+
+const authStore = useAuthStore()
+authStore.initAuth()
 
 router.afterEach(() => {
   document.body.style.overflow = 'auto'

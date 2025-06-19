@@ -1,28 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ProductDetailPage from '../views/ProductDetailPage.vue'
-import CartView from '@/views/CartView.vue'
-import HomeView from '@/views/HomeView.vue'
-import AuthForm from '@/views/AuthForm.vue'
-import NotFound from '@/views/NotFound.vue'
-import UserProfile from '@/views/UserProfile.vue'
-
+import { useAuthStore } from '@/stores/auth'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('../views/HomeView.vue'),
     },
     {
       path: '/products/:id',
       name: 'product-detail',
-      component: ProductDetailPage,
+      component:() => import('../views/ProductDetailPage.vue'),
     },
     {
       path: '/admin',
       name: 'admin',
       component: () => import('../views/Admin/AdminHome.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true },
       children: [
         {
           path: 'products',
@@ -50,31 +45,35 @@ const router = createRouter({
       path: '/notifications',
       name: 'notifications',
       component: () => import('../views/NotificationPage.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/productdetailpage',
       name: 'productdetailpage',
-      component: ProductDetailPage,
+      component: () => import('../views/ProductDetailPage.vue'),
     },
     {
       path: '/cart',
       name: 'cart',
-      component: CartView,
+      component: () => import('../views/CartView.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/orders',
       name: 'Orders',
       component: () => import('@/views/OrderManagement.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/authform',
       name: 'authform',
-      component: AuthForm,
+      component: () => import('../views/AuthForm.vue'),
     },
     {
       path: '/orderdetail/:id',
       name: 'OrderDetail',
       component: () => import('@/views/OrderDetail.vue'),
+      meta: { requiresAuth: true },
     },
     {
       path: '/favorites',
@@ -84,14 +83,46 @@ const router = createRouter({
     {
       path: '/userprofile',
       name: 'userprofile',
-      component: UserProfile,
+      component: () => import('@/views/UserProfile.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
-      component: NotFound,
+      component: () => import('@/views/NotFound.vue'),
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    if (authStore.showToast) {
+      authStore.showToast.add({
+        severity: 'warn',
+        summary: '需要登入',
+        detail: '請先登入才能訪問此頁面',
+        life: 3000
+      })
+    }
+    next('/authform')
+    return
+  }
+
+  if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    if (authStore.showToast) {
+      authStore.showToast.add({
+        severity: 'error',
+        summary: '權限不足',
+        detail: '需要管理員權限才能訪問此頁面',
+        life: 3000
+      })
+    }
+    next('/')
+    return
+  }
+
+  next()
 })
 
 export default router
