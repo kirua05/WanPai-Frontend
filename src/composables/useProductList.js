@@ -54,7 +54,7 @@ export function useProductList() {
     try {
       const res = await axios.get('/products')
       products.value = res.data
-    } catch (err) {
+    } catch {
       alert('產品載入失敗，請確認後端 API 是否正常，或稍後再試')
     }
 
