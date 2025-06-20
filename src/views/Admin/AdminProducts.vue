@@ -39,21 +39,13 @@
     },
   ])
 
-  const currentStatus = ref('all')
-  const handleTabChange = async (newStatus) => {
-    currentStatus.value = newStatus
-    try {
-      const res = await fetchAllProducts(newStatus)
-      productValue.value = res
-    } catch (error) {
-      toast.add({
-        severity: 'warn',
-        summary: '商品暫時無法載入',
-        detail: '請稍後再試',
-        life: 3000,
-      })
-    }
-  }
+const goCreateProduct = () => {
+  router.push({ name: 'createProduct' })
+}
+
+const goEditProduct = (id) => {
+  router.push({ name: 'editProduct', params: { id } })
+}
 
   const productValue = ref([])
   onMounted(async () => {
@@ -69,12 +61,7 @@
     <div class="card flex justify-center">
       <button
         class="text-md text-white px-3 py-2 border-surface-200 rounded-md bg-primary cursor-pointer"
-        @click="
-          router.push({
-            path: '/admin/products/edit',
-            query: { mode: 'create' },
-          })
-        "
+        @click="router.push({ name: 'createProduct' })"
       >
         新增商品
       </button>
@@ -102,12 +89,7 @@
       <template #body-name="{ data }">
         <a
           class="w-full underline text-primary cursor-pointer"
-          @click="
-            router.push({
-              path: `/admin/products/edit/${data.id}`,
-              query: { mode: 'edit' },
-            })
-          "
+          @click="router.push({ name: 'editProduct', params: { id: data.id } })"
         >
           {{ data.name }}
         </a>

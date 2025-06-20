@@ -33,8 +33,9 @@ const router = createRouter({
         {
           path: 'products/edit/:id',
           name: 'editProduct',
-          component: () => import('../views/Admin/EditProduct.vue'),
+          component: () => import('@/views/Admin/EditProduct.vue'),
         },
+
         {
           path: 'orders',
           name: 'orders',
