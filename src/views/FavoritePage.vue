@@ -2,6 +2,7 @@
   <div class="bg-gray-50 min-h-screen py-10 px-4">
     <Toast />
     <div class="max-w-6xl mx-auto flex gap-6">
+      <!-- 側邊欄 -->
       <aside class="w-64 bg-white rounded-xl shadow p-6">
         <div class="mb-6 flex items-center gap-3">
           <div
@@ -42,7 +43,7 @@
             to="/favorites"
             :class="[
               'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors',
-              route.path === '/favorites'
+              route.path === '/Favorites'
                 ? 'text-primary-600 bg-primary-50 border-l-4 border-primary-600'
                 : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
             ]"
@@ -53,6 +54,7 @@
         </nav>
       </aside>
 
+      <!-- 收藏清單主內容 -->
       <div class="flex-1 bg-white rounded-xl shadow p-6">
         <h2
           class="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2"
@@ -84,7 +86,7 @@
           >
             <div class="col-span-6 flex gap-4 items-start">
               <img
-                :src="item.image"
+                :src="item.image || '/no-image.jpg'"
                 alt="商品圖片"
                 class="w-24 h-24 object-cover rounded-md"
               />
@@ -132,7 +134,7 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { RouterLink, useRoute } from 'vue-router'
   import Dropdown from 'primevue/dropdown'
   import Button from 'primevue/button'
@@ -141,25 +143,34 @@
 
   const toast = useToast()
   const route = useRoute()
+  const favorites = ref([])
 
-  const favorites = ref([
-    {
-      id: 1,
-      refId: '25032014',
-      name: '小白模型',
-      image: 'https://via.placeholder.com/100x100',
-      price: 320,
-      quantity: null,
-    },
-    {
-      id: 2,
-      refId: '25032015',
-      name: '小白模型2',
-      image: 'https://via.placeholder.com/100x100',
-      price: 320,
-      quantity: null,
-    },
-  ])
+  onMounted(async () => {
+    const token = localStorage.getItem('token')
+    try {
+      const { data } = await axios.get('/api/favorites', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      favorites.value = data.map((item) => ({
+        id: item.productId,
+        refId: item.refId,
+        name: item.productName,
+        image: item.thumbnail,
+        price: item.price,
+        quantity: null,
+      }))
+    } catch (err) {
+      toast.add({
+        severity: 'error',
+        summary: '載入失敗',
+        detail: err?.response?.data?.error || '無法取得收藏資料',
+        life: 3000,
+      })
+    }
+  })
 
   async function addToCart(item) {
     const token = localStorage.getItem('token')
@@ -186,7 +197,30 @@
     }
   }
 
-  function removeFavorite(id) {
-    favorites.value = favorites.value.filter((f) => f.id !== id)
+  async function removeFavorite(productId) {
+    const token = localStorage.getItem('token')
+
+    try {
+      await axios.delete(`/api/favorites/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      favorites.value = favorites.value.filter((f) => f.id !== productId)
+
+      toast.add({
+        severity: 'success',
+        summary: '已取消收藏',
+        life: 2000,
+      })
+    } catch (err) {
+      toast.add({
+        severity: 'error',
+        summary: '刪除失敗',
+        detail: err?.response?.data?.error || '無法取消收藏',
+        life: 3000,
+      })
+    }
   }
 </script>
