@@ -6,10 +6,10 @@
     activeCategory: String,
   })
 
-  const emit = defineEmits(['update:category'])
+  const emit = defineEmits(['update:activeCategory'])
 
   function setCategory(c) {
-    emit('update:category', c)
+    emit('update:activeCategory', c)
   }
 </script>
 

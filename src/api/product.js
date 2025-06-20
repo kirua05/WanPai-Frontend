@@ -22,4 +22,16 @@ const updateProduct = async (id, data) => {
   return res.data
 }
 
-export { fetchAllProducts, fetchProductById, createProduct, updateProduct }
+
+const fetchFilterData = async () => {
+  const res = await axios.get('/tags/filter')
+  return res.data
+}
+
+export {
+  fetchAllProducts,
+  fetchProductById,
+  createProduct,
+  updateProduct,
+  fetchFilterData,
+}

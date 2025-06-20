@@ -1,12 +1,11 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, watch } from 'vue'
   import { RouterLink, useRoute, useRouter } from 'vue-router'
   import Drawer from 'primevue/drawer'
   import Button from 'primevue/button'
   import Menu from 'primevue/menu'
   import { useCartStore } from '@/stores/cart'
   import { useAuthStore } from '@/stores/auth'
-  import { onMounted } from 'vue'
   import { useNotificationStore } from '@/stores/notifications'
   import ProductSearchBar from '@/components/ProductSearchBar.vue'
 
@@ -16,8 +15,31 @@
   const router = useRouter()
   const authStore = useAuthStore()
   const notificationStore = useNotificationStore()
-  onMounted(notificationStore.fetch)
+
+  watch(
+    () => authStore.isLoggedIn,
+    async (isLoggedIn) => {
+      if (isLoggedIn) {
+        try {
+          await notificationStore.fetch()
+        } catch (error) {
+          console.warn(
+            'Could not fetch notifications, this is expected if not logged in.',
+            error
+          )
+        }
+      }
+    },
+    { immediate: true }
+  )
+
   const searchInput = ref(route.query.keyword || '')
+
+  const menuItems = ref([
+    { label: '首頁', to: '/' },
+    { label: '商品列表', to: '/products' },
+    // 您可以在這裡添加更多導覽項目
+  ])
 
   const memberMenu = ref()
 
@@ -63,6 +85,17 @@
         ...route.query,
         keyword: searchInput.value.trim(),
         page: 1,
+      },
+    })
+  }
+
+  const clearSearch = () => {
+    searchInput.value = ''
+    router.push({
+      path: '/',
+      query: {
+        ...route.query,
+        keyword: undefined,
       },
     })
   }

@@ -1,23 +1,30 @@
 import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import axios from '@/utils/axiosInstance'
 import { useRoute, useRouter } from 'vue-router'
+import { fetchFilterData } from '@/api/product'
 
 export function useProductList() {
   const route = useRoute()
   const router = useRouter()
 
-  const categories = [
-    '模型',
-    '公仔',
-    '立牌',
-    '雕像',
-    '抱枕',
-    '徽章',
-    '吊飾',
-    'T-shirt',
-  ]
-  const allCategories = ['全部', ...categories]
+  const categories = ref([])
+  const allCategories = computed(() => ['全部', ...categories.value])
   const itemsPerPage = 20
+
+  const loadFilterData = async () => {
+    try {
+      const filterData = await fetchFilterData()
+      if (filterData.series && Array.isArray(filterData.series)) {
+        categories.value = filterData.series.map((item) => item.tagname)
+      } else {
+        console.warn('API returned no series array:', filterData)
+        categories.value = []
+      }
+    } catch (error) {
+      console.error('Failed to load filter data:', error)
+      categories.value = []
+    }
+  }
 
   const activeCategory = computed({
     get: () => route.query.category || '全部',
@@ -50,30 +57,44 @@ export function useProductList() {
 
   const products = ref([])
 
-  onMounted(async () => {
+  const loadProductsByCategory = async (category) => {
     try {
-      const res = await axios.get('/products')
-      products.value = res.data
+      if (category === '全部') {
+        const res = await axios.get('/products')
+        products.value = res.data
+      } else {
+        const res = await axios.get('/tags/filterByTagnames', {
+          params: { tagname: category },
+        })
+        products.value = res.data.products || []
+      }
     } catch {
-      alert('產品載入失敗，請確認後端 API 是否正常，或稍後再試')
+      products.value = []
     }
+  }
 
-    if (route.query.keyword && route.query.keyword.trim()) {
-      await nextTick()
-      productSection.value?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
+  onMounted(async () => {
+    await loadFilterData()
+    // Now that filter data is loaded, start loading products based on the active category.
+    loadProductsByCategory(activeCategory.value)
   })
+
+  // Watch for category changes from user interaction, but not on initial load.
+  watch(
+    () => activeCategory.value,
+    async (newCategory, oldCategory) => {
+      // Avoid re-fetching on the initial "undefined" to "全部" transition that onMounted handles.
+      if (newCategory !== oldCategory && oldCategory !== undefined) {
+        await loadProductsByCategory(newCategory)
+      }
+    }
+  )
 
   const filteredProducts = computed(() => {
     let result = products.value
 
-    if (activeCategory.value !== '全部') {
-      result = result.filter((p) => p.category === activeCategory.value)
-    }
-
+    // Category filtering is handled by `loadProductsByCategory` via API call.
+    // This computed property now only handles keyword filtering.
     if (keyword.value.trim().length >= 1) {
       result = result.filter((p) =>
         p.name.toLowerCase().includes(keyword.value.toLowerCase())
