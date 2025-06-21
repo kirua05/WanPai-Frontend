@@ -15,6 +15,7 @@
   import { useToast } from 'primevue/usetoast'
   import Toast from 'primevue/toast'
   import InputText from 'primevue/inputtext'
+  import axios from 'axios'
   const toast = useToast()
   // Pinia 購物車狀態
   const cart = useCartStore()
@@ -30,6 +31,8 @@
     recipientPhone: '',
     shippingAddress: '',
   })
+
+  const profileLoading = ref(false)
 
   const shippingDetailsMove = ref(null)
 
@@ -154,6 +157,29 @@
     { deep: true }
   )
 
+  async function loadUserProfile() {
+    try {
+      profileLoading.value = true
+      const response = await axios.get(
+        'http://localhost:3000/api/users/profile',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // 根據你的認證方式調整
+          },
+        }
+      )
+      const profile = response.data
+      if (profile) {
+        shippingForm.recipientPhone = profile.phone || ''
+        shippingForm.shippingAddress = profile.address || ''
+      }
+    } catch (error) {
+      console.error('載入個人資料失敗:', error)
+    } finally {
+      profileLoading.value = false
+    }
+  }
+
   //結帳
   async function ecpayCheckout() {
     if (!isRecipientNameValid.value) {
@@ -207,6 +233,7 @@
       })
     } else {
       showShippingDetails.value = true
+      loadUserProfile()
       nextTick(() => {
         if (shippingDetailsMove.value) {
           shippingDetailsMove.value.scrollIntoView({ behavior: 'smooth' })
