@@ -1,40 +1,55 @@
 <script setup>
-  import { ref } from 'vue'
-  import { FilterMatchMode, FilterService } from '@primevue/core/api'
+  import { ref, computed } from 'vue'
   import AutoComplete from 'primevue/autocomplete'
+  import { fetchAllProducts } from '@/api/product'
+  import { fetchOrders } from '@/api/order'
+  import { onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
+  const router = useRouter()
+  const items = ref([])
 
-  const selectedItem = ref()
-  const filteredItems = ref()
-  const groupedItems = ref([
-    {
-      label: '商品',
-      code: 'products',
-      items: [{ label: '巨大侏儒河馬', value: '巨大侏儒河馬' }],
-    },
-    {
-      label: '訂單',
-      code: 'orders',
-      items: [{ label: '王小明', value: '王小明' }],
-    },
-  ])
+  onMounted(async () => {
+    const [productRes, orderRes] = await Promise.all([
+      fetchAllProducts(),
+      fetchOrders(),
+    ])
 
-  const search = (event) => {
-    let query = event.query
-    let newFilteredItems = []
+    const productItems = productRes.map((product) => ({
+      id: product.id,
+      label: product.name,
+      code: product.sku,
+      type: 'product',
+    }))
 
-    for (let country of groupedItems.value) {
-      let filteredItems = FilterService.filter(
-        country.items,
-        ['label'],
-        query,
-        FilterMatchMode.CONTAINS
-      )
-      if (filteredItems && filteredItems.length) {
-        newFilteredItems.push({ ...country, ...{ items: filteredItems } })
-      }
+    const orderItems = orderRes.map((order) => ({
+      id: order.id,
+      label: order.orderNumber,
+      code: order.customer.name,
+      type: 'order',
+    }))
+
+    items.value = [...productItems, ...orderItems]
+  })
+  const keyword = ref('')
+  const selectedItem = ref(null)
+  const filteredItems = computed(() => {
+    if (!keyword.value) return []
+
+    const lowerKeyword = keyword.value.toLowerCase()
+
+    return items.value.filter(
+      (item) =>
+        item.label.toLowerCase().includes(lowerKeyword) ||
+        item.code.toLowerCase().includes(lowerKeyword)
+    )
+  })
+
+  const search = (item) => {
+    if (item.type === 'product') {
+      router.push(`admin/products/${item.id}`)
+    } else if (item.type === 'order') {
+      router.push(`admin/orders/${item.id}`)
     }
-
-    filteredItems.value = newFilteredItems
   }
 </script>
 
@@ -42,11 +57,10 @@
   <div class="card w-124">
     <AutoComplete
       v-model="selectedItem"
-      :suggestions="filteredItem"
-      @complete="search"
+      :suggestions="filteredItems"
+      @item-select="search"
+      @input="keyword = $event"
       optionLabel="label"
-      optionGroupLabel="label"
-      optionGroupChildren="items"
       placeholder="輸入商品名稱、貨號或訂單編號"
       :pt="{ pcInputText: { root: '!w-124' } }"
     >
