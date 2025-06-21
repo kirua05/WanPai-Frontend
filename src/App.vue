@@ -1,4 +1,6 @@
 <script setup>
+  import { computed } from 'vue'
+  import { useRoute } from 'vue-router'
   import Navbar from '@/components/layout/NavBar.vue'
   import Footer from '@/components/layout/Footer.vue'
   import { onMounted } from 'vue'
@@ -8,6 +10,8 @@
 
   const toast = useToast()
   const authStore = useAuthStore()
+  const route = useRoute()
+  const isAdmin = computed(() => route.path.startsWith('/admin'))
 
   onMounted(() => {
     authStore.setToastHandler(toast)
@@ -15,12 +19,13 @@
 </script>
 
 <template>
-  <Navbar />
   <Toast />
 
-  <main class="mt-6 min-h-screen">
+  <Navbar v-if="!isAdmin" />
+
+  <main :class="!isAdmin ? 'mt-6 min-h-screen' : ''">
     <RouterView />
   </main>
 
-  <Footer />
+  <Footer v-if="!isAdmin" />
 </template>

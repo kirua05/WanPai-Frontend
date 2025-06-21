@@ -145,132 +145,166 @@
 
 <template>
   <Toast />
-  <div class="mr-6">
-    <h2 class="text-2xl">
-      {{ isCreateMode ? '新增商品' : '編輯商品' }}
-    </h2>
-    <div class="flex flex-col gap-4 mt-4">
-      <div>
-        <label class="font-bold mb-2 block" for="title">商品名稱</label>
-        <input
-          v-model="form.name"
-          type="text"
-          id="title"
-          class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full px-3 py-2 transition-colors duration-200"
-        />
-      </div>
-
-      <div>
-        <label class="font-bold mb-2 block" for="sku">商品貨號</label>
-        <input
-          v-model="form.sku"
-          type="text"
-          id="sku"
-          class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full px-3 py-2 transition-colors duration-200"
-        />
-      </div>
-      <div>
-        <label class="font-bold mb-2 block" for="description">商品描述</label>
-        <QuillEditor
-          v-model:content="form.description"
-          content-type="html"
-          :toolbar="toolbarOptions"
-          theme="snow"
-          style="height: 300px"
-        />
-      </div>
-
-      <div>
-        <label class="font-bold mb-2 block" for="image">商品圖片</label>
-        <UploadFile />
-      </div>
-      <div>
-        <label class="font-bold mb-2 block" for="price">商品價格</label>
-        <input
-          v-model="form.price"
-          type="number"
-          id="price"
-          min="0"
-          class="bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full md:w-56 px-3 py-2 transition-colors duration-200"
-        />
-      </div>
-
-      <div>
-        <label class="font-bold mb-2 block" for="stock">目前庫存數</label>
-        <div class="flex gap-4 items-end">
+  <div class="flex justify-center items-start min-h-screen bg-gray-100 py-10">
+    <div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl px-10 py-8">
+      <h2
+        class="text-3xl font-bold mb-6 pb-2 border-b border-gray-200 text-primary"
+      >
+        {{ isCreateMode ? '新增商品' : '編輯商品' }}
+      </h2>
+      <div class="flex flex-col gap-6 mt-2">
+        <div>
+          <label class="font-semibold mb-2 block text-gray-700" for="title">
+            商品名稱
+          </label>
           <input
-            v-model="form.stockOnHand"
-            type="number"
-            id="stock"
-            min="0"
-            disabled
-            class="block bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full md:w-56 px-3 py-2 transition-colors duration-200"
+            v-model="form.name"
+            type="text"
+            id="title"
+            class="bg-gray-50 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary w-full px-4 py-2 text-lg transition"
           />
-          <div>
-            <Checkbox v-model="showStockEdit" id="stockEdit" binary />
-            <label class="ml-2" for="stockEdit">修改庫存</label>
+        </div>
+
+        <div>
+          <label class="font-semibold mb-2 block text-gray-700" for="sku">
+            商品貨號
+          </label>
+          <input
+            v-model="form.sku"
+            type="text"
+            id="sku"
+            class="bg-gray-50 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary w-full px-4 py-2 text-lg transition"
+          />
+        </div>
+        <div>
+          <label
+            class="font-semibold mb-2 block text-gray-700"
+            for="description"
+          >
+            商品描述
+          </label>
+          <QuillEditor
+            v-model:content="form.description"
+            content-type="html"
+            :toolbar="toolbarOptions"
+            theme="snow"
+            style="height: 220px"
+            class="rounded-b-lg border-x border-b border-gray-300 bg-gray-50"
+          />
+        </div>
+
+        <div>
+          <label class="font-semibold mb-2 block text-gray-700" for="image">
+            商品圖片
+          </label>
+          <UploadFile />
+        </div>
+        <div>
+          <label class="font-semibold mb-2 block text-gray-700" for="price">
+            商品價格
+          </label>
+          <input
+            v-model="form.price"
+            type="number"
+            id="price"
+            min="0"
+            class="bg-gray-50 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary w-full md:w-56 px-4 py-2 text-lg transition"
+          />
+        </div>
+
+        <div>
+          <label class="font-semibold mb-2 block text-gray-700" for="stock">
+            目前庫存數
+          </label>
+          <div class="flex gap-4 items-end">
+            <input
+              v-model="form.stockOnHand"
+              type="number"
+              id="stock"
+              min="0"
+              disabled
+              class="bg-gray-50 rounded-lg border border-gray-300 focus:outline-none w-full md:w-56 px-4 py-2 text-lg"
+            />
+            <div class="flex items-center">
+              <Checkbox v-model="showStockEdit" id="stockEdit" binary />
+              <label class="ml-2 text-gray-600" for="stockEdit">修改庫存</label>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="mt-2" v-if="showStockEdit">
-        <label class="font-bold mb-2 block">修改後庫存</label>
-        <input
-          type="number"
-          v-model="form.stockOnHand"
-          min="0"
-          class="block bg-surface-0 rounded-md border-surface-300 border focus:outline-none focus:ring-0 enabled:focus:border-primary w-full md:w-56 px-3 py-2 transition-colors duration-200"
-        />
-        <label class="font-bold mb-2 mt-2 block">修改原因</label>
-        <Select
-          v-model="form.stockEditReason"
-          :options="stockEditReasonTypes"
-          optionLabel="title"
-          placeholder="選擇修改原因"
-          class="w-full md:w-56"
-        />
-      </div>
-
-      <div>
-        <label for="multiple-ac-2" class="font-bold mb-2 block">商品標籤</label>
-        <div class="flex gap-4">
+        <div
+          v-if="showStockEdit"
+          class="shadow-inner px-4 py-6 rounded-lg bg-gray-50"
+        >
+          <label class="font-semibold mb-2 block text-gray-700">
+            修改後庫存
+          </label>
+          <input
+            type="number"
+            v-model="form.stockOnHand"
+            min="0"
+            class="bg-gray-50 rounded-lg border border-gray-300 focus:outline-none w-full md:w-56 px-4 py-2 text-lg"
+          />
+          <label class="font-semibold mb-2 mt-2 block text-gray-700">
+            修改原因
+          </label>
           <Select
-            v-model="selectedType"
-            :options="types"
-            optionLabel="name"
-            placeholder="選擇標籤類型"
+            v-model="form.stockEditReason"
+            :options="stockEditReasonTypes"
+            optionLabel="title"
+            placeholder="選擇修改原因"
             class="w-full md:w-56"
           />
-          <AutoComplete
-            v-model="tagValue"
-            inputId="multiple-ac-2"
-            multiple
-            fluid
-            :typeahead="false"
-            :suggestions="items"
-            field="name"
-            @complete="search"
+        </div>
+
+        <div>
+          <label
+            for="multiple-ac-2"
+            class="font-semibold mb-2 block text-gray-700"
+          >
+            商品標籤
+          </label>
+          <div class="flex gap-4">
+            <Select
+              v-model="selectedType"
+              :options="types"
+              optionLabel="name"
+              placeholder="選擇標籤類型"
+              class="w-full md:w-56"
+            />
+            <AutoComplete
+              v-model="tagValue"
+              inputId="multiple-ac-2"
+              multiple
+              fluid
+              :typeahead="false"
+              :suggestions="items"
+              field="name"
+              @complete="search"
+            />
+          </div>
+        </div>
+        <div>
+          <label class="font-semibold mb-2 block text-gray-700" for="status">
+            商品狀態
+          </label>
+          <Select
+            v-model="form.status"
+            :options="statusOptions"
+            optionLabel="name"
+            optionValue="value"
+            placeholder="選擇商品狀態"
+            class="w-full md:w-56"
           />
         </div>
-      </div>
-      <div>
-        <label class="font-bold mb-2 block" for="status">商品狀態</label>
-        <Select
-          v-model="form.status"
-          :options="statusOptions"
-          optionLabel="name"
-          optionValue="value"
-          placeholder="選擇商品狀態"
-          class="w-full md:w-56"
-        />
-      </div>
-      <div>
-        <button
-          class="text-md text-white px-3 py-2 border-surface-200 rounded-md bg-primary cursor-pointer"
-          @click="submit"
-        >
-          <slot>儲存商品</slot>
-        </button>
+        <div class="flex justify-end">
+          <button
+            class="text-md font-bold text-white px-4 py-2 rounded-lg bg-primary shadow-md hover:bg-primary-700 hover:cursor-pointer transition"
+            @click="submit"
+          >
+            儲存商品
+          </button>
+        </div>
       </div>
     </div>
   </div>
