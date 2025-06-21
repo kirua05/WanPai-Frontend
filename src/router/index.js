@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -11,7 +12,7 @@ const router = createRouter({
     {
       path: '/products/:id',
       name: 'product-detail',
-      component:() => import('../views/ProductDetailPage.vue'),
+      component: () => import('../views/ProductDetailPage.vue'),
     },
     {
       path: '/admin',
@@ -102,7 +103,7 @@ router.beforeEach((to, from, next) => {
         severity: 'warn',
         summary: '需要登入',
         detail: '請先登入才能訪問此頁面',
-        life: 3000
+        life: 3000,
       })
     }
     next('/authform')
@@ -115,7 +116,7 @@ router.beforeEach((to, from, next) => {
         severity: 'error',
         summary: '權限不足',
         detail: '需要管理員權限才能訪問此頁面',
-        life: 3000
+        life: 3000,
       })
     }
     next('/')

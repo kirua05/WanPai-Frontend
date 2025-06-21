@@ -10,7 +10,7 @@
   const authStore = useAuthStore()
 
   onMounted(() => {
-  authStore.setToastHandler(toast)
+    authStore.setToastHandler(toast)
   })
 </script>
 
