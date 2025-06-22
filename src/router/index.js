@@ -42,7 +42,7 @@ const router = createRouter({
           component: () => import('../views/Admin/AdminOrders.vue'),
         },
         {
-          path: 'orders/edit',
+          path: 'orders/edit/:id',
           name: 'editOrder',
           component: () => import('../views/Admin/EditOrder.vue'),
         },

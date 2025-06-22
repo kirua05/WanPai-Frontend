@@ -13,7 +13,7 @@
     { title: '全部', value: 'all' },
     { title: '已付款', value: 'paid' },
     { title: '已出貨', value: 'shipped' },
-    { title: '已完成', value: 'completed' },
+    { title: '已完成', value: 'delivered' },
     { title: '已取消', value: 'cancelled' },
   ])
   const orderColumns = ref([
@@ -23,9 +23,15 @@
       style: 'width: 20%',
       sortable: true,
     },
-    { field: 'date', header: '日期', style: 'width: 12.5%', sortable: true },
     {
-      field: 'customer',
+      field: 'createdAt',
+      header: '日期',
+      style: 'width: 12.5%',
+      sortable: true,
+      format: (val) => (val ? val.slice(0, 10) : ''),
+    },
+    {
+      field: 'recipientName',
       header: '顧客',
       style: 'width: 20%',
       sortable: false,
@@ -39,11 +45,16 @@
         ({
           paid: '已付款',
           shipped: '已出貨',
-          completed: '已完成',
+          delivered: '已完成',
           cancelled: '已取消',
         })[val] || '未知',
     },
-    { field: 'total', header: '總金額', style: 'width: 20%', sortable: true },
+    {
+      field: 'totalPrice',
+      header: '總金額',
+      style: 'width: 20%',
+      sortable: true,
+    },
   ])
   const currentStatus = ref('all')
   const handleTabChange = async (newStatus) => {
@@ -95,7 +106,7 @@
           class="w-full underline text-primary cursor-pointer"
           @click="
             router.push({
-              path: `/admin/orders/edit`,
+              path: `/admin/orders/edit/${data.id}`,
             })
           "
         >
