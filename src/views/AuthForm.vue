@@ -1,199 +1,239 @@
 <script setup>
-  import { ref, onMounted } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { useAuthStore } from '@/stores/auth'
-  import { useToast } from 'primevue/usetoast'
-  import axios from '@/utils/axiosInstance'
-  import Button from 'primevue/button'
-  import Toast from 'primevue/toast'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { useToast } from 'primevue/usetoast'
+import axios from 'axios'
+import Button from 'primevue/button'
+import Toast from 'primevue/toast'
 
-  const router = useRouter()
-  const authStore = useAuthStore()
-  const toast = useToast()
+const router = useRouter()
+const authStore = useAuthStore()
+const toast = useToast()
 
-  const isLogin = ref(true)
-  const username = ref('')
-  const email = ref('')
-  const password = ref('')
-  const isPasswordVisible = ref(false)
+const isLogin = ref(true)
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const isPasswordVisible = ref(false)
 
-  const togglePasswordVisibility = () => {
-    isPasswordVisible.value = !isPasswordVisible.value
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const token = urlParams.get('token')
+  const error = urlParams.get('error')
+
+  if (error) {
+    let errorMessage = '登入失敗，請重試'
+    if (error === 'email_required') {
+      errorMessage = 'Google 帳號需要提供 email 權限'
+    } else if (error === 'auth_failed') {
+      errorMessage = 'Google 認證失敗'
+    }
+
+    toast.add({
+      severity: 'error',
+      summary: 'Google 登入失敗',
+      detail: errorMessage,
+      life: 4000,
+    })
+
+    window.history.replaceState({}, document.title, window.location.pathname)
+    return
   }
 
-  onMounted(() => {
-    const urlParams = new URLSearchParams(window.location.search)
-    const error = urlParams.get('error')
-
-    if (error) {
-      let errorMessage = '登入失敗，請重試'
-      if (error === 'email_required') {
-        errorMessage = 'Google 帳號需要提供 email 權限'
-      } else if (error === 'auth_failed') {
-        errorMessage = 'Google 認證失敗'
+  if (token) {
+    try {
+      const parts = token.split('.')
+      if (parts.length !== 3) {
+        throw new Error('Token 格式錯誤：不是有效的 JWT')
       }
+      const payload = JSON.parse(atob(parts[1]))
+      toast.add({
+        severity: 'success',
+        summary: 'Google 登入成功',
+        detail: `歡迎回來，${payload.username}！`,
+        life: 3000,
+      })
 
+      authStore.login(token, payload.role || 'user')
+      localStorage.setItem('token', token)
+      localStorage.setItem('role', payload.role || 'user')
+      window.history.replaceState({}, document.title, window.location.pathname)
+
+      setTimeout(() => {
+        if (payload.role === 'admin') {
+          router.push('/admin')
+        } else {
+          router.push('/')
+        }
+      }, 1000)
+
+    } catch (error) {
       toast.add({
         severity: 'error',
-        summary: 'Google 登入失敗',
-        detail: errorMessage,
+        summary: '登入失敗',
+        detail: `Token 解析錯誤: ${error.message}`,
+        life: 3000,
+      })
+    }
+  }
+})
+
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value
+}
+
+const toggleForm = () => {
+  isLogin.value = !isLogin.value
+  username.value = ''
+  email.value = ''
+  password.value = ''
+}
+
+const handleGoogleLogin = () => {
+  const backendUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000'
+  window.location.href = `${backendUrl}/api/users/google`
+}
+
+const login = async () => {
+  if (!email.value || !password.value) {
+    toast.add({
+      severity: 'warn',
+      summary: '輸入錯誤',
+      detail: '請填寫所有欄位',
+      life: 3000,
+    })
+    return
+  }
+
+  try {
+    const resp = await axios.post('/users/login', {
+      email: email.value,
+      password: password.value,
+    })
+
+    if (resp.status === 200) {
+      toast.add({
+        severity: 'success',
+        summary: '登入成功',
+        detail: '正在跳轉到主頁面...',
         life: 3000,
       })
 
-      window.history.replaceState({}, document.title, window.location.pathname)
-      return
+      authStore.login(resp.data.token, resp.data.role)
+      localStorage.setItem('token', resp.data.token)
+      localStorage.setItem('role', resp.data.role)
+
+      setTimeout(() => {
+        if (resp.data.role === 'admin') {
+          router.push('/admin')
+        } else {
+          router.push('/')
+        }
+      }, 1000)
     }
-  })
-
-  const toggleForm = () => {
-    isLogin.value = !isLogin.value
-    username.value = ''
-    email.value = ''
-    password.value = ''
-  }
-
-  const login = async () => {
-    if (!email.value || !password.value) {
+  } catch (error) {
+    if (error.response?.status === 401) {
+      toast.add({
+        severity: 'error',
+        summary: '登入失敗',
+        detail: 'Email 或密碼錯誤，請重新輸入',
+        life: 4000,
+      })
+    } else if (error.response?.status === 400) {
       toast.add({
         severity: 'warn',
         summary: '輸入錯誤',
-        detail: '請填寫所有欄位',
+        detail: '請輸入正確的 Email 和密碼格式',
         life: 3000,
       })
-      return
-    }
-
-    try {
-      const resp = await axios.post('/users/login', {
-        email: email.value,
-        password: password.value,
-      })
-
-      if (resp.status === 200) {
-        toast.add({
-          severity: 'success',
-          summary: '登入成功',
-          detail: '正在跳轉到主頁面...',
-          life: 3000,
-        })
-
-        authStore.login(resp.data.token, resp.data.role)
-        localStorage.setItem('token', resp.data.token)
-        localStorage.setItem('role', resp.data.role)
-
-        setTimeout(() => {
-          if (resp.data.role === 'admin') {
-            router.push('/admin/products')
-          } else {
-            router.push('/')
-          }
-        }, 1000)
-      }
-    } catch (error) {
-      if (error.response?.status === 401) {
-        toast.add({
-          severity: 'error',
-          summary: '登入失敗',
-          detail: 'Email 或密碼錯誤，請重新輸入',
-          life: 4000,
-        })
-      } else if (
-        error.response?.status === 400 ||
-        error.response?.status === 403
-      ) {
-        toast.add({
-          severity: 'warn',
-          summary: '輸入錯誤',
-          detail: '請輸入正確的 Email 和密碼格式',
-          life: 3000,
-        })
-      } else {
-        toast.add({
-          severity: 'error',
-          summary: '系統錯誤',
-          detail: '伺服器錯誤，請稍後再試',
-          life: 5000,
-        })
-      }
-    }
-  }
-
-  const register = async () => {
-    if (!username.value || !email.value || !password.value) {
-      toast.add({
-        severity: 'warn',
-        summary: '輸入錯誤',
-        detail: '請填寫所有欄位',
-        life: 3000,
-      })
-      return
-    }
-
-    if (password.value.length < 6) {
-      toast.add({
-        severity: 'warn',
-        summary: '密碼太短',
-        detail: '密碼至少需要 6 個字元',
-        life: 3000,
-      })
-      return
-    }
-
-    try {
-      const resp = await axios.post('/users/register', {
-        username: username.value,
-        email: email.value,
-        password: password.value,
-      })
-
-      if (resp.status === 201) {
-        toast.add({
-          severity: 'success',
-          summary: '註冊成功',
-          detail: '帳戶建立成功，正在跳轉到登入頁面...',
-          life: 3000,
-        })
-
-        setTimeout(() => {
-          username.value = ''
-          email.value = ''
-          password.value = ''
-          isLogin.value = true
-        }, 2000)
-      }
-    } catch (error) {
-      if (error.response?.status === 409) {
-        toast.add({
-          severity: 'error',
-          summary: '註冊失敗',
-          detail: '此 Email 已被註冊，請使用其他 Email',
-          life: 4000,
-        })
-      } else if (error.response?.status === 400) {
-        toast.add({
-          severity: 'warn',
-          summary: '輸入錯誤',
-          detail: '請檢查輸入的資料格式是否正確',
-          life: 3000,
-        })
-      } else {
-        toast.add({
-          severity: 'error',
-          summary: '註冊失敗',
-          detail: '系統錯誤，請稍後再試',
-          life: 5000,
-        })
-      }
-    }
-  }
-
-  const onSubmit = () => {
-    if (isLogin.value) {
-      login()
     } else {
-      register()
+      toast.add({
+        severity: 'error',
+        summary: '系統錯誤',
+        detail: '伺服器錯誤，請稍後再試',
+        life: 5000,
+      })
     }
   }
+}
+
+const register = async () => {
+  if (!username.value || !email.value || !password.value) {
+    toast.add({
+      severity: 'warn',
+      summary: '輸入錯誤',
+      detail: '請填寫所有欄位',
+      life: 3000,
+    })
+    return
+  }
+
+  if (password.value.length < 6) {
+    toast.add({
+      severity: 'warn',
+      summary: '密碼太短',
+      detail: '密碼至少需要 6 個字元',
+      life: 3000,
+    })
+    return
+  }
+
+  try {
+    const resp = await axios.post('/users/register', {
+      username: username.value,
+      email: email.value,
+      password: password.value,
+    })
+
+    if (resp.status === 201) {
+      toast.add({
+        severity: 'success',
+        summary: '註冊成功',
+        detail: '帳戶建立成功，正在跳轉到登入頁面...',
+        life: 3000,
+      })
+
+      setTimeout(() => {
+        username.value = ''
+        email.value = ''
+        password.value = ''
+        isLogin.value = true
+      }, 2000)
+    }
+  } catch (error) {
+    if (error.response?.status === 409) {
+      toast.add({
+        severity: 'error',
+        summary: '註冊失敗',
+        detail: '此 Email 已被註冊，請使用其他 Email',
+        life: 4000,
+      })
+    } else if (error.response?.status === 400) {
+      toast.add({
+        severity: 'warn',
+        summary: '輸入錯誤',
+        detail: '請檢查輸入的資料格式是否正確',
+        life: 3000,
+      })
+    } else {
+      toast.add({
+        severity: 'error',
+        summary: '註冊失敗',
+        detail: '系統錯誤，請稍後再試',
+        life: 5000,
+      })
+    }
+  }
+}
+
+const onSubmit = () => {
+  if (isLogin.value) {
+    login()
+  } else {
+    register()
+  }
+}
 </script>
 
 <template>
@@ -255,7 +295,7 @@
           </button>
         </div>
 
-        <div class="mb-6">
+        <div class="mb-4">
           <Button
             :label="isLogin ? '登入' : '建立帳戶'"
             class="w-full"
@@ -263,6 +303,24 @@
           />
         </div>
       </form>
+
+      <div v-if="isLogin" class="mb-6">
+        <div class="relative mb-4">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">或</span>
+          </div>
+        </div>
+
+        <Button
+         class="w-full flex items-center justify-center gap-2 google-classic"
+         @click="handleGoogleLogin">
+         <i class="pi pi-google"></i>
+         使用 Google 帳號登入
+         </Button>
+      </div>
 
       <div class="text-center">
         <p class="text-sm text-gray-600">
