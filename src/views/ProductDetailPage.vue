@@ -60,9 +60,10 @@
           { headers: { Authorization: `Bearer ${token}` } }
         )
       } else {
-        await axios.delete(`/api/favorites/${productId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        await axios.delete(`favorites/${productId}`)
+, {
+          headers: { Authorization: `Bearer ${token}` }
+        }
       }
     } catch (err) {
       product.value.isFavorited = originalState
