@@ -12,62 +12,25 @@ const fetchProductById = async (id) => {
   return res.data
 }
 
-const createProduct = async ({
-  name,
-  price,
-  coverImageFile,
-  previewImageFiles,
-}) => {
-  const formData = new FormData()
-  formData.append('name', name)
-  formData.append('price', price)
-
-  if (coverImageFile) {
-    formData.append('cover', coverImageFile)
-  }
-
-  if (Array.isArray(previewImageFiles)) {
-    previewImageFiles.forEach((file) => {
-      formData.append('previews', file)
-    })
-  }
-
-  const res = await axios.post('/admin/products', formData, {
+const createProduct = async (productData) => {
+  const res = await axios.post('/admin/products', productData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   })
 
   return res.data
 }
 
-const updateProduct = async (
-  id,
-  { name, price, coverImageFile, previewImageFiles }
-) => {
-  const formData = new FormData()
-  formData.append('name', name)
-  formData.append('price', price)
-
-  if (coverImageFile) {
-    formData.append('cover', coverImageFile)
-  }
-
-  if (Array.isArray(previewImageFiles)) {
-    previewImageFiles.forEach((file) => {
-      formData.append('previews', file)
-    })
-  }
-
-  const res = await axios.put(`/admin/products/${id}`, formData, {
+const updateProduct = async (id, productData) => {
+  const res = await axios.put(`/admin/products/${id}`, productData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   })
 
   return res.data
 }
-
 
 const fetchFilterData = async () => {
   const res = await axios.get('/tags/filter')

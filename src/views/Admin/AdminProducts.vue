@@ -4,11 +4,9 @@
   import { fetchAllProducts } from '@/api/product'
   import { onMounted } from 'vue'
   import { useRouter } from 'vue-router'
-  import { useToast } from 'primevue/usetoast'
   import Toast from 'primevue/toast'
   import Image from 'primevue/image'
   const router = useRouter()
-  const toast = useToast()
 
   const productTabs = ref([
     { title: '全部', value: 'all' },
@@ -39,15 +37,16 @@
     },
   ])
 
-const goCreateProduct = () => {
-  router.push({ name: 'createProduct' })
-}
-
-const goEditProduct = (id) => {
-  router.push({ name: 'editProduct', params: { id } })
-}
-
   const productValue = ref([])
+
+  const goCreateProduct = () => {
+    router.push({ name: 'createProduct' })
+  }
+
+  const goEditProduct = (id) => {
+    router.push({ name: 'editProduct', params: { id } })
+  }
+
   onMounted(async () => {
     const res = await fetchAllProducts()
     productValue.value = res
@@ -61,7 +60,7 @@ const goEditProduct = (id) => {
     <div class="card flex justify-center">
       <button
         class="text-md text-white px-3 py-2 border-surface-200 rounded-md bg-primary cursor-pointer"
-        @click="router.push({ name: 'createProduct' })"
+        @click="goCreateProduct"
       >
         新增商品
       </button>
@@ -89,7 +88,7 @@ const goEditProduct = (id) => {
       <template #body-name="{ data }">
         <a
           class="w-full underline text-primary cursor-pointer"
-          @click="router.push({ name: 'editProduct', params: { id: data.id } })"
+          @click="goEditProduct(data.id)"
         >
           {{ data.name }}
         </a>
