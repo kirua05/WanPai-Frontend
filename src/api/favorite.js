@@ -22,4 +22,3 @@ export async function removeFavorite(productId, token) {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
-

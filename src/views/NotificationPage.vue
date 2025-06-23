@@ -1,7 +1,7 @@
 <script setup>
   import { ref, computed, watch, onMounted } from 'vue'
   import Divider from 'primevue/divider'
-  import axios from '@/utils/axiosInstance' 
+  import axios from '@/utils/axiosInstance'
   import { useNotificationStore } from '@/stores/notifications'
 
   const notificationStore = useNotificationStore()

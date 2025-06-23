@@ -20,14 +20,11 @@
     showSplash.value = false
   }
 
-  const scrollToProducts = () => {
-    const productSection = document.querySelector('#product-section')
-    if (productSection) {
-      productSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
+  const scrollToBanner = () => {
+    window.scrollTo({
+      top: 525,
+      behavior: 'smooth',
+    })
   }
 </script>
 
@@ -37,7 +34,7 @@
 
   <div v-if="!showSplash">
     <section
-      class="relative bg-gradient-to-r from-yellow-50 to-yellow-100 py-32 mb-8 mt-0"
+      class="relative bg-gradient-to-r from-yellow-50 to-yellow-100 py-28 mb-8 mt-0"
     >
       <div class="max-w-screen-xl mx-auto px-4">
         <div class="text-center space-y-6">
@@ -53,7 +50,7 @@
               label="開始購物"
               size="large"
               class="px-8 py-3 text-lg bg-yellow-500 hover:bg-yellow-600 border-yellow-500 hover:border-yellow-600"
-              @click="scrollToProducts"
+              @click="scrollToBanner"
             />
             <Button
               label="了解更多"
@@ -100,11 +97,9 @@
         </div>
       </div>
     </section> -->
-
-    <BannerCarousel />
-
-    <div id="product-section">
-      <ProductListPage />
+    <div id="banner-section">
+      <BannerCarousel />
     </div>
+    <ProductListPage />
   </div>
 </template>

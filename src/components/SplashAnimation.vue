@@ -39,10 +39,14 @@
         />
       </div>
 
-      <div class="space-y-3 animate-[fadeInUp_1s_ease-in_0.2s_both] -translate-y-20">
+      <div
+        class="space-y-3 animate-[fadeInUp_1s_ease-in_0.2s_both] -translate-y-20"
+      >
         <div class="flex items-center justify-center gap-4">
           <div class="relative inline-block leading-none whitespace-nowrap">
-            <span class="absolute inset-0 text-[98px] md:text-[74px] font-bold tracking-tight text-yellow-600 -ml-[4px]">
+            <span
+              class="absolute inset-0 text-[98px] md:text-[74px] font-bold tracking-tight text-yellow-600 -ml-[4px]"
+            >
               玩派 WanPai
             </span>
             <h2
@@ -65,7 +69,7 @@
         class="flex justify-center space-x-8 mt-8 animate-[fadeInUp_1s_ease-out_0.8s_both] -translate-y-12"
       >
         <div
-          class="text-center space-y-2 animate-[float_1.5s_ease-in-out_infinite] delay-[0.5s] "
+          class="text-center space-y-2 animate-[float_1.5s_ease-in-out_infinite] delay-[0.5s]"
         >
           <div
             class="w-16 h-16 mx-auto bg-white backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-yellow-500 shadow-lg hover:scale-110 transition-transform duration-300"
@@ -212,21 +216,21 @@
     }
   }
   @keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateX(20px);
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    20% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    80% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
   }
-  20% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  80% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-}
 </style>
