@@ -51,7 +51,7 @@
     if (!item.read) {
       try {
         await axios.patch(
-          `/api/notifications/${item.id}/read`,
+          `/notifications/${item.id}/read`,
           {},
           {
             headers: { Authorization: `Bearer ${token}` },

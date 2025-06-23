@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import axios from '@/utils/axiosInstance'
 
 export const useNotificationStore = defineStore('notifications', () => {
   const list = ref([])
@@ -19,10 +19,7 @@ export const useNotificationStore = defineStore('notifications', () => {
   }
 
   async function fetch() {
-    const token = localStorage.getItem('token')
-    const { data } = await axios.get('/api/notifications', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const { data } = await axios.get('/notifications')
 
     list.value = data.map((item) => ({
       ...item,
