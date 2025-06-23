@@ -84,17 +84,6 @@
     })
   }
 
-  const clearSearch = () => {
-    searchInput.value = ''
-    router.push({
-      path: '/',
-      query: {
-        ...route.query,
-        keyword: undefined,
-      },
-    })
-  }
-
   watch(
     () => authStore.isLoggedIn,
     (isLoggedIn) => {
@@ -186,7 +175,6 @@
       <ProductSearchBar
         v-model="searchInput"
         @submit="search"
-        @clear="clearSearch"
       />
       <div class="hidden md:flex items-center gap-4">
         <div v-if="authStore.isLoggedIn" class="hidden md:block relative">

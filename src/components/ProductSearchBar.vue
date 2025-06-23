@@ -2,7 +2,7 @@
   import { computed } from 'vue'
 
   const props = defineProps(['modelValue'])
-  const emit = defineEmits(['update:modelValue', 'submit', 'clear'])
+  const emit = defineEmits(['update:modelValue', 'submit'])
 
   const modelValueProxy = computed({
     get: () => props.modelValue,

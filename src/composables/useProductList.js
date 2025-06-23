@@ -95,6 +95,20 @@ export function useProductList() {
     async (newCategory, oldCategory) => {
       if (newCategory !== oldCategory && oldCategory !== undefined) {
         await loadProductsByCategory(newCategory)
+
+        if (keyword.value.trim().length > 0) {
+          await nextTick()
+          const sectionEl = productSection.value
+          if (sectionEl) {
+            const offsetTop =
+              sectionEl.getBoundingClientRect().top + window.scrollY
+            const navbarHeight = 64
+            window.scrollTo({
+              top: offsetTop - navbarHeight,
+              behavior: 'smooth',
+            })
+          }
+        }
       }
     }
   )
