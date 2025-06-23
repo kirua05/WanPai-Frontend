@@ -59,11 +59,23 @@
           { productId },
           { headers: { Authorization: `Bearer ${token}` } }
         )
+        toast.add({
+          severity: 'success',
+          summary: '成功加入收藏',
+          detail: '可至「我的收藏」頁面查看此商品',
+          life: 3000,
+        })
       } else {
-        await axios.delete(`favorites/${productId}`)
-, {
-          headers: { Authorization: `Bearer ${token}` }
-        }
+        await axios.delete(`favorites/${productId}`),
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        toast.add({
+          severity: 'error',
+          summary: '已取消收藏',
+          detail: '已從收藏中移除此商品',
+          life: 3000,
+        })
       }
     } catch (err) {
       product.value.isFavorited = originalState
@@ -137,10 +149,20 @@
             />
             <Button
               :label="product.isFavorited ? '已收藏' : '收藏'"
-              icon="pi pi-heart"
-              class="flex-1"
+              class="flex-1 flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-black border-none"
               @click="toggleFavorite"
-            />
+            >
+              <template #icon>
+                <i
+                  :class="[
+                    product.isFavorited
+                      ? 'pi pi-heart-fill text-red-500'
+                      : 'pi pi-heart text-white',
+                    'text-xl',
+                  ]"
+                />
+              </template>
+            </Button>
           </div>
         </div>
       </div>
