@@ -91,11 +91,6 @@ const shippingDetailsMove = ref(null)
     ([newSelectedItems, newCartItems]) => {
       // 更新運費
       calculateShipping()
-
-      // 如果 selectedItems 為空且購物車有商品，則全選
-      if (newSelectedItems.length === 0 && newCartItems.length > 0) {
-        selectedItems.value = [...newCartItems]
-      }
     },
     { deep: true }
   )
@@ -128,19 +123,6 @@ const shippingDetailsMove = ref(null)
     } else {
       selectedItems.value = []
     }
-    watch(
-      selectedItems,
-      (newVal) => {
-        if (newVal.length === 0) {
-          showShippingDetails.value = false
-          //關閉(收貨詳細資訊)清除底下input框輸入過的內容
-          shippingForm.recipientName = ''
-          shippingForm.recipientPhone = ''
-          shippingForm.shippingAddress = ''
-        }
-      },
-      { deep: true }
-    )
   }
 
   // 結帳
@@ -185,7 +167,16 @@ const shippingDetailsMove = ref(null)
       ItemName: itemNames,
     }
 
-    await createEcpayOrder(payload, toast)
+    try {
+      await createEcpayOrder(payload, toast)
+      for (const item of selectedItems.value) {
+        await cart.remove(item.id)
+      }
+      selectedItems.value = []
+      router.push('/')
+    } catch (error) {
+      console.error('結帳失敗:', error)
+    }
   }
 
   function contactDetails() {

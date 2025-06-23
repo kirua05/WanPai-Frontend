@@ -30,20 +30,19 @@ export const useCartStore = defineStore('cart', {
       if (!isLogin()) {
         throw new Error('請先登入會員再將商品加入購物車！')
       }
-      await axios.post(
-        '/cart',
-        { productId: product.id, quantity: product.qty || 1 } 
-      )
+      await axios.post('/cart', {
+        productId: product.id,
+        quantity: product.qty || 1,
+      })
       await this.fetchCart()
     },
     async updateQty(id, qty) {
       if (!isLogin()) {
         throw new Error('請先登入會員')
       }
-      await axios.put(
-        `/cart/${id}`,
-        { quantity: qty }
-      )
+      await axios.put(`/cart/${id}`, {
+        quantity: qty 
+      })
       await this.fetchCart()
     },
     async remove(id) {
