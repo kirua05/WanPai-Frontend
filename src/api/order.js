@@ -11,33 +11,55 @@ export async function fetchOrders(filters = {}) {
       Authorization: `Bearer ${token}`,
     },
   })
+
   return res.data
 }
 
 export async function fetchOrderDetail(orderId) {
-  const res = await axios.get(`/orders/${orderId}`)
-  return res.data
-}
+  const authStore = useAuthStore()
+  const token = authStore.token
 
-export async function fetchAllOrders(status = 'all') {
-  const res = await axios.get('/admin/orders', {
-    params: { status },
+  const res = await axios.get(`/orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
   return res.data
 }
 
 export async function createOrder(orderData) {
-  const res = await axios.post('/orders', orderData)
+  const authStore = useAuthStore()
+  const token = authStore.token
+
+  const res = await axios.post('/orders', orderData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   return res.data
 }
 
 export async function updateOrder(orderId, updateData) {
-  const res = await axios.put(`/orders/${orderId}`, updateData)
+  const authStore = useAuthStore()
+  const token = authStore.token
+
+  const res = await axios.put(`/orders/${orderId}`, updateData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   return res.data
 }
 
 export async function deleteOrder(orderId) {
-  const res = await axios.delete(`/orders/${orderId}`)
+  const authStore = useAuthStore()
+  const token = authStore.token
+
+  const res = await axios.delete(`/orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
   return res.data
 }
 
