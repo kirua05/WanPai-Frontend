@@ -35,7 +35,10 @@ const {
       🔍 搜尋「{{ keyword }}」的結果：
     </p>
 
-    <div v-if="!hasLoadedOnce || isLoading" class="text-center text-gray-500 py-10">
+    <div
+      v-if="!hasLoadedOnce || isLoading"
+      class="text-center text-gray-500 py-10"
+    >
       <i class="pi pi-spin pi-spinner text-2xl mb-2"></i>
       <p>載入中...</p>
     </div>
@@ -47,7 +50,6 @@ const {
       <i class="pi pi-info-circle text-xl mb-2"></i>
       <p>查無符合的商品</p>
     </div>
-
     <div
       v-else
       ref="productSection"
