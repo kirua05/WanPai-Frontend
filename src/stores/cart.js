@@ -41,7 +41,7 @@ export const useCartStore = defineStore('cart', {
         throw new Error('請先登入會員')
       }
       await axios.put(`/cart/${id}`, {
-        quantity: qty 
+        quantity: qty,
       })
       await this.fetchCart()
     },

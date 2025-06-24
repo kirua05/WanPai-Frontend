@@ -24,11 +24,8 @@
       if (isLoggedIn) {
         try {
           await notificationStore.fetch()
-        } catch (error) {
-          console.warn(
-            'Could not fetch notifications, this is expected if not logged in.',
-            error
-          )
+        } catch {
+          notificationStore.totalUnread = 0
         }
       }
     },

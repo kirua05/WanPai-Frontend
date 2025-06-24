@@ -10,18 +10,13 @@ export function useProductList() {
   const categories = ref([])
   const allCategories = computed(() => ['全部', ...categories.value])
   const itemsPerPage = 20
-
   const loadFilterData = async () => {
     try {
-      const filterData = await fetchFilterData()
-      if (filterData.series && Array.isArray(filterData.series)) {
-        categories.value = filterData.series.map((item) => item.tagname)
-      } else {
-        console.warn('API returned no series array:', filterData)
-        categories.value = []
-      }
-    } catch (error) {
-      console.error('Failed to load filter data:', error)
+      const { series } = await fetchFilterData()
+      categories.value = Array.isArray(series)
+        ? series.map((item) => item.tagname)
+        : []
+    } catch {
       categories.value = []
     }
   }
@@ -75,15 +70,12 @@ export function useProductList() {
 
   onMounted(async () => {
     await loadFilterData()
-    // Now that filter data is loaded, start loading products based on the active category.
     loadProductsByCategory(activeCategory.value)
   })
 
-  // Watch for category changes from user interaction, but not on initial load.
   watch(
     () => activeCategory.value,
     async (newCategory, oldCategory) => {
-      // Avoid re-fetching on the initial "undefined" to "全部" transition that onMounted handles.
       if (newCategory !== oldCategory && oldCategory !== undefined) {
         await loadProductsByCategory(newCategory)
       }
@@ -93,8 +85,6 @@ export function useProductList() {
   const filteredProducts = computed(() => {
     let result = products.value
 
-    // Category filtering is handled by `loadProductsByCategory` via API call.
-    // This computed property now only handles keyword filtering.
     if (keyword.value.trim().length >= 1) {
       result = result.filter((p) =>
         p.name.toLowerCase().includes(keyword.value.toLowerCase())

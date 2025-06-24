@@ -10,31 +10,26 @@
   } from 'vue'
   import { useRouter } from 'vue-router'
   import { useCartStore } from '@/stores/cart'
-  import Button from '@/volt/Button.vue'
   import { createEcpayOrder } from '@/api/createEcpayOrder'
   import { useToast } from 'primevue/usetoast'
+  import Button from '@/volt/Button.vue'
   import Toast from 'primevue/toast'
   import InputText from 'primevue/inputtext'
   const toast = useToast()
-  // Pinia 購物車狀態
+
   const cart = useCartStore()
   const router = useRouter()
 
-  // 選中的商品列表
   const selectedItems = ref([])
-  // 選中的商品數量
   const showShippingDetails = ref(false)
 
-  //根據orders資料庫要的屬性做命名
   const shippingForm = reactive({
     recipientName: '',
     recipientPhone: '',
     shippingAddress: '',
   })
 
-const profileLoading = ref(false)
-
-const shippingDetailsMove = ref(null)
+  const shippingDetailsMove = ref(null)
 
   const isRecipientNameValid = computed(() => {
     if (shippingForm.recipientName.trim() === '') {
@@ -74,22 +69,18 @@ const shippingDetailsMove = ref(null)
     }, 0)
   })
 
-  // 運費狀態
   const state = reactive({
     shipping: 0,
   })
 
-  // TODO: 運費邏輯
   function calculateShipping() {
     state.shipping =
       selectedItems.value && selectedItems.value.length > 0 ? 100 : 0
   }
 
-  // 監聽選中項目和購物車資料變化
   watch(
     [selectedItems, () => cart.items],
-    ([newSelectedItems, newCartItems]) => {
-      // 更新運費
+    () => {
       calculateShipping()
     },
     { deep: true }
@@ -115,7 +106,6 @@ const shippingDetailsMove = ref(null)
 
   const { shipping } = toRefs(state)
 
-  // 全選
   function toggleSelectAll(event) {
     const isChecked = event.target.checked
     if (isChecked) {
@@ -125,7 +115,6 @@ const shippingDetailsMove = ref(null)
     }
   }
 
-  // 結帳
   async function ecpayCheckout() {
     if (!isRecipientNameValid.value) {
       toast.add({
@@ -174,8 +163,13 @@ const shippingDetailsMove = ref(null)
       }
       selectedItems.value = []
       router.push('/')
-    } catch (error) {
-      console.error('結帳失敗:', error)
+    } catch {
+      toast.add({
+        severity: 'error',
+        summary: '結帳失敗',
+        detail: '請稍後再試或聯絡客服',
+        life: 3000,
+      })
     }
   }
 
@@ -197,7 +191,6 @@ const shippingDetailsMove = ref(null)
     }
   }
 
-  // 單選
   function toggleSelectItem(item, event) {
     const isChecked = event.target.checked
     if (isChecked) {
@@ -210,7 +203,6 @@ const shippingDetailsMove = ref(null)
     calculateShipping()
   }
 
-  // 跳轉到商品詳細頁
   function goToProductDetail(productId) {
     router.push(`/products/${productId}`)
   }
@@ -358,7 +350,6 @@ const shippingDetailsMove = ref(null)
     </main>
   </div>
 
-  <!-- 收貨詳細資訊 -->
   <div
     class="bg-black text-white flex flex-col"
     v-if="showShippingDetails"
@@ -367,7 +358,6 @@ const shippingDetailsMove = ref(null)
     <main class="flex-1 px-4 py-6 bg-gray-100 text-black">
       <div class="container mx-auto p-4 bg-white rounded shadow">
         <h1 class="text-2xl font-bold mb-6 text-gray-800">收貨詳細資訊</h1>
-        <!-- input框 -->
         <div class="flex flex-col gap-2">
           <label for="username" class="font-bold">姓名</label>
           <InputText
@@ -401,7 +391,6 @@ const shippingDetailsMove = ref(null)
             {{ formatCurrency(selectedTotal + shipping) }}
           </span>
         </div>
-        <!-- 按鈕 -->
         <div class="flex justify-end mt-4">
           <Button
             label="跳轉頁面結帳"

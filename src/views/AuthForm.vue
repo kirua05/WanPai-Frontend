@@ -1,5 +1,5 @@
 <script setup>
-  import { ref } from 'vue'
+  import { ref, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { useAuthStore } from '@/stores/auth'
   import { useToast } from 'primevue/usetoast'
@@ -20,6 +20,30 @@
   const togglePasswordVisibility = () => {
     isPasswordVisible.value = !isPasswordVisible.value
   }
+
+  onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const error = urlParams.get('error')
+
+    if (error) {
+      let errorMessage = '登入失敗，請重試'
+      if (error === 'email_required') {
+        errorMessage = 'Google 帳號需要提供 email 權限'
+      } else if (error === 'auth_failed') {
+        errorMessage = 'Google 認證失敗'
+      }
+
+      toast.add({
+        severity: 'error',
+        summary: 'Google 登入失敗',
+        detail: errorMessage,
+        life: 3000,
+      })
+
+      window.history.replaceState({}, document.title, window.location.pathname)
+      return
+    }
+  })
 
   const toggleForm = () => {
     isLogin.value = !isLogin.value
@@ -73,7 +97,10 @@
           detail: 'Email 或密碼錯誤，請重新輸入',
           life: 4000,
         })
-      } else if (error.response?.status === 400) {
+      } else if (
+        error.response?.status === 400 ||
+        error.response?.status === 403
+      ) {
         toast.add({
           severity: 'warn',
           summary: '輸入錯誤',

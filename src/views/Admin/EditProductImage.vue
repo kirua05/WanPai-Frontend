@@ -287,7 +287,6 @@
       return response
     } catch (err) {
       if (currentRetry < maxRetries) {
-        // console.log(`上傳失敗，第 ${currentRetry + 1} 次重試...`)
         await new Promise((resolve) =>
           setTimeout(resolve, 1000 * (currentRetry + 1))
         )

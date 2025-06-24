@@ -1,6 +1,6 @@
 <script setup>
   import { ref, onMounted } from 'vue'
-  import axios from '@/utils/axiosInstance' // ✅ 用你的 axios instance
+  import axios from '@/utils/axiosInstance'
   import InputText from 'primevue/inputtext'
   import { useToast } from 'primevue/usetoast'
   import Toast from 'primevue/toast'
@@ -19,7 +19,7 @@
 
   onMounted(async () => {
     try {
-      const response = await axios.get('/users/profile') // ✅ 改成相對路徑
+      const response = await axios.get('/users/profile') 
       profile.value = response.data
       editProfile.value = { ...profile.value }
     } catch {
@@ -27,7 +27,7 @@
         severity: 'error',
         summary: '載入失敗',
         detail: '無法取得用戶資料，請重新整理頁面。',
-        life: 5000,
+        life: 3000,
       })
     }
   })
