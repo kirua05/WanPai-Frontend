@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from 'primevue/usetoast'
-import axios from 'axios'
+import axios from '@/utils/axiosInstance'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
 
@@ -91,9 +91,10 @@ const toggleForm = () => {
 }
 
 const handleGoogleLogin = () => {
-  const backendUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:3000'
-  window.location.href = `${backendUrl}/api/users/google`
-}
+    const backendUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'https://no5.zeabur.app'
+    const googleAuthUrl = `${backendUrl}/api/users/google`
+    window.location.href = googleAuthUrl
+  } 
 
 const login = async () => {
   if (!email.value || !password.value) {
