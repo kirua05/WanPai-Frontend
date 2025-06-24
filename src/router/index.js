@@ -79,7 +79,7 @@ const router = createRouter({
     {
       path: '/authform',
       name: 'authform',
-      component: () => import('../views/AuthForm.vue'),
+      component: () => import('@/views/AuthForm.vue'),
     },
     {
       path: '/orderdetail/:id',

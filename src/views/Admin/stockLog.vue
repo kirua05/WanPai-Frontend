@@ -54,7 +54,8 @@ onMounted(() => {
                 <img :src="product.image" alt="商品縮圖" class="w-20 h-20 object-cover rounded-lg border" />
                 <span class="text-2xl font-bold text-gray-800">{{ product.name }}</span>
             </div>
-            <DataTable :value="stockLogs" class="rounded-lg border border-gray-200 overflow-hidden">
+            <DataTable :value="stockLogs" paginator :rows="5" :rowsPerPageOptions="[5, 10, 20, 50]"
+                class="rounded-lg border border-gray-200 overflow-hidden">
                 <Column field="before" header="修改前" />
                 <Column field="after" header="修改後" class="text-center" />
                 <Column field="change" header="變化" class="text-center">
