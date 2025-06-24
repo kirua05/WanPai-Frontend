@@ -71,10 +71,9 @@
 
 <template>
   <div class="p-6 font-sans">
-    <h2 class="text-2xl font-bold mb-6 ml-8">我的通知</h2>
-
-    <div class="flex gap-6">
-      <aside class="w-40">
+    <h2 class="text-2xl font-bold mb-6 ml-4 sm:ml-8">我的通知</h2>
+    <div class="flex flex-col md:flex-row gap-6">
+      <aside class="w-full md:w-40 mb-4 md:mb-0">
         <ul class="list-none p-0 m-0">
           <li
             v-for="(item, index) in categories"

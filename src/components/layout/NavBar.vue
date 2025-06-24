@@ -280,26 +280,19 @@
             {{ cart.items.length }}
           </span>
         </div>
-
-        <RouterLink
-          v-if="authStore.isLoggedIn"
-          to="/notifications"
-          class="relative flex items-center justify-center mr-2"
-          title="我的通知"
-        >
-          <Button
-            icon="pi pi-comment"
-            text
-            rounded
-            class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:bg-gray-100 transition"
-            aria-label="通知"
-          />
-
-          <span
-            v-if="notificationStore.totalUnread > 0"
-            class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white z-10"
-          ></span>
-        </RouterLink>
+        <div v-if="authStore.isLoggedIn"
+          class="relative cursor-pointer text-gray-800 hover:text-emerald-600 text-base font-medium flex items-center"
+          @click="
+            () => {
+              visible = false
+              router.push('/notifications')
+            }
+          ">
+          <i class="pi pi-comment mr-2"></i>
+          通知中心
+          <span v-if="notificationStore.totalUnread > 0"
+            class="ml-auto bg-red-500 text-white text-xs w-2.5 h-2.5 rounded-full border-2 border-white"></span>
+        </div>
 
         <div v-if="!authStore.isLoggedIn">
           <RouterLink to="/authform" @click="visible = false">
