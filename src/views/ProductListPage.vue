@@ -63,7 +63,13 @@ const {
       </RouterLink>
     </div>
 
-    <ProductPagination v-if="hasLoadedOnce" :currentPage="currentPage" :totalPages="totalPages"
-      :pageButtons="pageButtons" v-model:pageInput="pageInput" @goToPage="goToPage" />
+    <ProductPagination
+      v-if="hasLoadedOnce"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      :pageButtons="pageButtons"
+      v-model:pageInput="pageInput"
+      @goToPage="goToPage"
+    />
   </div>
 </template>

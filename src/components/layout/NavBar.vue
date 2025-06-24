@@ -34,8 +34,6 @@
 
   const searchInput = ref(route.query.keyword || '')
 
-  const menuItems = ref([{ label: '後台管理', to: '/admin/products' }])
-
   const memberMenu = ref()
 
   const memberMenuItems = ref([
