@@ -5,6 +5,9 @@ const bubbles = ref([])
 
 onMounted(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4f9c44c (fixbubble)
   const rows = 5
   const cols = 6
   const total = rows * cols
@@ -28,6 +31,7 @@ onMounted(() => {
       blur: Math.random() < 0.5 ? 'blur-sm' : ''
     }
   })
+<<<<<<< HEAD
 =======
   bubbles.value = Array.from({ length: 30 }, (_, i) => ({
     id: i,
@@ -38,6 +42,8 @@ onMounted(() => {
     blur: Math.random() > 0.5 ? 'blur-xs' : ''
   }))
 >>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
+=======
+>>>>>>> 4f9c44c (fixbubble)
 })
 </script>
 
@@ -48,6 +54,7 @@ onMounted(() => {
       left: `${b.left}%`,
       width: `${b.size}px`,
       height: `${b.size}px`,
+<<<<<<< HEAD
 <<<<<<< HEAD
       opacity: b.opacity,
       transform: 'translate(-50%, -50%)'
@@ -62,3 +69,10 @@ onMounted(() => {
 
 <style scoped></style>
 >>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
+=======
+      opacity: b.opacity,
+      transform: 'translate(-50%, -50%)'
+    }"></div>
+  </div>
+</template>
+>>>>>>> 4f9c44c (fixbubble)
