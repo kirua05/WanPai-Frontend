@@ -8,6 +8,7 @@
   import { useToast } from 'primevue/usetoast'
   import InputNumber from 'primevue/inputnumber'
   import { useCartStore } from '@/stores/cart'
+  import Toast from 'primevue/toast'
 
   const route = useRoute()
   const product = ref({})
@@ -42,28 +43,12 @@
     const productId = product.value?.id
     if (!productId) return
 
-    const token = localStorage.getItem('token')
-
-    if (!token) {
-      toast.add({
-        severity: 'warn',
-        summary: '尚未登入',
-        detail: '請先登入才能收藏商品',
-        life: 3000,
-      })
-      return
-    }
-
     const originalState = product.value.isFavorited
     product.value.isFavorited = !originalState
 
     try {
       if (product.value.isFavorited) {
-        await axios.post(
-          '/favorites',
-          { productId },
-          { headers: { Authorization: `Bearer ${token}` } }
-        )
+        await axios.post('/favorites', { productId })
         toast.add({
           severity: 'success',
           summary: '成功加入收藏',
@@ -71,9 +56,7 @@
           life: 3000,
         })
       } else {
-        await axios.delete(`favorites/${productId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        await axios.delete(`/favorites/${productId}`)
         toast.add({
           severity: 'success',
           summary: '已移除收藏',
@@ -83,12 +66,21 @@
       }
     } catch (err) {
       product.value.isFavorited = originalState
-      toast.add({
-        severity: 'error',
-        summary: '收藏操作失敗',
-        detail: err?.response?.data?.error || '請稍後再試',
-        life: 3000,
-      })
+      if (err?.response?.status === 401) {
+        toast.add({
+          severity: 'warn',
+          summary: '尚未登入',
+          detail: '請先登入才能收藏商品',
+          life: 3000,
+        })
+      } else {
+        toast.add({
+          severity: 'error',
+          summary: '收藏操作失敗',
+          detail: err?.response?.data?.error || '請稍後再試',
+          life: 3000,
+        })
+      }
     }
   }
 
