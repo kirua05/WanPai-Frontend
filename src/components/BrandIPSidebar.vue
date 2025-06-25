@@ -114,7 +114,7 @@ const findBrandRelatedIPs = async () => {
             })
 
             if (relatedIPs.size > 0) {
-                return { brandId: brand.id, ips: Array.from(relatedIPs), brandName: brand.tagname }
+                return { brandId: brand.id, ips: Array.from(relatedIPs) }
             }
             return null
 
@@ -130,7 +130,7 @@ const findBrandRelatedIPs = async () => {
 
         results.forEach(result => {
             if (result) {
-                const { brandId, ips: brandIPs, brandName } = result
+                const { brandId, ips: brandIPs } = result
                 currentMap.set(brandId, brandIPs)
 
             }
@@ -138,8 +138,8 @@ const findBrandRelatedIPs = async () => {
 
         brandIpMap.value = currentMap
 
-    } catch {
-
+    } catch (error) {
+        error
     }
 }
 
