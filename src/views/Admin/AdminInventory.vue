@@ -1,50 +1,69 @@
 <script setup>
 import CommonTable from '@/components/CommonTable.vue'
-import InputText from 'primevue/inputtext'
+import Image from 'primevue/image'
+import { fetchAllProducts } from '@/api/product'
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 const router = useRouter()
-const inventoryTabs = ref([{ title: '全部', value: 'all' }])
+const inventoryTabs = ref([
+  { title: '全部', value: 'all' },
+  { title: '上架中', value: 'active' },
+  { title: '草稿', value: 'draft' },
+  { title: '典藏', value: 'archived' },
+])
 const inventoryColumns = ref([
-  { field: 'img', header: '', style: 'width: 25%', sortable: false },
-  { field: 'name', header: '商品', style: 'width: 25%', sortable: true },
+  { field: 'coverImage', header: '', style: 'width: 20%', sortable: false },
+  { field: 'name', header: '商品', style: 'width: 20%', sortable: true },
   {
-    field: 'reserved',
+    field: 'status',
+    header: '狀態',
+    style: 'width: 20%',
+    sortable: true,
+    format: (val) =>
+      ({
+        active: '上架中',
+        draft: '草稿',
+        archived: '典藏',
+      })[val] || '未知',
+  },
+  {
+    field: 'stockReserved',
     header: '預留數量',
-    style: 'width: 25%',
+    style: 'width: 20%',
     sortable: true,
   },
   {
     field: 'stockOnHand',
     header: '現有庫存',
-    style: 'width: 25%',
+    style: 'width: 20%',
     sortable: true,
   },
 ])
-const inventoryValue = ref([
-  {
-    img: 'f230fh0g3',
-    name: '路卡力歐',
-    reserved: 2,
-    stockOnHand: 24,
-  },
-])
+const productValue = ref([])
 const goStockLog = (id) => {
   router.push({ name: 'stockLog', params: { id } })
 }
+
+onMounted(async () => {
+  const res = await fetchAllProducts()
+  productValue.value = res
+
+})
 </script>
 
 <template>
   <div class="flex justify-between items-center mr-8 mb-4">
     <h2 class="text-2xl">庫存</h2>
   </div>
-  <CommonTable :tabs="inventoryTabs" :columns="inventoryColumns" :value="inventoryValue" scrollable selectable
+  <CommonTable :tabs="inventoryTabs" :columns="inventoryColumns" :value="productValue" scrollable selectable
     scroll-height="500px">
+    <template #body-coverImage="{ data }">
+      <Image v-if="data.coverImage" :src="data.coverImage" alt="Product Cover Image"
+        imageClass="w-32 h-32 object-cover rounded mx-auto" loading="lazy" />
+    </template>
     <template #body-name="{ data }">
       <a class="w-full underline text-primary cursor-pointer" @click="goStockLog(data.id)">{{ data.name }}</a>
-    </template>
-    <template #body-stockOnHand="{ data }">
-      <InputText v-model="data.stockOnHand" class="w-full" />
     </template>
   </CommonTable>
 </template>
