@@ -1,6 +1,7 @@
 <script setup>
+  import UserSidebar from '@/components/UserSideBar.vue'
   import { ref, computed, onMounted, watch } from 'vue'
-  import { RouterLink, useRoute } from 'vue-router'
+  import { RouterLink } from 'vue-router'
   import Button from 'primevue/button'
   import Dropdown from 'primevue/dropdown'
   import { useToast } from 'primevue/usetoast'
@@ -8,7 +9,6 @@
   import { useCartStore } from '@/stores/cart'
 
   const toast = useToast()
-  const route = useRoute()
   const favorites = ref([])
   const perPage = 10
   const currentPage = ref(1)
@@ -106,59 +106,34 @@
 </script>
 
 <template>
-  <div class="bg-gray-50 min-h-screen py-10 px-4">
+  <div
+    class="min-h-screen py-2 px-4"
+    style="
+      --s: 82px;
+      --c1: #ffdb57;
+      --c2: #ffffff;
+      --_g: radial-gradient(calc(var(--s) / 2), var(--c1) 97%, #0000);
+      background:
+        var(--_g),
+        var(--_g) calc(2 * var(--s)) calc(2 * var(--s)),
+        repeating-conic-gradient(from 45deg, #0000 0 25%, var(--c2) 0 50%)
+          calc(-0.707 * var(--s)) calc(-0.707 * var(--s)),
+        repeating-linear-gradient(
+          135deg,
+          var(--c1) calc(var(--s) / -2) calc(var(--s) / 2),
+          var(--c2) 0 calc(2.328 * var(--s))
+        ),
+        linear-gradient(to bottom right, #fff9c4, #ffe082);
+      background-size: calc(4 * var(--s)) calc(4 * var(--s));
+    "
+  >
     <Toast />
-    <div class="max-w-6xl mx-auto flex gap-6 items-start">
-      <aside class="w-64 bg-white rounded-xl shadow p-6">
-        <div class="mb-6 flex items-center gap-3">
-          <div
-            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center"
-          >
-            <i class="pi pi-user text-white"></i>
-          </div>
-          <span class="font-bold text-xl text-gray-800">我的帳戶</span>
-        </div>
-        <nav class="space-y-2">
-          <RouterLink
-            to="/userprofile"
-            :class="[
-              'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors',
-              route.path === '/userprofile'
-                ? 'text-primary-600 bg-primary-50 border-primary-600'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent',
-            ]"
-          >
-            <i class="pi pi-user"></i>
-            個人資料
-          </RouterLink>
-          <RouterLink
-            to="/orders"
-            :class="[
-              'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors',
-              route.path === '/orders'
-                ? 'text-primary-600 bg-primary-50 border-primary-600'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent',
-            ]"
-          >
-            <i class="pi pi-shopping-cart"></i>
-            訂單中心
-          </RouterLink>
-          <RouterLink
-            to="/favorites"
-            :class="[
-              'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors',
-              route.path === '/favorites'
-                ? 'text-primary-600 bg-primary-50 border-primary-600'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent',
-            ]"
-          >
-            <i class="pi pi-heart"></i>
-            收藏清單
-          </RouterLink>
-        </nav>
+    <div class="max-w-7xl mx-auto flex gap-6 items-start px-4 py-10">
+      <aside class="w-64 ml-11 -mt-2">
+        <UserSidebar />
       </aside>
 
-      <div class="flex-1 bg-white rounded-xl shadow p-6">
+      <div class="flex-1 bg-white rounded-xl shadow p-6 max-w-4xl">
         <h2
           class="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2"
         >

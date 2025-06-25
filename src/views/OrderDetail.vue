@@ -3,8 +3,10 @@
   import { useRoute } from 'vue-router'
   import { fetchOrderDetail, applyOrderReturn } from '@/api/order'
   import { useToast } from 'primevue/usetoast'
+  import { useStatusMap } from '@/composables/useStatusMap'
   import Toast from 'primevue/toast'
 
+  const { statusMap } = useStatusMap()
   const route = useRoute()
   const toast = useToast()
   const orderId = route.params.id
@@ -23,6 +25,10 @@
       isLoading.value = false
     }
   })
+
+  const orderStatusText = computed(() =>
+    order.value ? statusMap[order.value.status] || '未知狀態' : ''
+  )
 
   const subtotal = computed(() => {
     if (!order.value || !order.value.items) return 0
@@ -140,8 +146,8 @@
       <div class="bg-white rounded shadow p-4 max-w-6xl mx-auto space-y-2 mb-2">
         <h2 class="text-lg font-bold mb-2">訂單資訊</h2>
         <p>訂單編號：{{ order.orderNumber }}</p>
-        <p>訂單狀態：{{ order.status }}</p>
-        <p>下單日期：{{ order.date }}</p>
+        <p>訂單狀態：{{ orderStatusText }}</p>
+        <p>訂購日期：{{ formatDate(order.createdAt) }}</p>
       </div>
 
       <div class="bg-white rounded shadow p-4 max-w-6xl mx-auto space-y-2 mb-2">
