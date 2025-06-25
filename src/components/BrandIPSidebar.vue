@@ -10,7 +10,7 @@ defineProps({
     activeIpTag: String,
 })
 
-const emit = defineEmits(['update:activeIpTag'])
+
 
 const currentActiveIpTag = computed(() => route.query.ipTag || '')
 
@@ -71,14 +71,14 @@ const brandGroups = computed(() => {
 const loadInitialData = async () => {
     isLoading.value = true
     try {
-        console.log('Loading brands and IPs from /tags/filter...')
+
 
         const tagsRes = await axios.get('/tags/filter')
         brands.value = tagsRes.data.brands || []
         ips.value = tagsRes.data.ip || []
 
-        console.log('Brands loaded:', brands.value.length)
-        console.log('IPs loaded:', ips.value.length)
+
+
 
         initializeSmartMatching()
         isLoading.value = false
@@ -86,7 +86,7 @@ const loadInitialData = async () => {
         findBrandRelatedIPs()
 
     } catch (error) {
-        console.error('Failed to load initial data:', error)
+
         brands.value = []
         ips.value = []
         isLoading.value = false
@@ -94,7 +94,7 @@ const loadInitialData = async () => {
 }
 
 const findBrandRelatedIPs = async () => {
-    console.log('Finding brand-related IPs with API data...')
+
 
     const brandPromises = brands.value.map(async (brand) => {
         try {
@@ -119,7 +119,7 @@ const findBrandRelatedIPs = async () => {
             return null
 
         } catch (error) {
-            console.error(`Error finding IPs for brand ${brand.tagname}:`, error)
+
             return null
         }
     })
@@ -132,14 +132,14 @@ const findBrandRelatedIPs = async () => {
             if (result) {
                 const { brandId, ips: brandIPs, brandName } = result
                 currentMap.set(brandId, brandIPs)
-                console.log(`Brand "${brandName}" updated with ${brandIPs.length} IPs from API`)
+
             }
         })
 
         brandIpMap.value = currentMap
-        console.log('Brand-IP mapping updated with API data')
-    } catch (error) {
-        console.error('Error in parallel IP mapping:', error)
+
+    } catch {
+
     }
 }
 
