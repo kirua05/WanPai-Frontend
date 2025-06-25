@@ -6,17 +6,13 @@ import { fetchFilterData } from '@/api/product'
 export function useProductList() {
   const route = useRoute()
   const router = useRouter()
-
   const keyword = computed(() => route.query.keyword || '')
   const isSearching = computed(() => keyword.value.trim().length > 0)
-
   const categories = ref([])
   const allCategories = computed(() => ['全部', ...categories.value])
   const itemsPerPage = 20
-
   const isLoading = ref(false)
   const hasLoadedOnce = ref(false)
-
   const loadFilterData = async () => {
     try {
       const { series } = await fetchFilterData()

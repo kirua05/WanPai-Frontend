@@ -1,36 +1,33 @@
 <script setup>
-  import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
-  import BrandIPSidebar from '@/components/BrandIPSidebar.vue'
-  import ProductCard from '@/components/ProductCard.vue'
-  import ProductPagination from '@/components/ProductPagination.vue'
-  import { useProductList } from '@/composables/useProductList.js'
-  import { RouterLink } from 'vue-router'
+import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
+import BrandIPSidebar from '@/components/BrandIPSidebar.vue'
+import ProductCard from '@/components/ProductCard.vue'
+import ProductPagination from '@/components/ProductPagination.vue'
+import { useProductList } from '@/composables/useProductList.js'
+import { RouterLink } from 'vue-router'
 
-  const {
-    activeCategory,
-    activeIpTag,
-    isSearching,
-    keyword,
-    allCategories,
-    paginatedProducts,
-    currentPage,
-    totalPages,
-    goToPage,
-    pageInput,
-    pageButtons,
-    productSection,
-    isLoading,
-    hasLoadedOnce,
-  } = useProductList()
+
+const {
+  activeCategory,
+  activeIpTag,
+  isSearching,
+  keyword,
+  allCategories,
+  paginatedProducts,
+  currentPage,
+  totalPages,
+  goToPage,
+  pageInput,
+  pageButtons,
+  productSection,
+  isLoading,
+  hasLoadedOnce,
+} = useProductList()
 </script>
 
 <template>
-  <div class="px-2 sm:px-4 md:px-6 lg:px-8 py-6 max-w-[1400px] mx-auto">
-    <ProductCategoryFilter
-      v-if="!isSearching"
-      :categories="allCategories"
-      v-model:activeCategory="activeCategory"
-    />
+  <div class="px-2 sm:px-4 md:px-6 lg:px-8 py-6 max-w-[1200px] mx-auto">
+    <ProductCategoryFilter v-if="!isSearching" :categories="allCategories" v-model:activeCategory="activeCategory" />
 
     <p v-if="isSearching" class="text-lg font-semibold text-gray-700 mb-4">
       🔍 搜尋「{{ keyword }}」的結果：
