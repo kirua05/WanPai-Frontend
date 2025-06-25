@@ -86,7 +86,7 @@ const loadInitialData = async () => {
         findBrandRelatedIPs()
 
     } catch (error) {
-
+        error
         brands.value = []
         ips.value = []
         isLoading.value = false
@@ -119,7 +119,7 @@ const findBrandRelatedIPs = async () => {
             return null
 
         } catch (error) {
-
+            error
             return null
         }
     })
