@@ -22,13 +22,15 @@
       const response = await axios.get('/users/profile')
       profile.value = response.data
       editProfile.value = { ...profile.value }
-    } catch {
-      toast.add({
-        severity: 'error',
-        summary: '載入失敗',
-        detail: '無法取得用戶資料，請重新整理頁面。',
-        life: 3000,
-      })
+    } catch (error) {
+      if (error.response?.status && error.response.status !== 401) {
+        toast.add({
+          severity: 'error',
+          summary: '載入失敗',
+          detail: '無法取得用戶資料，請重新整理頁面。',
+          life: 3000,
+        })
+      }
     }
   })
 
@@ -102,9 +104,7 @@
       })
     } catch (error) {
       let errorMessage = '更新資料失敗，請稍後再試。'
-      if (error.response?.status === 401) {
-        errorMessage = '登入已過期，請重新登入。'
-      } else if (error.response?.status === 400) {
+      if (error.response?.status === 400) {
         errorMessage = '資料格式錯誤，請檢查輸入內容。'
       } else if (error.response?.status === 409) {
         errorMessage = '此 Email 已被其他會員使用。'
