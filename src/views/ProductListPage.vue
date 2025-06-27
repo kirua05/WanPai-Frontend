@@ -6,7 +6,6 @@ import ProductPagination from '@/components/ProductPagination.vue'
 import { useProductList } from '@/composables/useProductList.js'
 import { RouterLink } from 'vue-router'
 
-
 const {
   activeCategory,
   activeIpTag,
@@ -43,18 +42,12 @@ const {
       </div>
 
       <div class="flex-1">
-        <div
-          v-if="!hasLoadedOnce || isLoading"
-          class="text-center text-gray-500 py-10"
-        >
+        <div v-if="!hasLoadedOnce || isLoading" class="text-center text-gray-500 py-10">
           <i class="pi pi-spin pi-spinner text-2xl mb-2"></i>
           <p>載入中...</p>
         </div>
 
-        <div
-          v-else-if="paginatedProducts.length === 0"
-          class="text-center text-gray-400 py-10"
-        >
+        <div v-else-if="paginatedProducts.length === 0" class="text-center text-gray-400 py-10">
           <i class="pi pi-info-circle text-xl mb-2"></i>
           <p>查無符合的商品</p>
         </div>
@@ -64,12 +57,7 @@ const {
           ref="productSection"
           class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
         >
-          <RouterLink
-            v-for="item in paginatedProducts"
-            :key="item.id"
-            :to="`/products/${item.id}`"
-            class="block"
-          >
+          <RouterLink v-for="item in paginatedProducts" :key="item.id" :to="`/products/${item.id}`" class="block">
             <ProductCard :product="item" />
           </RouterLink>
         </div>
