@@ -16,7 +16,7 @@
   const router = useRouter()
 
   const searchOrderId = ref('')
-  const selectedDateRange = ref(null)
+  const selectedDateRange = ref('') // ✅ 統一為空字串初始值（與下拉選單匹配）
   const expandedRows = ref([])
   const errorMsg = ref('')
   const orders = ref([])
@@ -41,11 +41,8 @@
       if (selectedDateRange.value) {
         const today = new Date()
         const days = parseInt(selectedDateRange.value)
-        const startDate = new Date(today.getTime() - (days - 1) * 86400000)
-        startDate.setHours(0, 0, 0, 0)
-
-        const endDate = new Date(today)
-        endDate.setHours(23, 59, 59, 999)
+        const startDate = new Date(today.getTime() - days * 86400000)
+        const endDate = today
 
         filters.startDate = startDate.toISOString()
         filters.endDate = endDate.toISOString()
@@ -75,31 +72,14 @@
 </script>
 
 <template>
-  <div
-    class="min-h-screen py-2 px-4"
-    style="
-      --s: 82px;
-      --c1: #ffdb57;
-      --c2: #ffffff;
-      --_g: radial-gradient(calc(var(--s) / 2), var(--c1) 97%, #0000);
+  <div class="relative min-h-screen overflow-hidden py-2 px-4">
+    <div
+      class="absolute inset-0 z-0 bg-no-repeat bg-cover blur-md"
+      style="background-image: url('/src/assets/circle-scatter-haikei.svg')"
+    ></div>
 
-      --_g: radial-gradient(calc(var(--s) / 2), var(--c1) 97%, #0000);
-      background:
-        var(--_g),
-        var(--_g) calc(2 * var(--s)) calc(2 * var(--s)),
-        repeating-conic-gradient(from 45deg, #0000 0 25%, var(--c2) 0 50%)
-          calc(-0.707 * var(--s)) calc(-0.707 * var(--s)),
-        repeating-linear-gradient(
-          135deg,
-          var(--c1) calc(var(--s) / -2) calc(var(--s) / 2),
-          var(--c2) 0 calc(2.328 * var(--s))
-        ),
-        linear-gradient(to bottom right, #fff9c4, #ffe082);
-      background-size: calc(4 * var(--s)) calc(4 * var(--s));
-    "
-  >
-    <div class="flex max-w-7xl mx-auto px-4 py-8 gap-6">
-      <aside class="w-64 ml-11 hidden lg:block">
+    <div class="relative z-10 flex max-w-7xl mx-auto px-4 py-8 gap-6">
+      <aside class="w-64 ml-11">
         <UserSideBar />
       </aside>
 

@@ -4,7 +4,7 @@
 </script>
 
 <template>
-  <aside class="w-64 bg-white rounded-xl shadow p-6">
+  <aside class="w-65 bg-white rounded-xl shadow p-7 -mt-1">
     <div class="mb-6 flex items-center gap-3">
       <div
         class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center"
@@ -13,14 +13,15 @@
       </div>
       <span class="font-bold text-xl text-gray-800">我的帳戶</span>
     </div>
+
     <nav class="space-y-2">
       <RouterLink
         to="/userprofile"
         :class="[
-          'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors',
+          'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-all duration-200 transform',
           route.path === '/userprofile'
-            ? 'text-primary-600 bg-primary-50 border-primary-600'
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent',
+            ? 'text-primary-600 bg-primary-50 border-primary-600 pl-4 translate-x-1'
+            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent pl-3 translate-x-0',
         ]"
       >
         <i class="pi pi-user"></i>
@@ -30,10 +31,10 @@
       <RouterLink
         to="/orders"
         :class="[
-          'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors',
+          'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-all duration-200 transform',
           route.path === '/orders'
-            ? 'text-primary-600 bg-primary-50 border-primary-600'
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent',
+            ? 'text-primary-600 bg-primary-50 border-primary-600 pl-4 translate-x-1'
+            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent pl-3 translate-x-0',
         ]"
       >
         <i class="pi pi-shopping-cart"></i>
@@ -43,10 +44,10 @@
       <RouterLink
         to="/favorites"
         :class="[
-          'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors',
+          'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-all duration-200 transform',
           route.path === '/favorites'
-            ? 'text-primary-600 bg-primary-50 border-primary-600'
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent',
+            ? 'text-primary-600 bg-primary-50 border-primary-600 pl-4 translate-x-1'
+            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent pl-3 translate-x-0',
         ]"
       >
         <i class="pi pi-heart"></i>

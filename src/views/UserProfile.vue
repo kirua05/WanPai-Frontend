@@ -125,31 +125,16 @@
 </script>
 
 <template>
-  <div
-    class="bg-gray-50 min-h-screen py-10 px-4"
-    style="
-      --s: 82px;
-      --c1: #ffdb57;
-      --c2: #ffffff;
-      --_g: radial-gradient(calc(var(--s) / 2), var(--c1) 97%, #0000);
+  <div class="relative min-h-screen overflow-hidden">
+    <div
+      class="absolute inset-0 z-0 bg-no-repeat bg-cover blur-md"
+      style="background-image: url('/src/assets/circle-scatter-haikei.svg')"
+    ></div>
 
-      --_g: radial-gradient(calc(var(--s) / 2), var(--c1) 97%, #0000);
-      background:
-        var(--_g),
-        var(--_g) calc(2 * var(--s)) calc(2 * var(--s)),
-        repeating-conic-gradient(from 45deg, #0000 0 25%, var(--c2) 0 50%)
-          calc(-0.707 * var(--s)) calc(-0.707 * var(--s)),
-        repeating-linear-gradient(
-          135deg,
-          var(--c1) calc(var(--s) / -2) calc(var(--s) / 2),
-          var(--c2) 0 calc(2.328 * var(--s))
-        ),
-        linear-gradient(to bottom right, #fff9c4, #ffe082);
-      background-size: calc(4 * var(--s)) calc(4 * var(--s));
-    "
-  >
-    <div class="max-w-6xl mx-auto flex gap-6 items-start">
-      <aside class="w-64 bg-white rounded-xl shadow p-6 hidden lg:block">
+    <div
+      class="max-w-6xl mx-auto flex gap-6 items-start relative z-10 px-4 py-10"
+    >
+      <aside class="w-64 bg-white rounded-xl shadow p-6">
         <div class="mb-6 flex items-center gap-3">
           <div
             class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center"
@@ -160,7 +145,7 @@
         </div>
         <nav class="space-y-2">
           <RouterLink
-            to="/userprofile"
+            to="/profile"
             class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-md border-l-4 border-primary-600"
           >
             <i class="pi pi-user"></i>
