@@ -26,6 +26,15 @@
     }
   })
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '—'
+    return new Date(dateString).toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    })
+  }
+
   const orderStatusText = computed(() =>
     order.value ? statusMap[order.value.status] || '未知狀態' : ''
   )
@@ -40,15 +49,6 @@
 
   const steps = computed(() => {
     if (!order.value) return []
-
-    const formatDate = (dateString) => {
-      if (!dateString) return '—'
-      return new Date(dateString).toLocaleDateString('zh-TW', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      })
-    }
 
     return [
       {

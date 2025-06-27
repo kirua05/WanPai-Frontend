@@ -3,7 +3,7 @@
   import { ref, computed, onMounted, watch } from 'vue'
   import { RouterLink } from 'vue-router'
   import Button from 'primevue/button'
-  import Dropdown from 'primevue/dropdown'
+  import Select from 'primevue/select'
   import { useToast } from 'primevue/usetoast'
   import { fetchFavorites, removeFavorite } from '@/api/favorite'
   import { useCartStore } from '@/stores/cart'
@@ -186,7 +186,7 @@
             </div>
 
             <div class="col-span-4 flex gap-2 items-center justify-center">
-              <Dropdown
+              <Select
                 v-model="item.quantity"
                 :options="[1, 2, 3, 4, 5]"
                 placeholder="數量"

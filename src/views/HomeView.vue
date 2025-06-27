@@ -14,9 +14,14 @@
 
   onMounted(() => {
     const hasVisited = sessionStorage.getItem('wanpai-has-visited')
-    if (!hasVisited) {
+    const navType = performance.getEntriesByType('navigation')[0]?.type
+    const isFirstVisit = !hasVisited && navType === 'navigate'
+
+    if (isFirstVisit) {
       showSplash.value = true
       sessionStorage.setItem('wanpai-has-visited', 'true')
+    } else {
+      showSplash.value = false
     }
   })
 

@@ -11,6 +11,8 @@
   import { useRouter } from 'vue-router'
   import { useCartStore } from '@/stores/cart'
   import { createEcpayOrder } from '@/api/createEcpayOrder'
+  import { createOrder } from '@/api/order'
+  import { useAuthStore } from '@/stores/auth'
   import { useToast } from 'primevue/usetoast'
   import Button from '@/volt/Button.vue'
   import Toast from 'primevue/toast'
@@ -19,6 +21,7 @@
 
   const cart = useCartStore()
   const router = useRouter()
+  const authStore = useAuthStore()
 
   const selectedItems = ref([])
   const showShippingDetails = ref(false)
@@ -145,29 +148,73 @@
       })
       return
     }
+
+    if (!authStore.isLoggedIn) {
+      toast.add({
+        severity: 'error',
+        summary: '未登入',
+        detail: '請先登入後再進行結帳',
+        life: 3000,
+      })
+      router.push('/login')
+      return
+    }
+
     const itemNames = selectedItems.value
       .map((item) => item.product.name)
       .join('#')
     const tradeDesc = `購物車商品結帳: ${itemNames}`
 
-    const payload = {
-      TotalAmount: (selectedTotal.value + shipping.value).toString(),
-      TradeDesc: tradeDesc,
-      ItemName: itemNames,
-    }
-
     try {
-      await createEcpayOrder(payload, toast)
+      const totalAmount = selectedTotal.value + shipping.value
+      const orderNumber = `ORDER-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
+
+      const orderItems = selectedItems.value.map((item) => ({
+        productId: item.productId,
+        productName: item.product.name,
+        productImage: item.product.coverImage || 'no-image.png',
+        quantity: item.quantity,
+        price: Number(item.priceAtAdd),
+        subtotal: Number(item.priceAtAdd) * item.quantity,
+      }))
+
+      const token = authStore.token
+      const payload = JSON.parse(atob(token.split('.')[1]))
+
+      const orderData = {
+        orderNumber,
+        userId: payload.id,
+        recipientName: shippingForm.recipientName,
+        recipientPhone: shippingForm.recipientPhone,
+        shippingAddress: shippingForm.shippingAddress,
+        totalPrice: totalAmount,
+        quantity: selectedItems.value.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        ),
+        status: 'pending',
+        items: orderItems,
+      }
+
+      await createOrder(orderData)
+
+      const ecpayPayload = {
+        TotalAmount: totalAmount.toString(),
+        TradeDesc: tradeDesc,
+        ItemName: itemNames,
+        MerchantTradeNo: orderNumber,
+      }
       for (const item of selectedItems.value) {
         await cart.remove(item.id)
       }
       selectedItems.value = []
-      router.push('/')
-    } catch {
+
+      await createEcpayOrder(ecpayPayload, toast)
+    } catch (error) {
       toast.add({
         severity: 'error',
         summary: '結帳失敗',
-        detail: '請稍後再試或聯絡客服',
+        detail: error.response?.data?.error || '請稍後再試或聯絡客服',
         life: 3000,
       })
     }

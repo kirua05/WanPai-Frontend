@@ -16,7 +16,7 @@
   const router = useRouter()
 
   const searchOrderId = ref('')
-  const selectedDateRange = ref('')
+  const selectedDateRange = ref(null)
   const expandedRows = ref([])
   const errorMsg = ref('')
   const orders = ref([])
@@ -41,8 +41,11 @@
       if (selectedDateRange.value) {
         const today = new Date()
         const days = parseInt(selectedDateRange.value)
-        const startDate = new Date(today.getTime() - days * 86400000)
-        const endDate = today
+        const startDate = new Date(today.getTime() - (days - 1) * 86400000)
+        startDate.setHours(0, 0, 0, 0)
+
+        const endDate = new Date(today)
+        endDate.setHours(23, 59, 59, 999)
 
         filters.startDate = startDate.toISOString()
         filters.endDate = endDate.toISOString()
@@ -186,7 +189,7 @@
                     <Button
                       label="查看訂單"
                       icon="pi pi-search"
-                      class="text-xs py-1 rounded shadow"
+                      class="text-xs py-1 rounded shadow w-30"
                       @click="goToDetail(slotProps.data.id)"
                     />
                   </div>
