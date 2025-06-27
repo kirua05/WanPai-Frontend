@@ -10,6 +10,11 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue'),
     },
     {
+      path: '/products',
+      name: 'productList',
+      component: () => import('../views/ProductListPage.vue'),
+    },
+    {
       path: '/products/:id',
       name: 'productDetail',
       component: () => import('../views/ProductDetailPage.vue'),
@@ -54,7 +59,7 @@ const router = createRouter({
         {
           path: 'products/:id/stock-logs',
           name: 'stockLog',
-          component: () => import('../views/Admin/StockLog.vue'),
+          component: () => import('../views/Admin/stockLog.vue'),
         },
       ],
     },
