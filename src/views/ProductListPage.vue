@@ -1,13 +1,16 @@
 <script setup>
 import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
+import BrandIPSidebar from '@/components/BrandIPSidebar.vue'
 import ProductCard from '@/components/ProductCard.vue'
 import ProductPagination from '@/components/ProductPagination.vue'
 import { useProductList } from '@/composables/useProductList.js'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
 
+
 const {
   activeCategory,
+  activeIpTag,
   isSearching,
   keyword,
   allCategories,
@@ -21,6 +24,7 @@ const {
   isLoading,
   hasLoadedOnce,
 } = useProductList()
+
 
 const bubbleRef = ref(null)
 

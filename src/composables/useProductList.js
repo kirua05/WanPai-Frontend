@@ -26,19 +26,17 @@ export function useProductList() {
 
   const activeCategory = computed({
     get: () => {
-      // 如果有選中IP標籤，則商品分類不應該顯示為選中狀態
-      if (route.query.ipTag) {
+      // 如果有搜尋關鍵字或有選中IP標籤，則商品分類不應該顯示為選中狀態
+      if (route.query.keyword || route.query.ipTag) {
         return ''
       }
       return route.query.category === undefined ? '全部' : route.query.category
     },
     set: (val) => {
-      // 當選擇商品分類時，清除IP標籤
+      // 當選擇商品分類時，清除搜尋關鍵字和IP標籤
       router.push({
         query: {
-          ...route.query,
           category: val,
-          ipTag: '',
           page: 1,
         },
       })
@@ -48,7 +46,13 @@ export function useProductList() {
   const activeIpTag = computed({
     get: () => route.query.ipTag || '',
     set: (val) => {
-      router.push({ query: { ...route.query, ipTag: val, page: 1 } })
+      // 當選擇IP標籤時，清除搜尋關鍵字
+      router.push({
+        query: {
+          ipTag: val,
+          page: 1,
+        },
+      })
     },
   })
 
@@ -63,8 +67,32 @@ export function useProductList() {
 
   watch(
     () => route.query.keyword,
-    async (val) => {
+    async (val, oldVal) => {
+      // 當搜尋關鍵字被清除時，回到當前選擇的分類或IP標籤狀態
+      if (!val && oldVal) {
+        if (activeIpTag.value) {
+          await loadProductsByIpTag(activeIpTag.value)
+        } else {
+          await loadProductsByCategory(activeCategory.value)
+        }
+        return
+      }
+
       if (!val) return
+
+      // 當有搜尋關鍵字時，確保載入所有商品供搜尋
+      if (val.trim().length > 0) {
+        products.value = []
+        isLoading.value = true
+        try {
+          const res = await axios.get('/products')
+          products.value = res.data
+        } catch {
+          products.value = []
+        } finally {
+          isLoading.value = false
+        }
+      }
 
       if (route.query.category && route.query.category !== '全部') {
         router.push({
