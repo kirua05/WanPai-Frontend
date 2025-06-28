@@ -1,30 +1,4 @@
 <script setup>
-<<<<<<< HEAD
-<<<<<<< HEAD
-  import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
-  import BrandIPSidebar from '@/components/BrandIPSidebar.vue'
-  import ProductCard from '@/components/ProductCard.vue'
-  import ProductPagination from '@/components/ProductPagination.vue'
-  import { useProductList } from '@/composables/useProductList.js'
-  import { RouterLink } from 'vue-router'
-
-  const {
-    activeCategory,
-    activeIpTag,
-    isSearching,
-    keyword,
-    allCategories,
-    paginatedProducts,
-    currentPage,
-    totalPages,
-    goToPage,
-    pageInput,
-    pageButtons,
-    productSection,
-    isLoading,
-    hasLoadedOnce,
-  } = useProductList()
-=======
 import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
 import ProductCard from '@/components/ProductCard.vue'
 import ProductPagination from '@/components/ProductPagination.vue'
@@ -32,15 +6,6 @@ import { useProductList } from '@/composables/useProductList.js'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
 
-=======
-import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
-import ProductCard from '@/components/ProductCard.vue'
-import ProductPagination from '@/components/ProductPagination.vue'
-import { useProductList } from '@/composables/useProductList.js'
-import { RouterLink } from 'vue-router'
-import { ref, onMounted, onUnmounted } from 'vue'
-
->>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
 const {
   activeCategory,
   isSearching,
@@ -72,10 +37,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
-<<<<<<< HEAD
->>>>>>> 3d248b3 (feat: add static bubble background and homepage-only dynamic bubbles)
-=======
->>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
 </script>
 
 <template>
@@ -86,7 +47,6 @@ onUnmounted(() => {
       🔍 搜尋「{{ keyword }}」的結果：
     </p>
 
-<<<<<<< HEAD
     <div class="lg:hidden mt-4">
       <BrandIPSidebar v-model:activeIpTag="activeIpTag" />
     </div>
@@ -97,66 +57,26 @@ onUnmounted(() => {
       </div>
 
       <div class="flex-1">
-        <div
-          v-if="!hasLoadedOnce || isLoading"
-          class="text-center text-gray-500 py-10"
-        >
+        <div v-if="!hasLoadedOnce || isLoading" class="text-center text-gray-500 py-10">
           <i class="pi pi-spin pi-spinner text-2xl mb-2"></i>
           <p>載入中...</p>
         </div>
 
-        <div
-          v-else-if="paginatedProducts.length === 0"
-          class="text-center text-gray-400 py-10"
-        >
+        <div v-else-if="paginatedProducts.length === 0" class="text-center text-gray-400 py-10">
           <i class="pi pi-info-circle text-xl mb-2"></i>
           <p>查無符合的商品</p>
         </div>
 
-        <div
-          v-else
-          ref="productSection"
-          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
-        >
-          <RouterLink
-            v-for="item in paginatedProducts"
-            :key="item.id"
-            :to="`/products/${item.id}`"
-            class="block"
-          >
+        <div v-else ref="productSection"
+          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <RouterLink v-for="item in paginatedProducts" :key="item.id" :to="`/products/${item.id}`" class="block">
             <ProductCard :product="item" />
           </RouterLink>
         </div>
 
-        <ProductPagination
-          v-if="hasLoadedOnce"
-          :currentPage="currentPage"
-          :totalPages="totalPages"
-          :pageButtons="pageButtons"
-          v-model:pageInput="pageInput"
-          @goToPage="goToPage"
-        />
+        <ProductPagination v-if="hasLoadedOnce" :currentPage="currentPage" :totalPages="totalPages"
+          :pageButtons="pageButtons" v-model:pageInput="pageInput" @goToPage="goToPage" />
       </div>
     </div>
-=======
-    <div v-if="!hasLoadedOnce || isLoading" class="text-center text-gray-500 py-10">
-      <i class="pi pi-spin pi-spinner text-2xl mb-2"></i>
-      <p>載入中...</p>
-    </div>
-
-    <div v-else-if="paginatedProducts.length === 0" class="text-center text-gray-400 py-10">
-      <i class="pi pi-info-circle text-xl mb-2"></i>
-      <p>查無符合的商品</p>
-    </div>
-
-    <div v-else ref="productSection" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-      <RouterLink v-for="item in paginatedProducts" :key="item.id" :to="`/products/${item.id}`" class="block">
-        <ProductCard :product="item" />
-      </RouterLink>
-    </div>
-
-    <ProductPagination v-if="hasLoadedOnce" :currentPage="currentPage" :totalPages="totalPages"
-      :pageButtons="pageButtons" v-model:pageInput="pageInput" @goToPage="goToPage" />
->>>>>>> 3d248b3 (feat: add static bubble background and homepage-only dynamic bubbles)
   </div>
 </template>

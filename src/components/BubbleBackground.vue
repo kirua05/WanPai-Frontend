@@ -4,10 +4,6 @@ import { onMounted, ref } from 'vue'
 const bubbles = ref([])
 
 onMounted(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4f9c44c (fixbubble)
   const rows = 5
   const cols = 6
   const total = rows * cols
@@ -17,8 +13,6 @@ onMounted(() => {
   bubbles.value = Array.from({ length: total }, (_, i) => {
     const row = Math.floor(i / cols)
     const col = i % cols
-
-    // 偏移範圍加大：±40%
     const offsetY = (Math.random() - 0.5) * gapY * 0.8
     const offsetX = (Math.random() - 0.5) * gapX * 0.8
 
@@ -31,19 +25,6 @@ onMounted(() => {
       blur: Math.random() < 0.5 ? 'blur-sm' : ''
     }
   })
-<<<<<<< HEAD
-=======
-  bubbles.value = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    top: Math.random() * 100,
-    left: Math.random() * 100,
-    size: Math.random() * 50 + 50,
-    opacity: Math.random() * 0.3 + 0.4,
-    blur: Math.random() > 0.5 ? 'blur-xs' : ''
-  }))
->>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
-=======
->>>>>>> 4f9c44c (fixbubble)
 })
 </script>
 
@@ -54,25 +35,10 @@ onMounted(() => {
       left: `${b.left}%`,
       width: `${b.size}px`,
       height: `${b.size}px`,
-<<<<<<< HEAD
-<<<<<<< HEAD
       opacity: b.opacity,
       transform: 'translate(-50%, -50%)'
-    }"></div>
-  </div>
-</template>
-=======
-      opacity: b.opacity
     }"></div>
   </div>
 </template>
 
 <style scoped></style>
->>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
-=======
-      opacity: b.opacity,
-      transform: 'translate(-50%, -50%)'
-    }"></div>
-  </div>
-</template>
->>>>>>> 4f9c44c (fixbubble)
