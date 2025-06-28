@@ -153,6 +153,7 @@
       </RouterLink>
 
       <ProductSearchBar v-model="searchInput" @submit="search" />
+
       <div class="hidden md:flex items-center gap-4">
         <div v-if="authStore.isLoggedIn" class="hidden md:block relative">
           <Button
@@ -170,6 +171,7 @@
             class="text-base"
           />
         </div>
+
         <div class="relative cursor-pointer" @click="handleCartClick">
           <Button icon="pi pi-shopping-cart" text rounded />
           <span
@@ -193,7 +195,6 @@
             class="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:bg-gray-100 transition"
             aria-label="通知"
           />
-
           <span
             v-if="notificationStore.totalUnread > 0"
             class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white z-10"
@@ -242,6 +243,7 @@
             {{ cart.items.length }}
           </span>
         </div>
+
         <div
           v-if="authStore.isLoggedIn"
           class="relative cursor-pointer text-gray-800 hover:text-emerald-600 text-base font-medium flex items-center"
@@ -259,11 +261,13 @@
             class="ml-auto bg-red-500 text-white text-xs w-2.5 h-2.5 rounded-full border-2 border-white"
           ></span>
         </div>
+
         <div v-if="!authStore.isLoggedIn">
           <RouterLink to="/authform" @click="visible = false">
             <Button label="登入" severity="primary" class="mt-4 w-full" />
           </RouterLink>
         </div>
+
         <div v-else class="mt-4 space-y-3">
           <div>
             <div class="text-sm text-gray-500 mb-3">會員功能</div>

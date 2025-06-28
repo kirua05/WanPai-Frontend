@@ -73,3 +73,21 @@ router.afterEach(() => {
   }
 })
 app.mount('#app')
+
+const toastStyle = document.createElement('style')
+toastStyle.textContent = `
+.p-toast {
+  max-width: 90vw !important;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+.p-toast-message {
+  font-size: 0.95rem;
+  padding: 0.75rem;
+}
+.p-toast-top-right,
+.p-toast-bottom-right {
+  right: 1rem !important;
+}
+`
+document.head.appendChild(toastStyle)
