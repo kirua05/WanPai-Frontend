@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 const bubbles = ref([])
 
 onMounted(() => {
+<<<<<<< HEAD
   const rows = 5
   const cols = 6
   const total = rows * cols
@@ -27,6 +28,16 @@ onMounted(() => {
       blur: Math.random() < 0.5 ? 'blur-sm' : ''
     }
   })
+=======
+  bubbles.value = Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    top: Math.random() * 100,
+    left: Math.random() * 100,
+    size: Math.random() * 50 + 50,
+    opacity: Math.random() * 0.3 + 0.4,
+    blur: Math.random() > 0.5 ? 'blur-xs' : ''
+  }))
+>>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
 })
 </script>
 
@@ -37,8 +48,17 @@ onMounted(() => {
       left: `${b.left}%`,
       width: `${b.size}px`,
       height: `${b.size}px`,
+<<<<<<< HEAD
       opacity: b.opacity,
       transform: 'translate(-50%, -50%)'
     }"></div>
   </div>
 </template>
+=======
+      opacity: b.opacity
+    }"></div>
+  </div>
+</template>
+
+<style scoped></style>
+>>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)

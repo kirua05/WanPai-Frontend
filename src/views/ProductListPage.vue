@@ -1,5 +1,6 @@
 <script setup>
 <<<<<<< HEAD
+<<<<<<< HEAD
   import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
   import BrandIPSidebar from '@/components/BrandIPSidebar.vue'
   import ProductCard from '@/components/ProductCard.vue'
@@ -31,6 +32,15 @@ import { useProductList } from '@/composables/useProductList.js'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
 
+=======
+import ProductCategoryFilter from '@/components/ProductCategoryFilter.vue'
+import ProductCard from '@/components/ProductCard.vue'
+import ProductPagination from '@/components/ProductPagination.vue'
+import { useProductList } from '@/composables/useProductList.js'
+import { RouterLink } from 'vue-router'
+import { ref, onMounted, onUnmounted } from 'vue'
+
+>>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
 const {
   activeCategory,
   isSearching,
@@ -62,7 +72,10 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
+<<<<<<< HEAD
 >>>>>>> 3d248b3 (feat: add static bubble background and homepage-only dynamic bubbles)
+=======
+>>>>>>> 037577c (feat: add static bubble background and homepage-only dynamic bubbles)
 </script>
 
 <template>
