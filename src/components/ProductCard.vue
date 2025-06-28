@@ -46,7 +46,7 @@ async function addToCart(e) {
       <p class="text-sm sm:text-base font-medium line-clamp-2 min-h-[3.5em] leading-tight">
         {{ product.name }}
       </p>
-      <p class="text-lg sm:text-xl font-bold mt-2 text-black">
+      <p class="text-lg sm:text-xl font-bold mt-2 text-black dark:text-yellow-300">
         ${{ product.price }}
       </p>
     </div>

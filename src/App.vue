@@ -43,7 +43,7 @@
   <Toast />
   <BubbleBackground />
   <FloatingBubble ref="bubbleRef" />
-
+  <Button label="Toggle Dark Mode" @click="toggleDarkMode"></Button>
   <Navbar v-if="!isAdmin" />
 
   <main :class="!isAdmin ? 'mt-6 min-h-screen' : ''">
