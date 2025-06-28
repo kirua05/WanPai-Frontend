@@ -13,6 +13,18 @@ export function useProductList() {
   const itemsPerPage = 20
   const isLoading = ref(false)
   const hasLoadedOnce = ref(false)
+  const randomProducts = ref([])
+
+  const loadRandomProducts = async () => {
+    try {
+      const res = await axios.get('/products/random?limit=8')
+      randomProducts.value = res.data
+    } catch (err) {
+      err
+      randomProducts.value = []
+    }
+  }
+
   const loadFilterData = async () => {
     try {
       const { series } = await fetchFilterData()
@@ -26,14 +38,12 @@ export function useProductList() {
 
   const activeCategory = computed({
     get: () => {
-      // 如果有搜尋關鍵字或有選中IP標籤，則商品分類不應該顯示為選中狀態
       if (route.query.keyword || route.query.ipTag) {
         return ''
       }
       return route.query.category === undefined ? '全部' : route.query.category
     },
     set: (val) => {
-      // 當選擇商品分類時，清除搜尋關鍵字和IP標籤
       router.push({
         query: {
           category: val,
@@ -46,7 +56,6 @@ export function useProductList() {
   const activeIpTag = computed({
     get: () => route.query.ipTag || '',
     set: (val) => {
-      // 當選擇IP標籤時，清除搜尋關鍵字
       router.push({
         query: {
           ipTag: val,
@@ -68,7 +77,6 @@ export function useProductList() {
   watch(
     () => route.query.keyword,
     async (val, oldVal) => {
-      // 當搜尋關鍵字被清除時，回到當前選擇的分類或IP標籤狀態
       if (!val && oldVal) {
         if (activeIpTag.value) {
           await loadProductsByIpTag(activeIpTag.value)
@@ -79,8 +87,6 @@ export function useProductList() {
       }
 
       if (!val) return
-
-      // 當有搜尋關鍵字時，確保載入所有商品供搜尋
       if (val.trim().length > 0) {
         products.value = []
         isLoading.value = true
@@ -103,6 +109,8 @@ export function useProductList() {
           },
         })
       }
+
+      await loadRandomProducts()
     }
   )
 
@@ -159,6 +167,10 @@ export function useProductList() {
     } else {
       await loadProductsByCategory(activeCategory.value)
     }
+
+    if (isSearching.value) {
+      await loadRandomProducts()
+    }
   })
 
   watch(
@@ -179,10 +191,8 @@ export function useProductList() {
     async (newIpTag, oldIpTag) => {
       if (newIpTag !== oldIpTag && oldIpTag !== undefined) {
         if (newIpTag) {
-          // 當選擇IP標籤時，載入該IP的產品
           await loadProductsByIpTag(newIpTag)
         } else {
-          // 當清除IP標籤時，根據當前分類載入產品
           const categoryToLoad =
             activeCategory.value === '' ? '全部' : activeCategory.value
           await loadProductsByCategory(categoryToLoad)
@@ -261,5 +271,7 @@ export function useProductList() {
     productSection,
     isLoading,
     hasLoadedOnce,
+    randomProducts,
+    loadRandomProducts,
   }
 }

@@ -22,6 +22,7 @@
     productSection,
     isLoading,
     hasLoadedOnce,
+    randomProducts,
   } = useProductList()
 
   const bubbleRef = ref(null)
@@ -99,6 +100,21 @@
           v-model:pageInput="pageInput"
           @goToPage="goToPage"
         />
+        <section v-if="isSearching && randomProducts.length > 0" class="mt-12">
+          <h2 class="text-xl font-bold mb-4">大家也在看 👀</h2>
+          <div
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+          >
+            <RouterLink
+              v-for="item in randomProducts"
+              :key="item.id"
+              :to="`/products/${item.id}`"
+              class="block"
+            >
+              <ProductCard :product="item" />
+            </RouterLink>
+          </div>
+        </section>
       </div>
     </div>
   </div>
