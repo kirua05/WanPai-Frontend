@@ -177,7 +177,7 @@
         <div v-if="!isEdit" class="space-y-6 mt-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full sm:w-4/5">
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2">
                 用戶名
               </label>
               <div
@@ -188,7 +188,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2">
                 手機號碼
               </label>
               <div
@@ -199,7 +199,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-gray-700 mb-2">
                 Email
               </label>
               <div
@@ -210,7 +210,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label class="block text-sm font-medium text-gray-700">
                 地址
               </label>
               <div

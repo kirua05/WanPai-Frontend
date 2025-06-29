@@ -77,17 +77,10 @@
           <p>查無符合的商品</p>
         </div>
 
-        <div
-          v-else
-          ref="productSection"
-          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
-        >
-          <RouterLink
-            v-for="item in paginatedProducts"
-            :key="item.id"
-            :to="`/products/${item.id}`"
-            class="block"
-          >
+        <div v-else ref="productSection"
+          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 min-w-0">
+          <RouterLink v-for="item in paginatedProducts" :key="item.id" :to="`/products/${item.id}`"
+            class="block w-full">
             <ProductCard :product="item" />
           </RouterLink>
         </div>

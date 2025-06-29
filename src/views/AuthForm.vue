@@ -229,16 +229,16 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-white">
+  <div class="flex justify-center items-center min-h-screen bg-gray-100 ">
     <Toast />
-    <div class="w-full max-w-md p-6 bg-white dark:bg-white text-black dark:text-white rounded-lg shadow-lg mt-[-100px]">
+    <div class="w-full max-w-md p-6 bg-white  text-black  rounded-lg shadow-lg mt-[-100px]">
       <h2 class="text-center text-2xl font-semibold mb-6">
         {{ isLogin ? '登入' : '註冊' }}
       </h2>
 
       <form @submit.prevent="onSubmit">
         <div v-if="!isLogin" class="mb-4">
-          <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="username" class="block text-sm font-medium text-gray-700 ">
             用戶名
           </label>
           <input type="text" id="username" v-model="username"
@@ -247,23 +247,25 @@ const onSubmit = () => {
         </div>
 
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="email" class="block text-sm font-medium text-gray-700 ">
             電子郵件
           </label>
-          <input type="email" id="email" v-model="email"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="請輸入電子郵件" required />
+          <input type="email" id="email" v-model="email" class="w-full px-4 py-2 border border-gray-300  rounded-md
+                   bg-white text-black
+                   placeholder-gray-400
+                   focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="請輸入電子郵件" required />
         </div>
 
         <div class="mb-4 relative">
-          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label for="password" class="block text-sm font-medium text-gray-700 ">
             密碼
           </label>
-          <input :type="isPasswordVisible ? 'text' : 'password'" v-model="password" id="password"
-            class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="請輸入密碼" required />
+          <input :type="isPasswordVisible ? 'text' : 'password'" v-model="password" id="password" class="w-full px-4 py-2 pr-10 border border-gray-300  rounded-md
+                   bg-white text-black
+                   placeholder-gray-400
+                   focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="請輸入密碼" required />
           <button type="button" @click="togglePasswordVisibility"
-            class="absolute right-3 top-8 text-gray-500 hover:text-gray-700">
+            class="absolute right-3 top-8 text-gray-500  hover:text-gray-700 ">
             <i v-if="isPasswordVisible" class="pi pi-eye-slash"></i>
             <i v-else class="pi pi-eye"></i>
           </button>

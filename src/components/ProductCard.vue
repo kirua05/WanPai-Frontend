@@ -40,13 +40,13 @@ async function addToCart(e) {
 </script>
 
 <template>
-  <div class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition-all relative">
-    <img :src="product.coverImage" alt="商品圖片" class="w-full h-64 object-contain bg-white" />
+  <div class="bg-white  rounded-lg overflow-hidden shadow hover:shadow-lg transition-all relative">
+    <img :src="product.coverImage" alt="商品圖片" class="w-full h-64 object-contain bg-white " />
     <div class="p-4">
-      <p class="text-sm sm:text-base font-medium line-clamp-2 min-h-[3.5em] leading-tight">
+      <p class="text-sm sm:text-base font-medium line-clamp-2 min-h-[3.5em] leading-tight text-black ">
         {{ product.name }}
       </p>
-      <p class="text-lg sm:text-xl font-bold mt-2 text-black dark:text-black">
+      <p class="text-lg sm:text-xl font-bold mt-2 text-black">
         ${{ product.price }}
       </p>
     </div>

@@ -136,9 +136,9 @@
 </script>
 
 <template>
-  <header class="bg-white dark:bg-white text-black dark:text-black shadow py-2">
+  <header class="bg-white  text-black  shadow py-2">
     <div class="max-w-screen-xl mx-auto flex items-center justify-between h-12 px-4">
-      <RouterLink to="/" class="text-xl font-bold text-emerald-600 dark:text-emerald-400" @click="handleHomeClick">
+      <RouterLink to="/" class="text-xl font-bold text-emerald-600" @click="handleHomeClick">
         <img src="@/assets/logo.png" alt="Wanpai Logo" class="h-30 w-auto object-contain" />
       </RouterLink>
 
@@ -146,13 +146,13 @@
 
       <div class="hidden md:flex items-center gap-4">
         <div v-if="authStore.isLoggedIn" class="hidden md:block relative">
-          <Button icon="pi pi-user" text rounded @click="toggleMemberMenu"
-            class="hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="會員選單" />
-          <Menu ref="memberMenu" :model="memberMenuItems" popup class="text-base dark:bg-gray-800 dark:text-white" />
+          <Button icon="pi pi-user" text rounded @click="toggleMemberMenu" class="hover:bg-gray-100"
+            aria-label="會員選單" />
+          <Menu ref="memberMenu" :model="memberMenuItems" popup class="text-base " />
         </div>
 
         <div class="relative cursor-pointer" @click="handleCartClick">
-          <Button icon="pi pi-shopping-cart" text rounded class="hover:bg-gray-100 dark:hover:bg-gray-700" />
+          <Button icon="pi pi-shopping-cart" text rounded class="hover:bg-gray-100" />
           <span v-if="cart.items.length"
             class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
             {{ cart.items.length }}
@@ -181,7 +181,7 @@
         <div class="hidden md:block">
           <RouterLink v-if="!authStore.isLoggedIn" to="/authform">
             <Button label="登入"
-              class="w-full bg-white dark:bg-gray-700 text-black dark:text-white font-semibold border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600" />
+              class="w-full bg-white text-black font-semibold border border-gray-300  hover:bg-gray-100" />
           </RouterLink>
           <Button v-else label="登出" severity="danger" size="small" @click="logout" />
         </div>
