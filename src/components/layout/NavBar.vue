@@ -192,22 +192,21 @@
       </div>
     </div>
 
-    <Drawer v-model:visible="visible" position="right"
-      class="shadow-lg rounded-l-xl border-l border-gray-200 dark:border-gray-700 dark:bg-white text-black dark:text-white">
+    <Drawer v-model:visible="visible" position="right">
       <template #header>
-        <div class="text-lg font-semibold px-4 pt-4">
-          選單
-        </div>
+        <div class="text-lg font-semibold">選單</div>
       </template>
-
-      <div class="flex flex-col gap-6 px-4 py-6">
-        <div class="flex items-center justify-between hover:text-emerald-400 cursor-pointer"
-          @click="() => { visible = false; handleCartClick() }">
-          <span class="flex items-center">
-            <i class="pi pi-shopping-cart mr-2"></i> 購物車
-          </span>
+      <div class="flex flex-col gap-5 mt-4 px-4">
+        <div class="text-gray-800 hover:text-emerald-600 text-base font-medium flex items-center cursor-pointer" @click="
+          () => {
+            visible = false
+            handleCartClick()
+          }
+        ">
+          <i class="pi pi-shopping-cart mr-2"></i>
+          購物車
           <span v-if="cart.items.length"
-            class="bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+            class="ml-auto bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
             {{ cart.items.length }}
           </span>
         </div>
@@ -273,6 +272,5 @@
         </div>
       </div>
     </Drawer>
-
   </header>
 </template>
