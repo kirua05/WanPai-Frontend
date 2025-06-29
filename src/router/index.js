@@ -10,6 +10,11 @@ const router = createRouter({
       name: 'landing',
       component: () => import('../views/LandingView.vue'),
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/AuthForm.vue'),
+    },
 
     {
       path: '/products',

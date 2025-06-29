@@ -12,6 +12,7 @@ import Aura from '@primeuix/themes/aura'
 import 'primeicons/primeicons.css'
 import ToastService from 'primevue/toastservice'
 import Toast from 'primevue/toast'
+import './index.css'
 
 const app = createApp(App)
 const MyPreset = definePreset(Aura, {
