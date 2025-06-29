@@ -34,16 +34,9 @@
     window.addEventListener('scroll', handleScroll)
   })
 
-<<<<<<< HEAD
   onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll)
   })
-=======
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
-
->>>>>>> 893bff8 (fixdarkmode)
 </script>
 
 <template>
