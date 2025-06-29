@@ -54,11 +54,6 @@
     <p v-if="isSearching" class="text-lg font-semibold text-gray-700 mb-4">
       🔍 搜尋「{{ keyword }}」的結果：
     </p>
-
-    <div class="hidden lg:block flex-shrink-0">
-      <BrandIPSidebar v-model:activeIpTag="activeIpTag" />
-    </div>
-
     <div class="flex gap-6 mt-6">
       <div class="hidden lg:block flex-shrink-0">
         <BrandIPSidebar v-model:activeIpTag="activeIpTag" />
