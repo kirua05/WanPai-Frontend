@@ -136,7 +136,7 @@
 </script>
 
 <template>
-  <header class="bg-white dark:bg-gray-900 text-black dark:text-white shadow py-2">
+  <header class="bg-white dark:bg-white text-black dark:text-black shadow py-2">
     <div class="max-w-screen-xl mx-auto flex items-center justify-between h-12 px-4">
       <RouterLink to="/" class="text-xl font-bold text-emerald-600 dark:text-emerald-400" @click="handleHomeClick">
         <img src="@/assets/logo.png" alt="Wanpai Logo" class="h-30 w-auto object-contain" />
@@ -148,11 +148,11 @@
         <div v-if="authStore.isLoggedIn" class="hidden md:block relative">
           <Button icon="pi pi-user" text rounded @click="toggleMemberMenu"
             class="hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="會員選單" />
-          <Menu ref="memberMenu" :model="memberMenuItems" popup class="text-base" />
+          <Menu ref="memberMenu" :model="memberMenuItems" popup class="text-base dark:bg-gray-800 dark:text-white" />
         </div>
 
         <div class="relative cursor-pointer" @click="handleCartClick">
-          <Button icon="pi pi-shopping-cart" text rounded />
+          <Button icon="pi pi-shopping-cart" text rounded class="hover:bg-gray-100 dark:hover:bg-gray-700" />
           <span v-if="cart.items.length"
             class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
             {{ cart.items.length }}
@@ -180,7 +180,8 @@
 
         <div class="hidden md:block">
           <RouterLink v-if="!authStore.isLoggedIn" to="/authform">
-            <Button label="登入" severity="primary" size="small" />
+            <Button label="登入"
+              class="w-full bg-white dark:bg-gray-700 text-black dark:text-white font-semibold border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600" />
           </RouterLink>
           <Button v-else label="登出" severity="danger" size="small" @click="logout" />
         </div>
@@ -192,14 +193,14 @@
     </div>
 
     <Drawer v-model:visible="visible" position="right"
-      class="dark:bg-gray-900 shadow-lg rounded-l-xl border-l border-gray-800">
+      class="shadow-lg rounded-l-xl border-l border-gray-200 dark:border-gray-700 dark:bg-white text-black dark:text-white">
       <template #header>
-        <div class="text-lg font-semibold text-black dark:text-white px-4 pt-4">
+        <div class="text-lg font-semibold px-4 pt-4">
           選單
         </div>
       </template>
 
-      <div class="flex flex-col gap-6 px-4 py-6 text-black dark:text-white">
+      <div class="flex flex-col gap-6 px-4 py-6">
         <div class="flex items-center justify-between hover:text-emerald-400 cursor-pointer"
           @click="() => { visible = false; handleCartClick() }">
           <span class="flex items-center">
@@ -272,5 +273,6 @@
         </div>
       </div>
     </Drawer>
+
   </header>
 </template>

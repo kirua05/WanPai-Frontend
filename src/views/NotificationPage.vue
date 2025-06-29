@@ -70,7 +70,7 @@ function hasUnread(type) {
 </script>
 
 <template>
-  <div class="p-6 font-sans bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen">
+  <div class="p-6 font-sans bg-white dark:bg-white text-black dark:text-black min-h-screen">
     <h2 class="text-2xl font-bold mb-6 ml-4 sm:ml-8">我的通知</h2>
     <div class="flex flex-col md:flex-row gap-6">
       <!-- Sidebar -->

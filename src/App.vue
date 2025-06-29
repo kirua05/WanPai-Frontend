@@ -34,16 +34,22 @@
     window.addEventListener('scroll', handleScroll)
   })
 
+<<<<<<< HEAD
   onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll)
   })
+=======
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+>>>>>>> 893bff8 (fixdarkmode)
 </script>
 
 <template>
   <Toast />
   <BubbleBackground />
   <FloatingBubble ref="bubbleRef" />
-  <Button label="Toggle Dark Mode" @click="toggleDarkMode"></Button>
   <Navbar v-if="!isAdmin" />
 
   <main :class="!isAdmin ? 'mt-6 min-h-screen' : ''">
