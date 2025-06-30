@@ -55,7 +55,7 @@
       const data = await fetchOrders(filters)
       orders.value = data.map((order) => ({
         ...order,
-        statusText: statusMap[order.status] || '未知狀態',
+        statusText: statusMap[order.status] || order.status,
       }))
       errorMsg.value = ''
     } catch {
@@ -72,6 +72,20 @@
   function goToDetail(id) {
     if (!id || isNaN(Number(id))) return
     router.push(`/orderdetail/${id}`)
+  }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '—'
+    const date = new Date(dateString)
+    return date.toLocaleString('zh-TW', {
+      timeZone: 'Asia/Taipei',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    })
   }
 </script>
 
@@ -152,11 +166,13 @@
                 </template>
               </Column>
 
-              <Column
-                field="createdAt"
-                header="訂購日期"
-                style="width: 260px"
-              />
+              <Column header="訂購日期" style="width: 260px">
+                <template #body="slotProps">
+                  <div class="text-left">
+                    {{ formatDate(slotProps.data.createdAt) }}
+                  </div>
+                </template>
+              </Column>
               <Column
                 field="statusText"
                 header="狀態"
@@ -198,7 +214,7 @@
                         class="w-16 h-16 rounded border"
                       />
                       <div class="flex-1">
-                        <div class="font-medium">{{ item.name }}</div>
+                        <div class="font-medium">{{ item.productName }}</div>
                         <div class="text-sm text-gray-600">
                           數量：{{ item.quantity }} ｜ 售價：{{
                             Number(item.price)

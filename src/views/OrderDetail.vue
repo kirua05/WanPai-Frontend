@@ -1,119 +1,146 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { fetchOrderDetail, applyOrderReturn } from '@/api/order'
-import { showToast } from '@/utils/toast'
-import { useStatusMap } from '@/composables/useStatusMap'
+  import { ref, onMounted, computed } from 'vue'
+  import { useRoute } from 'vue-router'
+  import { fetchOrderDetail, applyOrderReturn } from '@/api/order'
+  import { showToast } from '@/utils/toast'
+  import { useStatusMap } from '@/composables/useStatusMap'
 
-const { statusMap } = useStatusMap()
-const route = useRoute()
-const orderId = route.params.id
+  const { statusMap } = useStatusMap()
+  const route = useRoute()
+  const orderId = route.params.id
 
-const order = ref(null)
-const errorMsg = ref('')
-const isLoading = ref(true)
+  const order = ref(null)
+  const errorMsg = ref('')
+  const isLoading = ref(true)
 
-onMounted(async () => {
-  try {
-    const data = await fetchOrderDetail(orderId)
-    order.value = data
-  } catch {
-    errorMsg.value = '無法取得訂單資料'
-  } finally {
-    isLoading.value = false
-  }
-})
-
-const formatDate = (dateString) => {
-  if (!dateString) return '—'
-  return new Date(dateString).toLocaleDateString('zh-TW', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  })
-}
-
-const orderStatusText = computed(() =>
-  order.value ? statusMap[order.value.status] || '未知狀態' : ''
-)
-
-const subtotal = computed(() => {
-  if (!order.value || !order.value.items) return 0
-  return order.value.items.reduce(
-    (sum, item) => sum + Number(item.price) * Number(item.quantity),
-    0
-  )
-})
-
-const steps = computed(() => {
-  if (!order.value) return []
-
-  return [
-    {
-      label: '下單完成',
-      icon: new URL('@/assets/icons/one.svg', import.meta.url).href,
-      date: formatDate(order.value.createdAt),
-    },
-    {
-      label: '出貨中',
-      icon: new URL('@/assets/icons/two.svg', import.meta.url).href,
-      date: formatDate(order.value.shippedAt),
-    },
-    {
-      label: '確認收貨',
-      icon: new URL('@/assets/icons/three.svg', import.meta.url).href,
-      date: formatDate(order.value.deliveredAt),
-    },
-  ]
-})
-
-async function applyReturn() {
-  if (!order.value) return
-
-  try {
-    const returnData = {
-      reason: '商品有瑕疵',
-      description: '申請退貨',
+  onMounted(async () => {
+    try {
+      const data = await fetchOrderDetail(orderId)
+      order.value = data
+    } catch {
+      errorMsg.value = '無法取得訂單資料'
+    } finally {
+      isLoading.value = false
     }
+  })
 
-    await applyOrderReturn(orderId, returnData)
-
-    order.value.returnStatus = '已申請'
-    order.value.returnReason = returnData.reason
-
-    showToast({
-      severity: 'success',
-      summary: '申請成功',
-      detail: '退貨申請已提交，請等待審核',
-    })
-  } catch {
-    showToast({
-      severity: 'error',
-      summary: '申請失敗',
-      detail: '退貨申請提交失敗，請稍後再試',
-    })
+  const orderStatusText = computed(() =>
+    statusMap[order.value?.status] ?? order.value?.status ?? ''
+  )
+  const formatDate = (dateString) => {
+    if (!dateString) return '—'
+    try {
+      const date = new Date(dateString)
+      if (isNaN(date.getTime())) return '無效日期'
+      return date.toLocaleString('zh-TW', {
+        timeZone: 'Asia/Taipei',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      })
+    } catch {
+      return '格式錯誤'
+    }
   }
-}
+
+  const subtotal = computed(() => {
+    if (!order.value || !order.value.items) return 0
+    return order.value.items.reduce(
+      (sum, item) => sum + Number(item.price) * Number(item.quantity),
+      0
+    )
+  })
+
+  const steps = computed(() => {
+    if (!order.value) return []
+
+    return [
+      {
+        label: '下單完成',
+        icon: new URL('@/assets/icons/one.svg', import.meta.url).href,
+        date: formatDate(order.value.createdAt),
+      },
+      {
+        label: '出貨中',
+        icon: new URL('@/assets/icons/two.svg', import.meta.url).href,
+        date: formatDate(order.value.shippedAt),
+      },
+      {
+        label: '確認收貨',
+        icon: new URL('@/assets/icons/three.svg', import.meta.url).href,
+        date: formatDate(order.value.deliveredAt),
+      },
+    ]
+  })
+
+  async function applyReturn() {
+    if (!order.value) return
+
+    try {
+      const returnData = {
+        reason: '商品有瑕疵',
+        description: '申請退貨',
+      }
+
+      await applyOrderReturn(orderId, returnData)
+
+      order.value.returnStatus = '已申請'
+      order.value.returnReason = returnData.reason
+
+      showToast({
+        severity: 'success',
+        summary: '申請成功',
+        detail: '退貨申請已提交，請等待審核',
+      })
+    } catch {
+      showToast({
+        severity: 'error',
+        summary: '申請失敗',
+        detail: '退貨申請提交失敗，請稍後再試',
+      })
+    }
+  }
 </script>
 
 <template>
   <Toast />
   <div class="p-6 space-y-6 bg-white text-black min-h-screen">
     <div v-if="order">
-      <div class="bg-gray-100 p-6 rounded shadow max-w-6xl mx-auto text-center mb-2">
+      <div
+        class="bg-gray-100 p-6 rounded shadow max-w-6xl mx-auto text-center mb-2"
+      >
         <h2 class="text-lg font-bold mb-9">訂單進度</h2>
         <div class="flex justify-between items-center">
-          <div v-for="(step, index) in steps" :key="step.label" class="flex flex-col items-center w-1/4 relative">
+          <div
+            v-for="(step, index) in steps"
+            :key="step.label"
+            class="flex flex-col items-center w-1/4 relative"
+          >
             <div class="text-sm font-bold mb-2">{{ step.label }}</div>
-            <img :src="step.icon" alt="step icon" class="w-8 h-8 min-w-[32px] min-h-[32px]" />
+            <img
+              :src="step.icon"
+              alt="step icon"
+              class="w-8 h-8 min-w-[32px] min-h-[32px]"
+            />
             <div class="text-xs text-gray-500 mt-1">{{ step.date }}</div>
             <template v-if="index < steps.length - 1">
-              <div class="absolute right-[-12%] top-1/2 transform -translate-y-1/2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                  class="w-5 h-5 text-gray-400">
-                  <path fill-rule="evenodd"
+              <div
+                class="absolute right-[-12%] top-1/2 transform -translate-y-1/2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="w-5 h-5 text-gray-400"
+                >
+                  <path
+                    fill-rule="evenodd"
                     d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                    clip-rule="evenodd" />
+                    clip-rule="evenodd"
+                  />
                 </svg>
               </div>
             </template>
@@ -138,10 +165,17 @@ async function applyReturn() {
       <div class="bg-white rounded shadow p-4 max-w-6xl mx-auto space-y-4 mb-2">
         <h2 class="text-lg font-bold mb-2">購買商品</h2>
         <ul>
-          <li v-for="(item, index) in order.items" :key="index" class="flex items-center gap-4 pb-3">
-            <img :src="item.productImage" class="w-20 h-20 object-cover rounded border" />
+          <li
+            v-for="(item, index) in order.items"
+            :key="index"
+            class="flex items-center gap-4 pb-3"
+          >
+            <img
+              :src="item.productImage"
+              class="w-20 h-20 object-cover rounded border"
+            />
             <div class="flex-1">
-              <p class="font-medium">{{ item.name }}</p>
+              <p class="font-medium">{{ item.productName }}</p>
               <p class="text-sm text-gray-600">
                 數量：{{ item.quantity }}，售價：{{ Number(item.price) }} 元
               </p>
@@ -164,12 +198,18 @@ async function applyReturn() {
             </div>
           </div>
 
-          <div v-if="(order.returnStatus ?? '未申請') !== '未申請'" class="mr-3">
+          <div
+            v-if="(order.returnStatus ?? '未申請') !== '未申請'"
+            class="mr-3"
+          >
             <p class="font-semibold">退貨狀態：{{ order.returnStatus }}</p>
             <p v-if="order.returnReason">原因：{{ order.returnReason }}</p>
           </div>
           <div v-else>
-            <button class="px-3 py-1 text-gray-500 rounded hover:bg-gray-100 transition" @click="applyReturn">
+            <button
+              class="px-3 py-1 text-gray-500 rounded hover:bg-gray-100 transition"
+              @click="applyReturn"
+            >
               申請退貨
             </button>
           </div>

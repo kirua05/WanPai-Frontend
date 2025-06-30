@@ -24,7 +24,7 @@
     const orderItems = orderRes.map((order) => ({
       id: order.id,
       label: order.orderNumber,
-      code: order.customer.name,
+      code: order.recipientName,
       type: 'order',
     }))
 

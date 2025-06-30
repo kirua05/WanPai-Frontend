@@ -38,22 +38,16 @@
 
 <template>
   <div
-    class="bg-white rounded-lg shadow hover:shadow-lg transition-all relative flex flex-col h-full"
+    class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition-all relative"
   >
-    <div
-      class="w-full aspect-[3/4] bg-white flex items-center justify-center overflow-hidden rounded-t-lg"
-    >
-      >
-      <img
-        :src="product.coverImage"
-        alt="商品圖片"
-        class="max-w-full max-h-full object-contain"
-      />
-    </div>
-
-    <div class="p-4 flex-1 flex flex-col justify-between">
+    <img
+      :src="product.coverImage"
+      alt="商品圖片"
+      class="w-full h-64 object-contain bg-white"
+    />
+    <div class="p-4">
       <p
-        class="text-sm sm:text-base font-medium line-clamp-2 min-h-[3.5em] leading-tight text-black"
+        class="text-sm sm:text-base font-medium line-clamp-2 min-h-[3.5em] leading-tight"
       >
         {{ product.name }}
       </p>
@@ -63,10 +57,10 @@
     </div>
 
     <button
-      class="absolute bottom-2 right-2 w-10 h-10 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg"
+      class="absolute bottom-2 right-2 w-10 h-10 bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer group"
       @click="addToCart"
     >
-      <i class="pi pi-shopping-cart"></i>
+      <i class="pi pi-shopping-cart group-hover:animate-bounce"></i>
     </button>
   </div>
 </template>

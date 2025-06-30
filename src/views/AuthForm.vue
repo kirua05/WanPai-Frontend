@@ -1,231 +1,228 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import axios from '@/utils/axiosInstance'
-import Button from 'primevue/button'
-import { showToast } from '@/utils/toast'
+  import { ref, onMounted } from 'vue'
+  import { useRouter } from 'vue-router'
+  import { useAuthStore } from '@/stores/auth'
+  import axios from '@/utils/axiosInstance'
+  import Button from 'primevue/button'
+  import { showToast } from '@/utils/toast'
 
-const router = useRouter()
-const authStore = useAuthStore()
+  const router = useRouter()
+  const authStore = useAuthStore()
 
-const isLogin = ref(true)
-const username = ref('')
-const email = ref('')
-const password = ref('')
-const isPasswordVisible = ref(false)
+  const isLogin = ref(true)
+  const username = ref('')
+  const email = ref('')
+  const password = ref('')
+  const isPasswordVisible = ref(false)
 
-onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const token = urlParams.get('token')
-  const error = urlParams.get('error')
+  onMounted(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const token = urlParams.get('token')
+    const error = urlParams.get('error')
 
-  if (error) {
-    let errorMessage = '登入失敗，請重試'
-    if (error === 'email_required') {
-      errorMessage = 'Google 帳號需要提供 email 權限'
-    } else if (error === 'auth_failed') {
-      errorMessage = 'Google 認證失敗'
-    }
-
-    showToast({
-      severity: 'error',
-      summary: 'Google 登入失敗',
-      detail: errorMessage,
-    })
-
-    window.history.replaceState({}, document.title, window.location.pathname)
-    return
-  }
-
-  if (token) {
-    try {
-      const parts = token.split('.')
-      if (parts.length !== 3) {
-        throw new Error('Token 格式錯誤：不是有效的 JWT')
+    if (error) {
+      let errorMessage = '登入失敗，請重試'
+      if (error === 'email_required') {
+        errorMessage = 'Google 帳號需要提供 email 權限'
+      } else if (error === 'auth_failed') {
+        errorMessage = 'Google 認證失敗'
       }
-      const payload = JSON.parse(atob(parts[1]))
-      showToast({
-        severity: 'success',
-        summary: 'Google 登入成功',
-        detail: `歡迎回來，${payload.username}！`,
-      })
 
-
-      authStore.login(token, payload.role || 'user')
-      localStorage.setItem('token', token)
-      localStorage.setItem('role', payload.role || 'user')
-      window.history.replaceState(
-        {},
-        document.title,
-        window.location.pathname
-      )
-
-      setTimeout(() => {
-        if (payload.role === 'admin') {
-          router.push('/admin/products')
-        } else {
-          router.push('/')
-        }
-      }, 1000)
-    } catch {
       showToast({
         severity: 'error',
-        summary: '登入失敗',
+        summary: 'Google 登入失敗',
+        detail: errorMessage,
       })
+
+      window.history.replaceState({}, document.title, window.location.pathname)
+      return
     }
-  }
-})
 
-const togglePasswordVisibility = () => {
-  isPasswordVisible.value = !isPasswordVisible.value
-}
-
-const toggleForm = () => {
-  isLogin.value = !isLogin.value
-  username.value = ''
-  email.value = ''
-  password.value = ''
-}
-
-const handleGoogleLogin = () => {
-  const backendUrl =
-    import.meta.env.VITE_API_BASE_URL?.replace('/api', '') ||
-    'https://no5.zeabur.app'
-  const googleAuthUrl = `${backendUrl}/api/users/google`
-  window.location.href = googleAuthUrl
-}
-
-const login = async () => {
-  if (!email.value || !password.value) {
-    showToast({
-      severity: 'warn',
-      summary: '輸入錯誤',
-      detail: '請填寫所有欄位',
-    })
-    return
-  }
-
-  try {
-    const resp = await axios.post('/users/login', {
-      email: email.value,
-      password: password.value,
-    })
-
-    if (resp.status === 200) {
-      showToast({
-        severity: 'success',
-        summary: '登入成功',
-        detail: '正在跳轉到主頁面...',
-      })
-
-
-      authStore.login(resp.data.token, resp.data.role)
-      localStorage.setItem('token', resp.data.token)
-      localStorage.setItem('role', resp.data.role)
-
-      setTimeout(() => {
-        if (resp.data.role === 'admin') {
-          router.push('/admin/products')
-        } else {
-          router.push('/')
+    if (token) {
+      try {
+        const parts = token.split('.')
+        if (parts.length !== 3) {
+          throw new Error('Token 格式錯誤：不是有效的 JWT')
         }
-      }, 1000)
-    }
-  } catch (error) {
-    if (error.response?.status === 401) {
-      showToast({
-        severity: 'error',
-        summary: '登入失敗',
-        detail: 'Email 或密碼錯誤，請重新輸入',
-      })
+        const payload = JSON.parse(atob(parts[1]))
+        showToast({
+          severity: 'success',
+          summary: 'Google 登入成功',
+          detail: `歡迎回來，${payload.username}！`,
+        })
 
-    } else if (error.response?.status === 400) {
+        authStore.login(token, payload.role || 'user')
+        localStorage.setItem('token', token)
+        localStorage.setItem('role', payload.role || 'user')
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        )
+
+        setTimeout(() => {
+          if (payload.role === 'admin') {
+            router.push('/admin/products')
+          } else {
+            router.push('/')
+          }
+        }, 1000)
+      } catch {
+        showToast({
+          severity: 'error',
+          summary: '登入失敗',
+        })
+      }
+    }
+  })
+
+  const togglePasswordVisibility = () => {
+    isPasswordVisible.value = !isPasswordVisible.value
+  }
+
+  const toggleForm = () => {
+    isLogin.value = !isLogin.value
+    username.value = ''
+    email.value = ''
+    password.value = ''
+  }
+
+  const handleGoogleLogin = () => {
+    const backendUrl =
+      import.meta.env.VITE_API_BASE_URL?.replace('/api', '') ||
+      'https://no5.zeabur.app'
+    const googleAuthUrl = `${backendUrl}/api/users/google`
+    window.location.href = googleAuthUrl
+  }
+
+  const login = async () => {
+    if (!email.value || !password.value) {
       showToast({
         severity: 'warn',
         summary: '輸入錯誤',
-        detail: '請輸入正確的 Email 和密碼格式',
+        detail: '請填寫所有欄位',
       })
-    } else {
-      showToast({
-        severity: 'error',
-        summary: '系統錯誤',
-        detail: '伺服器錯誤，請稍後再試',
+      return
+    }
+
+    try {
+      const resp = await axios.post('/users/login', {
+        email: email.value,
+        password: password.value,
       })
+
+      if (resp.status === 200) {
+        showToast({
+          severity: 'success',
+          summary: '登入成功',
+          detail: '正在跳轉到主頁面...',
+        })
+
+        authStore.login(resp.data.token, resp.data.role)
+        localStorage.setItem('token', resp.data.token)
+        localStorage.setItem('role', resp.data.role)
+
+        setTimeout(() => {
+          if (resp.data.role === 'admin') {
+            router.push('/admin/products')
+          } else {
+            router.push('/')
+          }
+        }, 1000)
+      }
+    } catch (error) {
+      if (error.response?.status === 401) {
+        showToast({
+          severity: 'error',
+          summary: '登入失敗',
+          detail: 'Email 或密碼錯誤，請重新輸入',
+        })
+      } else if (error.response?.status === 400) {
+        showToast({
+          severity: 'warn',
+          summary: '輸入錯誤',
+          detail: '請輸入正確的 Email 和密碼格式',
+        })
+      } else {
+        showToast({
+          severity: 'error',
+          summary: '系統錯誤',
+          detail: '伺服器錯誤，請稍後再試',
+        })
+      }
     }
   }
-}
 
-const register = async () => {
-  if (!username.value || !email.value || !password.value) {
-    showToast({
-      severity: 'warn',
-      summary: '輸入錯誤',
-      detail: '請填寫所有欄位',
-    })
-    return
-  }
-
-  if (password.value.length < 6) {
-    showToast({
-      severity: 'warn',
-      summary: '密碼太短',
-      detail: '密碼至少需要 6 個字元',
-    })
-    return
-  }
-
-  try {
-    const resp = await axios.post('/users/register', {
-      username: username.value,
-      email: email.value,
-      password: password.value,
-    })
-
-    if (resp.status === 201) {
-      showToast({
-        severity: 'success',
-        summary: '註冊成功',
-        detail: '帳戶建立成功，正在跳轉到登入頁面...',
-      })
-
-      setTimeout(() => {
-        username.value = ''
-        email.value = ''
-        password.value = ''
-        isLogin.value = true
-      }, 2000)
-    }
-  } catch (error) {
-    if (error.response?.status === 409) {
-      showToast({
-        severity: 'error',
-        summary: '註冊失敗',
-        detail: '此 Email 已被註冊，請使用其他 Email',
-      })
-    } else if (error.response?.status === 400) {
+  const register = async () => {
+    if (!username.value || !email.value || !password.value) {
       showToast({
         severity: 'warn',
         summary: '輸入錯誤',
-        detail: '請檢查輸入的資料格式是否正確',
+        detail: '請填寫所有欄位',
       })
-    } else {
+      return
+    }
+
+    if (password.value.length < 6) {
       showToast({
-        severity: 'error',
-        summary: '註冊失敗',
-        detail: '系統錯誤，請稍後再試',
+        severity: 'warn',
+        summary: '密碼太短',
+        detail: '密碼至少需要 6 個字元',
       })
+      return
+    }
+
+    try {
+      const resp = await axios.post('/users/register', {
+        username: username.value,
+        email: email.value,
+        password: password.value,
+      })
+
+      if (resp.status === 201) {
+        showToast({
+          severity: 'success',
+          summary: '註冊成功',
+          detail: '帳戶建立成功，正在跳轉到登入頁面...',
+        })
+
+        setTimeout(() => {
+          username.value = ''
+          email.value = ''
+          password.value = ''
+          isLogin.value = true
+        }, 2000)
+      }
+    } catch (error) {
+      if (error.response?.status === 409) {
+        showToast({
+          severity: 'error',
+          summary: '註冊失敗',
+          detail: '此 Email 已被註冊，請使用其他 Email',
+        })
+      } else if (error.response?.status === 400) {
+        showToast({
+          severity: 'warn',
+          summary: '輸入錯誤',
+          detail: '請檢查輸入的資料格式是否正確',
+        })
+      } else {
+        showToast({
+          severity: 'error',
+          summary: '註冊失敗',
+          detail: '系統錯誤，請稍後再試',
+        })
+      }
     }
   }
-}
 
-const onSubmit = () => {
-  if (isLogin.value) {
-    login()
-  } else {
-    register()
+  const onSubmit = () => {
+    if (isLogin.value) {
+      login()
+    } else {
+      register()
+    }
   }
-}
 </script>
 
 <template>
@@ -241,38 +238,58 @@ const onSubmit = () => {
           <label for="username" class="block text-sm font-medium text-gray-700 ">
             用戶名
           </label>
-          <input type="text" id="username" v-model="username"
+          <input
+            type="text"
+            id="username"
+            v-model="username"
             class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="請輸入用戶名" required />
+            placeholder="請輸入用戶名"
+            required
+          />
         </div>
 
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700 ">
             電子郵件
           </label>
-          <input type="email" id="email" v-model="email" class="w-full px-4 py-2 border border-gray-300  rounded-md
-                   bg-white text-black
-                   placeholder-gray-400
-                   focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="請輸入電子郵件" required />
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="請輸入電子郵件"
+            required
+          />
         </div>
 
         <div class="mb-4 relative">
           <label for="password" class="block text-sm font-medium text-gray-700 ">
             密碼
           </label>
-          <input :type="isPasswordVisible ? 'text' : 'password'" v-model="password" id="password" class="w-full px-4 py-2 pr-10 border border-gray-300  rounded-md
-                   bg-white text-black
-                   placeholder-gray-400
-                   focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="請輸入密碼" required />
-          <button type="button" @click="togglePasswordVisibility"
-            class="absolute right-3 top-8 text-gray-500  hover:text-gray-700 ">
+          <input
+            :type="isPasswordVisible ? 'text' : 'password'"
+            v-model="password"
+            id="password"
+            class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-md bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="請輸入密碼"
+            required
+          />
+          <button
+            type="button"
+            @click="togglePasswordVisibility"
+            class="absolute right-3 top-8 text-gray-500 hover:text-gray-700"
+          >
             <i v-if="isPasswordVisible" class="pi pi-eye-slash"></i>
             <i v-else class="pi pi-eye"></i>
           </button>
         </div>
 
         <div class="mb-4">
-          <Button :label="isLogin ? '登入' : '建立帳戶'" class="w-full" type="submit" />
+          <Button
+            :label="isLogin ? '登入' : '建立帳戶'"
+            class="w-full"
+            type="submit"
+          />
         </div>
       </form>
 
@@ -288,20 +305,25 @@ const onSubmit = () => {
 
         <Button
           class="w-full flex items-center justify-center gap-3 google-classic !bg-white !text-gray-700 !border-gray-300 hover:!bg-gray-50 hover:!shadow-md !transition-all !duration-200 !rounded-lg !py-3 !px-4 !font-medium"
-          @click="handleGoogleLogin">
+          @click="handleGoogleLogin"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24">
             <path
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-              fill="#4285F4" />
+              fill="#4285F4"
+            />
             <path
               d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              fill="#34A853" />
+              fill="#34A853"
+            />
             <path
               d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-              fill="#FBBC05" />
+              fill="#FBBC05"
+            />
             <path
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              fill="#EA4335" />
+              fill="#EA4335"
+            />
           </svg>
           使用 Google 帳號登入
         </Button>
@@ -310,7 +332,10 @@ const onSubmit = () => {
       <div class="text-center">
         <p class="text-sm text-gray-600">
           {{ isLogin ? '還沒有帳戶？' : '已經有帳戶？' }}
-          <button @click="toggleForm" class="text-blue-600 hover:underline ml-1">
+          <button
+            @click="toggleForm"
+            class="text-blue-600 hover:underline ml-1"
+          >
             {{ isLogin ? '註冊' : '登入' }}
           </button>
         </p>
