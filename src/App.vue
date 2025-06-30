@@ -1,26 +1,29 @@
 <script setup>
-  import { ref, onMounted, onUnmounted, computed } from 'vue'
+  import { ref, computed, onMounted, onUnmounted } from 'vue'
   import { useRoute } from 'vue-router'
+  import { useToast } from 'primevue/usetoast'
+  import Toast from 'primevue/toast'
+
+  // 🧩 自訂元件
   import Navbar from '@/components/layout/NavBar.vue'
   import Footer from '@/components/layout/Footer.vue'
-  import Toast from 'primevue/toast'
   import FloatingBubble from '@/components/FloatingBubble.vue'
   import BubbleBackground from '@/components/BubbleBackground.vue'
-  import { useToast } from 'primevue/usetoast'
   import { setGlobalToast } from '@/utils/toast'
 
   const toast = useToast()
   setGlobalToast(toast)
+
   const route = useRoute()
+
   const isAdmin = computed(() => route.path.startsWith('/admin'))
+  const isHome = computed(() => route.path === '/')
 
   const bubbleRef = ref(null)
-
   const handleScroll = () => {
-    const isHome = route.path === '/'
     const isSearching = !!route.query.keyword
     if (
-      isHome &&
+      isHome.value &&
       !isSearching &&
       window.scrollY > 100 &&
       Math.random() > 0.85

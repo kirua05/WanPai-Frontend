@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 @import './base.css';
 @import 'tailwindcss';
 @import 'tailwindcss-primeui';
@@ -5,45 +6,111 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Nunito', Arial, Helvetica, sans-serif;
   background-color: #f7f7f7;
 }
+
 #app {
   min-height: 100vh;
   width: 100%;
 }
 
-/*
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+@layer utilities {
+  .float-x {
+    animation: floatX 2s ease-in-out infinite;
+  }
+  .slow-spin {
+    animation: slow-spin 4s linear infinite;
+  }
+  .soft-bounce {
+    animation: soft-bounce 2s ease-in-out infinite;
+  }
+  .pop-in {
+    animation: pop-in 0.8s cubic-bezier(0.25, 1.2, 0.5, 1) forwards;
+  }
+  .marquee p {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-left 20s linear infinite;
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
+@keyframes floatX {
+  0%,
+  100% {
+    transform: translateX(0);
   }
+  50% {
+    transform: translateX(30px);
+  }
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+@keyframes slow-spin {
+  0% {
+    transform: rotate(0deg);
   }
-} */
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes soft-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(40px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes scrollLoop {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+@layer utilities {
+  .marquee-fast {
+    animation: scrollLoop 10s linear infinite;
+  }
+  .marquee-slow {
+    animation: scrollLoop 20s linear infinite;
+  }
+}
+
+.marquee {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  color: #444;
+  border-radius: 1rem;
+  padding: 1rem 0;
+}
