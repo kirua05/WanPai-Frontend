@@ -1,6 +1,7 @@
 <script setup>
   import BannerCarousel from '@/components/BannerCarousel.vue'
   import ProductListPage from '@/views/ProductListPage.vue'
+  import AiChatWidget from '@/components/AiChatWidget.vue'
   import { useRoute } from 'vue-router'
   import { computed } from 'vue'
 
@@ -12,4 +13,5 @@
 <template>
   <BannerCarousel v-if="!isSearching" />
   <ProductListPage />
+  <AiChatWidget />
 </template>

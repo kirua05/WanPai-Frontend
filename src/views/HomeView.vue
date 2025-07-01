@@ -5,7 +5,7 @@
   import ProductListPage from '@/views/ProductListPage.vue'
   import Toast from 'primevue/toast'
   import SplashAnimation from '@/components/SplashAnimation.vue'
-  import AiChatWidget from '@/components/AiChatWidget.vue'
+
   const route = useRoute()
   const keyword = computed(() => route.query.keyword || '')
   const isSearching = computed(() => keyword.value.trim().length > 0)
@@ -36,5 +36,4 @@
     <BannerCarousel v-if="!isSearching" />
   </div>
   <ProductListPage />
-  <AiChatWidget />
 </template>
