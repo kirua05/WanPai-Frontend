@@ -82,12 +82,13 @@ VITE_API_BASE_URL=https://your-real-api.com/api
 - 林欣雨 [GitHub](https://github.com/Raelin930)
   - 訂單管理頁面實作
   - 訂單 API
-  - 資料庫
+  - 網站 Landing Page
     
 - 巫坤郁 [GitHub](https://github.com/kenyykd)
   - 串接綠界金流
   - 購物車詳細資料切版
   - 商品標籤
+  - AI 串接
    
 - 謝聿涵 [GitHub](https://github.com/hsiehyuhan)
   - 購物車頁面
@@ -99,10 +100,12 @@ VITE_API_BASE_URL=https://your-real-api.com/api
   - 網站首頁切版
   - 商品資料串接
   - 搜尋商品功能
+  - ZeaBur 部署專案
  
 - 楊子毅 [GitHub](https://github.com/ziyi1998)
   - 登入註冊功能
   - 會員編輯資料功能
+  - 第三方登入
   - 資料庫
   
 - 吳禹慧 [GitHub](https://github.com/rosewuuu)
