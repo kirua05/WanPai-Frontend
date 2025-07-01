@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted, watch } from 'vue'
+  import { ref, watch } from 'vue'
   import { RouterLink, useRoute, useRouter } from 'vue-router'
   import Drawer from 'primevue/drawer'
   import Button from 'primevue/button'
@@ -65,6 +65,8 @@
   watch(
     () => authStore.isLoggedIn,
     (isLoggedIn) => {
+      if (!authStore.isInitialized) return
+
       if (isLoggedIn) {
         cart.fetchCart().catch(() => {
           showToast({
@@ -79,18 +81,6 @@
     },
     { immediate: true }
   )
-
-  onMounted(() => {
-    if (authStore.isLoggedIn) {
-      cart.fetchCart().catch(() => {
-        showToast({
-          severity: 'warn',
-          summary: '載入失敗',
-          detail: '購物車資料載入失敗，請重新整理頁面',
-        })
-      })
-    }
-  })
 
   authStore.initAuth()
 

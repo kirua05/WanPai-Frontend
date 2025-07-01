@@ -6,6 +6,7 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: false,
     token: null,
     role: null,
+    isInitialized: false,
   }),
 
   getters: {
@@ -20,7 +21,17 @@ export const useAuthStore = defineStore('auth', {
       const role = localStorage.getItem('role')
       this.token = token
       this.role = role
-      this.isLoggedIn = token !== null
+      if (token) {
+        try {
+          this.isLoggedIn = true
+        } catch {
+          this.logout()
+        }
+      } else {
+        this.isLoggedIn = false
+      }
+
+      this.isInitialized = true
     },
 
     login(token, role = null) {
@@ -31,6 +42,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = token
       this.role = role
       this.isLoggedIn = true
+      this.isInitialized = true
     },
 
     logout() {
@@ -39,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = null
       this.role = null
       this.isLoggedIn = false
-
+      this.isInitialized = true
       const cartStore = useCartStore()
       cartStore.items = []
     },
