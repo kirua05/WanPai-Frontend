@@ -267,7 +267,7 @@
                 class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce opacity-50 [animation-delay:0.2s]"
               ></span>
             </div>
-            AI 正在思考中...
+            小助手正在思考中
           </div>
         </div>
       </div>
