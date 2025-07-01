@@ -5,7 +5,10 @@
   import { useRouter } from 'vue-router'
   import CommonTable from '@/components/CommonTable.vue'
   import { showToast } from '@/utils/toast'
+  import BaseLoader from '@/components/BaseLoader.vue'
   const router = useRouter()
+  const isloading = ref(true)
+  const hasLoadedOnce = ref(false)
 
   const orderTabs = ref([
     { title: '全部', value: 'all' },
@@ -86,36 +89,42 @@
   onMounted(async () => {
     const res = await fetchAllOrders()
     orderValue.value = res
+    isloading.value = false
+    hasLoadedOnce.value = true
   })
 </script>
 
 <template>
   <Toast />
-  <div class="flex justify-between items-center mr-8 mb-4">
-    <h2 class="text-2xl">訂單</h2>
-  </div>
-  <div class="mr-8">
-    <CommonTable
-      :tabs="orderTabs"
-      :columns="orderColumns"
-      :value="orderValue"
-      @tab-change="handleTabChange"
-      scrollable
-      selectable
-      scroll-height="500px"
-    >
-      <template #body-orderNumber="{ data }">
-        <a
-          class="w-full underline text-primary cursor-pointer"
-          @click="
-            router.push({
-              path: `/admin/orders/edit/${data.id}`,
-            })
-          "
+  <BaseLoader :isLoading="isloading" :hasLoadedOnce="hasLoadedOnce">
+    <div v-if="!isloading">
+      <div class="flex justify-between items-center mr-8 mb-4">
+        <h2 class="text-2xl">訂單</h2>
+      </div>
+      <div class="mr-8">
+        <CommonTable
+          :tabs="orderTabs"
+          :columns="orderColumns"
+          :value="orderValue"
+          @tab-change="handleTabChange"
+          scrollable
+          selectable
+          scroll-height="500px"
         >
-          {{ data.orderNumber }}
-        </a>
-      </template>
-    </CommonTable>
-  </div>
+          <template #body-orderNumber="{ data }">
+            <a
+              class="w-full underline text-primary cursor-pointer"
+              @click="
+                router.push({
+                  path: `/admin/orders/edit/${data.id}`,
+                })
+              "
+            >
+              {{ data.orderNumber }}
+            </a>
+          </template>
+        </CommonTable>
+      </div>
+    </div>
+  </BaseLoader>
 </template>
