@@ -132,9 +132,9 @@
     ></div>
 
     <div
-      class="max-w-6xl mx-auto flex gap-6 items-start relative z-10 px-4 py-10"
+      class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 items-start relative z-10 px-4 py-10"
     >
-      <aside class="w-64 bg-white rounded-xl shadow p-6">
+      <aside class="hidden lg:block lg:w-64 bg-white rounded-xl shadow p-6">
         <div class="mb-6 flex items-center gap-3">
           <div
             class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center"
@@ -168,7 +168,7 @@
         </nav>
       </aside>
 
-      <section class="flex-1 bg-white rounded-xl shadow p-6">
+      <section class="w-full bg-white rounded-xl shadow p-6">
         <div class="px-6 py-4 border-b border-gray-200 bg-white">
           <h2 class="text-2xl font-bold text-gray-800">個人資料</h2>
           <p class="text-sm text-gray-500 mt-1">管理您的帳戶資訊和偏好設定</p>
@@ -186,7 +186,6 @@
                 {{ profile.username }}
               </div>
             </div>
-
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 手機號碼
@@ -197,7 +196,6 @@
                 {{ profile.phone || '未設定' }}
               </div>
             </div>
-
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -208,7 +206,6 @@
                 {{ profile.email }}
               </div>
             </div>
-
             <div>
               <label class="block text-sm font-medium text-gray-700">
                 地址
@@ -220,7 +217,6 @@
               </div>
             </div>
           </div>
-
 
           <div class="border-t border-gray-200 mt-10 mb-4"></div>
 

@@ -3,10 +3,10 @@
   import { ref, computed, onMounted, watch } from 'vue'
   import { RouterLink } from 'vue-router'
   import Button from 'primevue/button'
-  import Dropdown from 'primevue/dropdown'
   import { showToast } from '@/utils/toast'
   import { fetchFavorites, removeFavorite } from '@/api/favorite'
   import { useCartStore } from '@/stores/cart'
+  import Select from 'primevue/select'
 
   const favorites = ref([])
   const perPage = 10
@@ -100,16 +100,21 @@
 <template>
   <div class="relative min-h-screen overflow-hidden py-2 px-4">
     <div
-      class="absolute inset-0 z-0 bg-no-repeat bg-cover blur-md"
+      class="absolute inset-0 z-0 bg-no-repeat bg-cover blur-md hidden lg:block"
       style="background-image: url('/src/assets/circle-scatter-haikei.svg')"
     ></div>
+
     <Toast />
-    <div class="relative z-10 flex max-w-7xl mx-auto px-4 py-8 gap-6">
-      <aside class="w-64 ml-11">
+    <div
+      class="relative z-10 flex flex-col lg:flex-row max-w-7xl mx-auto px-4 py-8 gap-6"
+    >
+      <aside class="hidden lg:block lg:w-64 ml-11">
         <UserSidebar />
       </aside>
 
-      <div class="flex-1 bg-white rounded-xl shadow p-10 max-w-4xl -mt-3">
+      <div
+        class="w-full bg-white rounded-xl shadow p-6 sm:p-10 max-w-4xl -mt-3"
+      >
         <h2
           class="text-xl font-semibold mb-4 text-center flex items-center justify-center gap-2"
         >
@@ -129,68 +134,68 @@
             <div class="col-span-2 text-center">單價</div>
             <div class="col-span-4 text-left pl-12">數量</div>
           </div>
-          <div
-            v-for="(item, index) in paginatedFavorites"
-            :key="item.id"
-            :class="[
-              'grid md:grid-cols-12 gap-4 px-4 py-4 items-center',
-              index !== paginatedFavorites.length - 1
-                ? 'border-b border-gray-200'
-                : '',
-              'block md:grid',
-            ]"
-          >
-            <div class="md:col-span-6 flex gap-4 items-start mb-4 md:mb-0">
-              <img
-                :src="item.image || '/no-image.jpg'"
-                alt="商品圖片"
-                class="w-24 h-24 object-cover rounded-md"
-              />
-              <div>
-                <div class="text-sm text-gray-500">{{ item.refId }}</div>
-                <router-link
-                  :to="`/products/${item.id}`"
-                  class="text-black font-medium text-sm sm:text-base leading-snug hover:underline"
-                >
-                  {{ item.name }}
-                </router-link>
-              </div>
-            </div>
-            <div
-              class="md:col-span-2 text-gray-800 font-medium text-center mb-2 md:mb-0"
-            >
-              NT${{ item.price }}
-            </div>
 
-            <div class="col-span-4 flex gap-2 items-center justify-center">
-              <Dropdown
-                v-model="item.quantity"
-                :options="[1, 2, 3, 4, 5]"
-                placeholder="數量"
-                class="w-24"
-                :pt="{
-                  root: { class: 'h-[36px] text-sm' },
-                  input: { class: 'text-sm' },
-                }"
-              />
-              <Button
-                label="加入購物車"
-                size="small"
-                :loading="item.isAdding"
-                :disabled="!item.quantity || item.isAdding"
-                @click="addToCartHandler(item)"
-                :class="[
-                  'transition-all duration-200',
-                  item.isAdding ? 'w-[128px]' : 'w-[112px]',
-                ]"
-              />
-              <Button
-                icon="pi pi-trash"
-                severity="secondary"
-                text
-                size="small"
-                @click="removeFavoriteHandler(item.id)"
-              />
+          <div
+            v-for="item in paginatedFavorites"
+            :key="item.id"
+            class="px-4 py-4 border-b border-gray-200 last:border-none"
+          >
+            <div
+              class="flex flex-col md:grid md:grid-cols-12 md:items-center gap-4"
+            >
+              <div class="md:col-span-6 flex flex-col md:flex-row gap-4">
+                <img
+                  :src="item.image || '/no-image.jpg'"
+                  alt="商品圖片"
+                  class="w-24 h-24 object-cover rounded-md"
+                />
+                <div class="flex-1">
+                  <div class="text-sm text-gray-500">{{ item.refId }}</div>
+                  <router-link
+                    :to="`/products/${item.id}`"
+                    class="text-black font-medium text-sm sm:text-base leading-snug hover:underline"
+                  >
+                    {{ item.name }}
+                  </router-link>
+                </div>
+              </div>
+
+              <div
+                class="md:col-span-2 text-gray-800 font-medium text-sm md:text-base whitespace-nowrap text-center"
+              >
+                NT${{ item.price }}
+              </div>
+
+              <div
+                class="md:col-span-4 flex flex-wrap justify-center md:justify-start items-center gap-2"
+              >
+                <Select
+                  v-model="item.quantity"
+                  :options="[1, 2, 3, 4, 5]"
+                  placeholder="數量"
+                  class="w-24"
+                  :pt="{
+                    root: { class: 'h-[36px] text-sm' },
+                    input: { class: 'text-sm' },
+                  }"
+                />
+                <Button
+                  label="加入購物車"
+                  size="small"
+                  :loading="item.isAdding"
+                  :disabled="!item.quantity || item.isAdding"
+                  @click="addToCartHandler(item)"
+                  class="transition-all duration-200 w-[112px]"
+                />
+                <Button
+                  icon="pi pi-trash"
+                  severity="secondary"
+                  text
+                  size="small"
+                  class="text-gray-500"
+                  @click="removeFavoriteHandler(item.id)"
+                />
+              </div>
             </div>
           </div>
 

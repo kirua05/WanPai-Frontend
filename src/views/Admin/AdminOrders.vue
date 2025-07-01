@@ -55,7 +55,7 @@
       format: (val) =>
         ({
           paid: '已付款',
-          shipped: '已出貨', 
+          shipped: '已出貨',
           delivered: '已完成',
           cancelled: '已取消',
         })[val] || val,

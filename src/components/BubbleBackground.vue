@@ -1,9 +1,12 @@
 <script setup>
-  import { onMounted, ref } from 'vue'
+  import { ref, onMounted } from 'vue'
 
   const bubbles = ref([])
+  const isMobile = ref(window.innerWidth <= 768)
 
   onMounted(() => {
+    if (isMobile.value) return
+
     const rows = 5
     const cols = 6
     const total = rows * cols
@@ -29,7 +32,10 @@
 </script>
 
 <template>
-  <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+  <div
+    v-if="!isMobile"
+    class="fixed inset-0 -z-10 min-h-screen overflow-hidden pointer-events-none"
+  >
     <div
       v-for="b in bubbles"
       :key="b.id"
@@ -46,5 +52,3 @@
     ></div>
   </div>
 </template>
-
-<style scoped></style>

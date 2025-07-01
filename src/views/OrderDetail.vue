@@ -24,8 +24,8 @@
     }
   })
 
-  const orderStatusText = computed(() =>
-    statusMap[order.value?.status] ?? order.value?.status ?? ''
+  const orderStatusText = computed(
+    () => statusMap[order.value?.status] ?? order.value?.status ?? ''
   )
   const formatDate = (dateString) => {
     if (!dateString) return '—'

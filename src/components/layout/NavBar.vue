@@ -136,25 +136,53 @@
 </script>
 
 <template>
-  <header class="bg-white  text-black  shadow py-2">
-    <div class="max-w-screen-xl mx-auto flex items-center justify-between h-12 px-4">
-      <RouterLink to="/" class="text-xl font-bold text-emerald-600" @click="handleHomeClick">
-        <img src="@/assets/logo.png" alt="Wanpai Logo" class="h-30 w-auto object-contain" />
+  <header class="bg-white text-black shadow py-2">
+    <div
+      class="max-w-screen-xl mx-auto flex items-center justify-between h-12 px-4"
+    >
+      <RouterLink
+        to="/"
+        class="text-xl font-bold text-emerald-600"
+        @click="handleHomeClick"
+      >
+        <img
+          src="@/assets/logo.png"
+          alt="Wanpai Logo"
+          class="h-30 w-auto object-contain"
+        />
       </RouterLink>
 
       <ProductSearchBar v-model="searchInput" @submit="search" />
 
       <div class="hidden md:flex items-center gap-4">
         <div v-if="authStore.isLoggedIn" class="hidden md:block relative">
-          <Button icon="pi pi-user" text rounded @click="toggleMemberMenu" class="hover:bg-gray-100"
-            aria-label="會員選單" />
-          <Menu ref="memberMenu" :model="memberMenuItems" popup class="text-base " />
+          <Button
+            icon="pi pi-user"
+            text
+            rounded
+            @click="toggleMemberMenu"
+            class="hover:bg-gray-100"
+            aria-label="會員選單"
+          />
+          <Menu
+            ref="memberMenu"
+            :model="memberMenuItems"
+            popup
+            class="text-base"
+          />
         </div>
 
         <div class="relative cursor-pointer" @click="handleCartClick">
-          <Button icon="pi pi-shopping-cart" text rounded class="hover:bg-gray-100" />
-          <span v-if="cart.items.length"
-            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+          <Button
+            icon="pi pi-shopping-cart"
+            text
+            rounded
+            class="hover:bg-gray-100"
+          />
+          <span
+            v-if="cart.items.length"
+            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+          >
             {{ cart.items.length }}
           </span>
         </div>
@@ -180,10 +208,18 @@
 
         <div class="hidden md:block">
           <RouterLink v-if="!authStore.isLoggedIn" to="/authform">
-            <Button label="登入"
-              class="w-full bg-white text-black font-semibold border border-gray-300  hover:bg-gray-100" />
+            <Button
+              label="登入"
+              class="w-full bg-white text-black font-semibold border border-gray-300 hover:bg-gray-100"
+            />
           </RouterLink>
-          <Button v-else label="登出" severity="danger" size="small" @click="logout" />
+          <Button
+            v-else
+            label="登出"
+            severity="danger"
+            size="small"
+            @click="logout"
+          />
         </div>
       </div>
 
@@ -197,16 +233,21 @@
         <div class="text-lg font-semibold">選單</div>
       </template>
       <div class="flex flex-col gap-5 mt-4 px-4">
-        <div class="text-gray-800 hover:text-emerald-600 text-base font-medium flex items-center cursor-pointer" @click="
-          () => {
-            visible = false
-            handleCartClick()
-          }
-        ">
+        <div
+          class="text-gray-800 hover:text-emerald-600 text-base font-medium flex items-center cursor-pointer"
+          @click="
+            () => {
+              visible = false
+              handleCartClick()
+            }
+          "
+        >
           <i class="pi pi-shopping-cart mr-2"></i>
           購物車
-          <span v-if="cart.items.length"
-            class="ml-auto bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+          <span
+            v-if="cart.items.length"
+            class="ml-auto bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"
+          >
             {{ cart.items.length }}
           </span>
         </div>

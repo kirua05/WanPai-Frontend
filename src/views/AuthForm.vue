@@ -226,16 +226,18 @@
 </script>
 
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-gray-100 ">
+  <div class="flex justify-center items-center min-h-screen bg-gray-100">
     <Toast />
-    <div class="w-full max-w-md p-6 bg-white  text-black  rounded-lg shadow-lg mt-[-100px]">
+    <div
+      class="w-full max-w-md p-6 bg-white text-black rounded-lg shadow-lg mt-[-100px]"
+    >
       <h2 class="text-center text-2xl font-semibold mb-6">
         {{ isLogin ? '登入' : '註冊' }}
       </h2>
 
       <form @submit.prevent="onSubmit">
         <div v-if="!isLogin" class="mb-4">
-          <label for="username" class="block text-sm font-medium text-gray-700 ">
+          <label for="username" class="block text-sm font-medium text-gray-700">
             用戶名
           </label>
           <input
@@ -249,7 +251,7 @@
         </div>
 
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700 ">
+          <label for="email" class="block text-sm font-medium text-gray-700">
             電子郵件
           </label>
           <input
@@ -263,7 +265,7 @@
         </div>
 
         <div class="mb-4 relative">
-          <label for="password" class="block text-sm font-medium text-gray-700 ">
+          <label for="password" class="block text-sm font-medium text-gray-700">
             密碼
           </label>
           <input

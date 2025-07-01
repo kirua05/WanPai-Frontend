@@ -6,6 +6,7 @@
   import { useProductList } from '@/composables/useProductList.js'
   import { RouterLink } from 'vue-router'
   import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
+  import BubbleBackground from '@/components/BubbleBackground.vue'
 
   const {
     activeCategory,

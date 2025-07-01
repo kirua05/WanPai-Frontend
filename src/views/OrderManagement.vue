@@ -55,7 +55,7 @@
       const data = await fetchOrders(filters)
       orders.value = data.map((order) => ({
         ...order,
-        statusText: statusMap[order.status]
+        statusText: statusMap[order.status],
       }))
       errorMsg.value = ''
     } catch {
@@ -96,12 +96,13 @@
       style="background-image: url('/src/assets/circle-scatter-haikei.svg')"
     ></div>
 
-    <div class="relative z-10 flex max-w-7xl mx-auto px-4 py-8 gap-6">
-      <aside class="w-64 ml-11">
+    <div
+      class="relative z-10 flex flex-col lg:flex-row max-w-7xl mx-auto px-4 py-8 gap-6"
+    >
+      <aside class="hidden lg:block w-64 ml-11">
         <UserSideBar />
       </aside>
-
-      <section class="flex-1">
+      <section class="flex-1 w-full">
         <div v-if="authStore.isLoggedIn">
           <div
             class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
@@ -173,11 +174,13 @@
                   </div>
                 </template>
               </Column>
+
               <Column
                 field="statusText"
                 header="狀態"
                 style="width: 260px; text-align: left"
               />
+
               <Column style="width: 260px">
                 <template #header>
                   <div class="text-center font-semibold">總金額</div>
@@ -186,6 +189,7 @@
                   <div class="text-left pl-2">{{ slotProps.data.total }}</div>
                 </template>
               </Column>
+
               <Column header="" style="width: 200px">
                 <template #body="slotProps">
                   <div class="flex justify-start py-1">
