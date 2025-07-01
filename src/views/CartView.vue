@@ -16,6 +16,7 @@
   import Button from '@/volt/Button.vue'
   import InputText from 'primevue/inputtext'
   import { showToast } from '@/utils/toast'
+  import axios from '@/utils/axiosInstance'
 
   const cart = useCartStore()
   const router = useRouter()
@@ -23,7 +24,7 @@
 
   const selectedItems = ref([])
   const showShippingDetails = ref(false)
-
+  const profileLoading = ref(false)
   const shippingForm = reactive({
     recipientName: '',
     recipientPhone: '',
@@ -116,6 +117,26 @@
     }
   }
 
+  async function loadUserProfile() {
+    try {
+      profileLoading.value = true
+      const response = await axios.get('users/profile')
+      const profile = response.data
+      if (profile) {
+        shippingForm.recipientPhone = profile.phone || ''
+        shippingForm.shippingAddress = profile.address || ''
+      }
+    } catch {
+      showToast({
+      severity: 'error',
+      summary: '載入失敗',
+      detail: '無法載入個人資料，請稍後再試！',
+    })
+    } finally {
+      profileLoading.value = false
+    }
+  }
+
   async function ecpayCheckout() {
     if (!isRecipientNameValid.value) {
       showToast({
@@ -150,7 +171,7 @@
         summary: '請先登入',
         detail: '請先登入會員再進行結帳！',
       })
-      router.push('/login')
+      router.push('/authform')
       return
     }
 
@@ -222,6 +243,7 @@
       })
     } else {
       showShippingDetails.value = true
+      loadUserProfile()
       nextTick(() => {
         if (shippingDetailsMove.value) {
           shippingDetailsMove.value.scrollIntoView({ behavior: 'smooth' })
@@ -403,7 +425,7 @@
             id="username"
             v-model="shippingForm.recipientName"
             aria-describedby="username-help"
-            class="w-lg p-2 outline rounded-lg"
+            class="w-lg p-2 outline rounded-lg max-w-full"
             required=""
           />
           <label for="cellphone" class="font-bold">手機號碼</label>
@@ -411,7 +433,7 @@
             id="cellphone"
             v-model="shippingForm.recipientPhone"
             aria-describedby="cellphone-help"
-            class="w-lg p-2 outline rounded-lg mg-1"
+            class="w-lg p-2 outline rounded-lg mg-1 max-w-full"
             required=""
           />
           <label for="address" class="font-bold">地址</label>
@@ -419,7 +441,7 @@
             id="address"
             v-model="shippingForm.shippingAddress"
             aria-describedby="address-help"
-            class="w-lg p-2 outline rounded-lg"
+            class="w-lg p-2 outline rounded-lg max-w-full"
             required=""
           />
         </div>
