@@ -37,7 +37,7 @@
             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 border-transparent pl-3 translate-x-0',
         ]"
       >
-        <i class="pi pi-shopping-cart"></i>
+        <i class="pi pi-list"></i>
         訂單中心
       </RouterLink>
 
