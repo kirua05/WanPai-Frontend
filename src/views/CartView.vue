@@ -128,10 +128,10 @@
       }
     } catch {
       showToast({
-      severity: 'error',
-      summary: '載入失敗',
-      detail: '無法載入個人資料，請稍後再試！',
-    })
+        severity: 'error',
+        summary: '載入失敗',
+        detail: '無法載入個人資料，請稍後再試！',
+      })
     } finally {
       profileLoading.value = false
     }
