@@ -3,6 +3,9 @@
   import { showToast } from '@/utils/toast'
 
   const cart = useCartStore()
+  function isLogin() {
+    return !!localStorage.getItem('token')
+  }
 
   const props = defineProps({
     product: Object,
@@ -11,6 +14,7 @@
   async function addToCart(e) {
     e.preventDefault()
     e.stopPropagation()
+
     try {
       await cart.add(props.product)
       showToast({
@@ -18,17 +22,17 @@
         summary: '成功',
         detail: '已加入購物車！',
       })
-    } catch (err) {
-      if (import.meta.env.DEV) {
+    } catch {
+      if (!isLogin()) {
         showToast({
-          severity: 'error',
-          summary: '操作失敗',
-          detail: err.message,
+          severity: 'warn',
+          summary: '請先登入',
+          detail: '請先登入再加入購物車！',
         })
       } else {
         showToast({
-          severity: 'warn',
-          summary: '操作失敗',
+          severity: 'error',
+          summary: '失敗',
           detail: '暫時無法加入購物車，請稍後再試',
         })
       }
