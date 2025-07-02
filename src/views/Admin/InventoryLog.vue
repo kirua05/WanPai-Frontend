@@ -119,18 +119,18 @@
 </script>
 
 <template>
-  <div class="flex justify-center items-start min-h-screen bg-gray-100 py-10">
-    <div class="w-full max-w-6xl bg-white rounded-2xl shadow-xl px-10 py-8">
+  <div class="flex items-start justify-center min-h-screen py-10 bg-gray-100">
+    <div class="w-full max-w-6xl px-10 py-8 bg-white shadow-xl rounded-2xl">
       <h2
-        class="text-3xl font-bold mb-6 pb-2 border-b border-gray-200 text-primary"
+        class="pb-2 mb-6 text-3xl font-bold border-b border-gray-200 text-primary"
       >
         庫存異動紀錄
-        <span v-if="productId" class="text-lg text-gray-600 ml-2 pb-2">
+        <span v-if="productId" class="pb-2 ml-2 text-lg text-gray-600">
           (單一商品)
         </span>
       </h2>
 
-      <div v-if="productId" class="text-gray-600 mb-4">
+      <div v-if="productId" class="mb-4 text-gray-600">
         <a
           @click="goEditProduct(productId)"
           class="font-semibold cursor-pointer hover:text-primary"
@@ -142,15 +142,15 @@
         <img
           :src="product.coverImage"
           alt="商品縮圖"
-          class="w-20 h-20 object-cover rounded-lg border"
+          class="object-cover w-20 h-20 border rounded-lg"
         />
         <span class="text-2xl font-bold text-gray-800">{{ product.name }}</span>
       </div>
 
-      <div v-if="!productId" class="mb-6 p-4 bg-gray-50 rounded-lg">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div v-if="!productId" class="p-4 mb-6 rounded-lg bg-gray-50">
+        <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+            <label class="block mb-1 text-sm font-medium text-gray-700">
               商品ID
             </label>
             <InputText
@@ -160,7 +160,7 @@
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+            <label class="block mb-1 text-sm font-medium text-gray-700">
               修改原因
             </label>
             <Select
@@ -173,7 +173,7 @@
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+            <label class="block mb-1 text-sm font-medium text-gray-700">
               開始日期
             </label>
             <DatePicker
@@ -183,7 +183,7 @@
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
+            <label class="block mb-1 text-sm font-medium text-gray-700">
               結束日期
             </label>
             <DatePicker
@@ -212,7 +212,7 @@
         :lazy="!productId"
         @page="onPageChange"
         :rowsPerPageOptions="[10, 20, 50]"
-        class="rounded-lg border border-gray-200 overflow-hidden"
+        class="overflow-hidden border border-gray-200 rounded-lg"
       >
         <Column
           v-if="!productId"
@@ -274,3 +274,4 @@
     </div>
   </div>
 </template>
+

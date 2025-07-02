@@ -64,7 +64,7 @@ const router = createRouter({
         {
           path: 'products/:id/stock-logs',
           name: 'stockLog',
-          component: () => import('../views/Admin/StockLog.vue'),
+          component: () => import('../views/Admin/InventoryLog.vue'),
         },
       ],
     },
