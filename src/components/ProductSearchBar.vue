@@ -1,5 +1,5 @@
 <script setup>
-  import { computed } from 'vue'
+  import { computed, ref } from 'vue'
 
   const props = defineProps(['modelValue'])
   const emit = defineEmits(['update:modelValue', 'submit'])
@@ -9,12 +9,22 @@
     set: (val) => emit('update:modelValue', val),
   })
 
+  const isComposing = ref(false)
+
   function handleSearch() {
     emit('submit')
   }
 
-  function handleEnter(event) {
-    if (!event.isComposing) {
+  function handleCompositionStart() {
+    isComposing.value = true
+  }
+
+  function handleCompositionEnd(event) {
+    isComposing.value = false
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === 'Enter' && !isComposing.value) {
       handleSearch()
     }
   }
@@ -24,7 +34,9 @@
   <div class="flex items-center gap-2">
     <input
       v-model="modelValueProxy"
-      @keyup.enter="handleEnter"
+      @keydown="handleKeyDown"
+      @compositionstart="handleCompositionStart"
+      @compositionend="handleCompositionEnd"
       placeholder="請輸入商品名稱..."
       class="px-3 py-[6px] border border-gray-300 rounded-md text-sm w-[200px] h-9"
     />
