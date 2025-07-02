@@ -169,19 +169,19 @@
 </script>
 
 <template>
-  <div class="fixed bottom-5 right-5 z-[1000] font-sans sm:bottom-5 sm:right-5">
+  <div class="fixed bottom-3 right-3 z-[1000] font-sans sm:bottom-5 sm:right-5">
     <div
       v-if="!isExpanded"
       @click="toggleChat"
-      class="flex items-center gap-2 bg-yellow-500 text-white py-3 px-5 rounded-full cursor-pointer shadow-lg shadow-yellow-500/40 transition-all duration-300 ease-in-out text-sm font-medium hover:-translate-y-0.5 hover:shadow-xl hover:shadow-yellow-500/60 md:gap-2 sm:gap-1 sm:px-3"
+      class="flex items-center gap-1 bg-yellow-500 text-white py-2 px-3 rounded-full cursor-pointer shadow-lg shadow-yellow-500/40 transition-all duration-300 ease-in-out text-xs font-medium hover:-translate-y-0.5 hover:shadow-xl hover:shadow-yellow-500/60 sm:gap-2 sm:py-3 sm:px-5 sm:text-sm md:gap-2"
     >
       <svg
-        width="24"
-        height="24"
+        width="20"
+        height="20"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        class="flex-shrink-0"
+        class="flex-shrink-0 sm:w-6 sm:h-6"
       >
         <path
           d="M20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H6L10 22L14 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"
@@ -197,22 +197,28 @@
         />
       </svg>
       <span class="hidden sm:inline">玩派小助手</span>
-      <span class="sm:hidden">小助手</span>
+      <span class="sm:hidden">助手</span>
     </div>
 
     <div
       v-if="isExpanded"
-      class="bg-white rounded-xl w-[350px] h-[500px] shadow-xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300 max-sm:w-[calc(100vw-2.5rem)] max-sm:h-[calc(100vh-6.25rem)]"
+      class="bg-white rounded-xl w-[280px] h-[400px] shadow-xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-300 xs:w-[260px] xs:h-[380px] sm:w-[320px] sm:h-[450px] md:w-[350px] md:h-[500px] max-w-[calc(100vw-1.5rem)] max-h-[calc(100vh-4rem)]"
     >
       <div
-        class="bg-yellow-500 text-white px-5 py-4 flex justify-between items-center"
+        class="bg-yellow-500 text-white px-3 py-3 flex justify-between items-center sm:px-5 sm:py-4"
       >
-        <h3 class="m-0 text-base font-semibold">玩派小助手</h3>
+        <h3 class="m-0 text-sm font-semibold sm:text-base">玩派小助手</h3>
         <button
           @click="toggleChat"
-          class="bg-white/20 border border-white/30 text-white cursor-pointer p-1.5 rounded-md transition-all duration-200 font-bold w-7 h-7 flex items-center justify-center hover:bg-white/30 hover:border-white/50 hover:scale-110"
+          class="bg-white/20 border border-white/30 text-white cursor-pointer p-1 rounded-md transition-all duration-200 font-bold w-6 h-6 flex items-center justify-center hover:bg-white/30 hover:border-white/50 hover:scale-110 sm:p-1.5 sm:w-7 sm:h-7"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            class="sm:w-4 sm:h-4"
+          >
             <path
               d="M8 6.293l2.146-2.147a.5.5 0 01.708.708L8.707 7l2.147 2.146a.5.5 0 01-.708.708L8 7.707l-2.146 2.147a.5.5 0 01-.708-.708L7.293 8 5.146 5.854a.5.5 0 01.708-.708L8 6.293z"
             />
@@ -222,20 +228,20 @@
 
       <div
         ref="messagesContainer"
-        class="flex-1 overflow-y-auto p-4 bg-slate-50"
+        class="flex-1 overflow-y-auto p-3 bg-slate-50 sm:p-4"
       >
         <div
           v-for="message in messages"
           :key="message.id"
           :class="[
-            'mb-4 animate-in fade-in slide-in-from-bottom-1 duration-300 message-item',
+            'mb-3 animate-in fade-in slide-in-from-bottom-1 duration-300 message-item sm:mb-4',
             message.isUser
               ? 'flex flex-col items-end'
               : 'flex flex-col items-start',
           ]"
         >
           <div
-            class="max-w-[80%] py-3 px-4 rounded-[18px] text-sm leading-relaxed"
+            class="max-w-[85%] py-2 px-3 rounded-[16px] text-xs leading-relaxed sm:max-w-[80%] sm:py-3 sm:px-4 sm:rounded-[18px] sm:text-sm"
             :class="
               message.isUser
                 ? 'bg-yellow-500 text-white rounded-br-sm'
@@ -244,27 +250,27 @@
             v-html="sanitizeHtml(message.text)"
             @click="handleLinkClick"
           ></div>
-          <div class="text-xs text-gray-400 mt-1 mx-2">
+          <div class="text-[10px] text-gray-400 mt-1 mx-2 sm:text-xs">
             {{ formatTime(message.timestamp) }}
           </div>
         </div>
 
         <div
           v-if="isLoading"
-          class="mb-4 animate-in fade-in slide-in-from-bottom-1 duration-300 flex flex-col items-start message-item"
+          class="mb-3 animate-in fade-in slide-in-from-bottom-1 duration-300 flex flex-col items-start message-item sm:mb-4"
         >
           <div
-            class="max-w-[80%] px-4 py-3 rounded-[18px] text-sm leading-relaxed bg-white text-gray-700 border border-gray-200 rounded-bl-sm flex items-center gap-2"
+            class="max-w-[85%] px-3 py-2 rounded-[16px] text-xs leading-relaxed bg-white text-gray-700 border border-gray-200 rounded-bl-sm flex items-center gap-2 sm:max-w-[80%] sm:px-4 sm:py-3 sm:rounded-[18px] sm:text-sm"
           >
             <div class="flex gap-1">
               <span
-                class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce opacity-50"
+                class="w-1 h-1 rounded-full bg-gray-400 animate-bounce opacity-50 sm:w-1.5 sm:h-1.5"
               ></span>
               <span
-                class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce opacity-50 [animation-delay:0.1s]"
+                class="w-1 h-1 rounded-full bg-gray-400 animate-bounce opacity-50 [animation-delay:0.1s] sm:w-1.5 sm:h-1.5"
               ></span>
               <span
-                class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce opacity-50 [animation-delay:0.2s]"
+                class="w-1 h-1 rounded-full bg-gray-400 animate-bounce opacity-50 [animation-delay:0.2s] sm:w-1.5 sm:h-1.5"
               ></span>
             </div>
             小助手正在思考中
@@ -272,7 +278,7 @@
         </div>
       </div>
 
-      <div class="p-4 bg-white border-t border-gray-200">
+      <div class="p-3 bg-white border-t border-gray-200 sm:p-4">
         <div class="flex gap-2 items-center">
           <input
             ref="messageInput"
@@ -282,14 +288,20 @@
             @compositionend="handleCompositionEnd"
             placeholder="輸入你的問題..."
             :disabled="isLoading"
-            class="flex-1 px-4 py-3 border border-gray-300 rounded-full text-sm outline-none transition-colors duration-200 focus:border-yellow-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-full text-xs outline-none transition-colors duration-200 focus:border-yellow-500 disabled:bg-gray-100 disabled:cursor-not-allowed sm:px-4 sm:py-3 sm:text-sm"
           />
           <button
             @click="sendMessage"
             :disabled="!currentMessage.trim() || isLoading"
-            class="bg-yellow-500 text-white border-none rounded-full w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:transform-none"
+            class="bg-yellow-500 text-white border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:transform-none sm:w-10 sm:h-10"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              class="sm:w-4 sm:h-4"
+            >
               <path
                 d="M15.854 7.354l-7-7a.5.5 0 00-.708.708L14.293 7H1.5a.5.5 0 000 1h12.793l-6.147 6.146a.5.5 0 00.708.708l7-7a.5.5 0 000-.708z"
               />
