@@ -19,7 +19,7 @@
     isComposing.value = true
   }
 
-  function handleCompositionEnd(event) {
+  function handleCompositionEnd() {
     isComposing.value = false
   }
 
