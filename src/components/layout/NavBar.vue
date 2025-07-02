@@ -37,7 +37,6 @@
     router.push({
       path: '/products',
       query: {
-        ...route.query,
         keyword: searchInput.value.trim(),
         page: 1,
       },
