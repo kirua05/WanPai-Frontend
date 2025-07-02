@@ -6,24 +6,60 @@ import { fetchFilterData } from '@/api/product'
 export function useProductList() {
   const route = useRoute()
   const router = useRouter()
+
   const keyword = computed(() => route.query.keyword || '')
   const isSearching = computed(() => keyword.value.trim().length > 0)
+
   const categories = ref([])
   const allCategories = computed(() => ['全部', ...categories.value])
+
   const itemsPerPage = 20
   const isLoading = ref(false)
   const hasLoadedOnce = ref(false)
-  const randomProducts = ref([])
 
-  const loadRandomProducts = async () => {
-    try {
-      const res = await axios.get('/products/random?limit=8')
-      randomProducts.value = res.data
-    } catch (err) {
-      err
-      randomProducts.value = []
-    }
-  }
+  const products = ref([])
+  const randomProducts = ref([])
+  const productSection = ref(null)
+
+  const currentPage = computed({
+    get: () => parseInt(route.query.page, 10) || 1,
+    set: (val) => {
+      router.push({ query: { ...route.query, page: val } })
+    },
+  })
+
+  const activeCategory = computed({
+    get: () =>
+      route.query.category === undefined ? '全部' : route.query.category,
+    set: (val) => {
+      router.push({
+        path: '/products',
+        query: {
+          ...route.query,
+          keyword: '',
+          ipTag: '',
+          category: val,
+          page: 1,
+        },
+      })
+    },
+  })
+
+  const activeIpTag = computed({
+    get: () => route.query.ipTag || '',
+    set: (val) => {
+      router.push({
+        path: '/products',
+        query: {
+          ...route.query,
+          keyword: '',
+          category: '',
+          ipTag: val,
+          page: 1,
+        },
+      })
+    },
+  })
 
   const loadFilterData = async () => {
     try {
@@ -36,99 +72,31 @@ export function useProductList() {
     }
   }
 
-  const activeCategory = computed({
-    get: () => {
-      if (route.query.keyword || route.query.ipTag) {
-        return ''
-      }
-      return route.query.category === undefined ? '全部' : route.query.category
-    },
-    set: (val) => {
-      router.push({
-        query: {
-          category: val,
-          page: 1,
-        },
-      })
-    },
-  })
+  const fetchAllProducts = async () => {
+    const res = await axios.get('/products')
+    return res.data || []
+  }
 
-  const activeIpTag = computed({
-    get: () => route.query.ipTag || '',
-    set: (val) => {
-      router.push({
-        query: {
-          ipTag: val,
-          page: 1,
-        },
-      })
-    },
-  })
+  const fetchProductsByTag = async (tag) => {
+    const res = await axios.get('/tags/filterByTagnames', {
+      params: { tagname: tag },
+    })
+    return res.data.products || []
+  }
 
-  const currentPage = computed({
-    get: () => parseInt(route.query.page, 10) || 1,
-    set: (val) => {
-      router.push({ query: { ...route.query, page: val } })
-    },
-  })
-
-  const productSection = ref(null)
-
-  watch(
-    () => route.query.keyword,
-    async (val, oldVal) => {
-      if (!val && oldVal) {
-        if (activeIpTag.value) {
-          await loadProductsByIpTag(activeIpTag.value)
-        } else {
-          await loadProductsByCategory(activeCategory.value)
-        }
-        return
-      }
-
-      if (!val) return
-      if (val.trim().length > 0) {
-        products.value = []
-        isLoading.value = true
-        try {
-          const res = await axios.get('/products')
-          products.value = res.data
-        } catch {
-          products.value = []
-        } finally {
-          isLoading.value = false
-        }
-      }
-
-      if (route.query.category && route.query.category !== '全部') {
-        router.push({
-          query: {
-            ...route.query,
-            category: '全部',
-            page: 1,
-          },
-        })
-      }
-
-      await loadRandomProducts()
-    }
-  )
-
-  const products = ref([])
-
-  const loadProductsByCategory = async (category) => {
-    products.value = []
+  const loadProducts = async () => {
     isLoading.value = true
+    products.value = []
 
     try {
-      if (category === '全部') {
-        const res = await axios.get('/products')
-        products.value = res.data
+      if (isSearching.value) {
+        products.value = await fetchAllProducts()
+      } else if (activeIpTag.value) {
+        products.value = await fetchProductsByTag(activeIpTag.value)
+      } else if (activeCategory.value && activeCategory.value !== '全部') {
+        products.value = await fetchProductsByTag(activeCategory.value)
       } else {
-        const res = await axios.get('/tags/filterByTagnames', {
-          params: { tagname: category },
-        })
-        products.value = res.data.products || []
+        products.value = await fetchAllProducts()
       }
     } catch {
       products.value = []
@@ -138,75 +106,33 @@ export function useProductList() {
     }
   }
 
-  const loadProductsByIpTag = async (ipTag) => {
-    products.value = []
-    isLoading.value = true
-
+  const loadRandomProducts = async () => {
     try {
-      if (ipTag) {
-        const res = await axios.get('/tags/filterByTagnames', {
-          params: { tagname: ipTag },
-        })
-        products.value = res.data.products || []
-      } else {
-        const res = await axios.get('/products')
-        products.value = res.data
-      }
+      const res = await axios.get('/products/random?limit=8')
+      randomProducts.value = res.data || []
     } catch {
-      products.value = []
-    } finally {
-      isLoading.value = false
-      hasLoadedOnce.value = true
+      randomProducts.value = []
     }
   }
 
-  onMounted(async () => {
-    await loadFilterData()
-    if (activeIpTag.value) {
-      await loadProductsByIpTag(activeIpTag.value)
-    } else {
-      await loadProductsByCategory(activeCategory.value)
-    }
+  watch(
+    () => [route.query.keyword, route.query.category, route.query.ipTag],
+    async () => {
+      await loadProducts()
+      if (isSearching.value) await loadRandomProducts()
+    },
+    { immediate: true }
+  )
 
-    if (isSearching.value) {
-      await loadRandomProducts()
-    }
+  onMounted(() => {
+    loadFilterData()
   })
-
-  watch(
-    () => activeCategory.value,
-    async (newCategory, oldCategory) => {
-      if (
-        newCategory !== oldCategory &&
-        oldCategory !== undefined &&
-        newCategory
-      ) {
-        await loadProductsByCategory(newCategory)
-      }
-    }
-  )
-
-  watch(
-    () => activeIpTag.value,
-    async (newIpTag, oldIpTag) => {
-      if (newIpTag !== oldIpTag && oldIpTag !== undefined) {
-        if (newIpTag) {
-          await loadProductsByIpTag(newIpTag)
-        } else {
-          const categoryToLoad =
-            activeCategory.value === '' ? '全部' : activeCategory.value
-          await loadProductsByCategory(categoryToLoad)
-        }
-      }
-    }
-  )
 
   const filteredProducts = computed(() => {
     let result = products.value
-    if (keyword.value.trim().length >= 1) {
-      result = result.filter((p) =>
-        p.name.toLowerCase().includes(keyword.value.toLowerCase())
-      )
+    if (isSearching.value) {
+      const kw = keyword.value.trim().toLowerCase()
+      result = result.filter((p) => p.name.toLowerCase().includes(kw))
     }
     return result
   })
@@ -230,29 +156,24 @@ export function useProductList() {
     }
   }
 
+  const pageInput = ref('')
   const pageButtons = computed(() => {
     const total = totalPages.value
     const current = currentPage.value
     const buttons = []
 
     if (total <= 5) {
-      for (let i = 1; i <= total; i++) {
-        buttons.push(i)
-      }
+      for (let i = 1; i <= total; i++) buttons.push(i)
     } else {
-      if (current <= 3) {
-        buttons.push(1, 2, 3, 4, '...', total)
-      } else if (current >= total - 2) {
+      if (current <= 3) buttons.push(1, 2, 3, 4, '...', total)
+      else if (current >= total - 2)
         buttons.push(1, '...', total - 3, total - 2, total - 1, total)
-      } else {
+      else
         buttons.push(1, '...', current - 1, current, current + 1, '...', total)
-      }
     }
 
     return buttons
   })
-
-  const pageInput = ref('')
 
   return {
     keyword,
@@ -272,6 +193,5 @@ export function useProductList() {
     isLoading,
     hasLoadedOnce,
     randomProducts,
-    loadRandomProducts,
   }
 }
