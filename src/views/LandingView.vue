@@ -234,14 +234,14 @@
       >
         <div
           id="xiaonan-section"
-          class="w-full md:w-7/12 space-y-6 text-center mx-auto px-4 -mt-80 md:mt-0"
+          class="w-full md:w-7/12 space-y-6 text-center mx-auto px-4 -mt-83 md:mt-0"
         >
           <h2
-            class="text-3xl md:text-5xl text-yellow-700 mt-[-60px] font-extrabold"
+            class="text-2xl md:text-5xl text-yellow-700 mt-[-60px] font-extrabold"
           >
             關於玩派
           </h2>
-          <p class="text-lg text-gray-700 leading-relaxed">
+          <p class="text-ml text-gray-700 leading-relaxed">
             我們不是賣玩具給小孩，
             <br />
             而是把玩具的快樂，還給大人。
@@ -286,7 +286,7 @@
       </div>
     </section>
 
-    <section class="overflow-hidden bg-white py-4">
+    <section class="overflow-hidden bg-white py-4 -mt-90">
       <div class="flex marquee-fast w-max">
         <p
           class="text-[56px] font-black tracking-widest text-yellow-700 uppercase px-6 min-w-max"
