@@ -157,11 +157,11 @@
           <img
             src="@/assets/logo.png"
             alt="玩派 logo"
-            class="h-28 md:h-75 w-auto"
+            class="h-40 md:h-75 w-auto"
           />
         </div>
         <h1
-          class="text-7xl md:text-8xl font-extrabold text-gray-800 leading-tight mt-60 md:-mt-10"
+          class="text-7xl md:text-8xl font-extrabold text-gray-800 leading-tight mt-46 md:-mt-10"
         >
           玩派
         </h1>
@@ -237,18 +237,18 @@
           class="w-full md:w-7/12 space-y-6 text-center mx-auto px-4 -mt-83 md:mt-0"
         >
           <h2
-            class="text-2xl md:text-5xl text-yellow-700 mt-[-60px] font-extrabold"
+            class="text-3xl md:text-5xl text-yellow-700 mt-[-60px] md:-mt-20 font-extrabold"
           >
             關於玩派
           </h2>
-          <p class="text-ml text-gray-700 leading-relaxed">
+          <p class="text-base md:text-lg text-gray-700 leading-relaxed">
             我們不是賣玩具給小孩，
             <br />
             而是把玩具的快樂，還給大人。
             <br />
             讓你在探索的路上不再迷路。
           </p>
-          <p class="hidden md:block text-sm text-gray-600 mt-20">
+          <p class="hidden md:block text-sm md:text-base text-gray-600 mt-20">
             靈感來自一位總是「只是晃晃」卻空手而回的模型控——我們的朋友小南。
           </p>
         </div>
@@ -286,7 +286,7 @@
       </div>
     </section>
 
-    <section class="overflow-hidden bg-white py-4 -mt-90">
+    <section class="overflow-hidden bg-white py-4 -mt-90 md:mt-0">
       <div class="flex marquee-fast w-max">
         <p
           class="text-[56px] font-black tracking-widest text-yellow-700 uppercase px-6 min-w-max"
