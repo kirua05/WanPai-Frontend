@@ -87,9 +87,7 @@
   }
 
   const handleGoogleLogin = () => {
-    const backendUrl =
-      import.meta.env.VITE_API_BASE_URL?.replace('/api', '') ||
-      'https://no5.zeabur.app'
+    const backendUrl = import.meta.env.VITE_API_BASE_URL?.replace('/api', '')
     const googleAuthUrl = `${backendUrl}/api/users/google`
     window.location.href = googleAuthUrl
   }
